@@ -1,0 +1,30 @@
+package com.thindie.avezer.engine
+
+import androidx.annotation.StringRes
+import androidx.compose.runtime.Immutable
+import com.thindie.avezer.R
+
+@Immutable
+data class ScreenScopeError(
+  val message: String,
+  val actions: Map<Actions, Command>,
+) {
+  sealed interface Actions {
+    sealed interface Common : Actions {
+      @get:StringRes
+      val titleRes: Int?
+
+      data object ButtonMain : Common {
+        override val titleRes: Int = R.string.error_action_ok
+      }
+
+      data object ButtonSecondaryRetry : Common {
+        override val titleRes: Int = R.string.error_action_retry
+      }
+
+      data object DismissMain : Common {
+        override val titleRes: Int? = null
+      }
+    }
+  }
+}

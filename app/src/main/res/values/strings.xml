@@ -1,0 +1,62 @@
+<resources>
+    <string name="app_name">Avezer</string>
+
+    <string name="error_unexpected">Что-то пошло не так. Попробуйте ещё раз.</string>
+    <string name="btn_close">Закрыть</string>
+
+    <string name="error_action_ok">Ок</string>
+    <string name="error_action_retry">Попробовать снова</string>
+
+    <!-- Имена ключей сделаны так, чтобы их было удобно доставать динамически через ID -->
+
+    <!-- Clear / Cloudy -->
+    <string name="weather_code_0">Clear sky</string>
+    <string name="weather_code_1">Mainly clear</string>
+    <string name="weather_code_2">Partly cloudy</string>
+    <string name="weather_code_3">Overcast</string>
+
+    <!-- Fog -->
+    <string name="weather_code_45">Fog</string>
+    <string name="weather_code_48">Depositing rime fog</string>
+
+    <!-- Drizzle -->
+    <string name="weather_code_51">Drizzle: Light intensity</string>
+    <string name="weather_code_53">Drizzle: Moderate intensity</string>
+    <string name="weather_code_55">Drizzle: Dense intensity</string>
+
+    <!-- Freezing Drizzle -->
+    <string name="weather_code_56">Freezing Drizzle: Light intensity</string>
+    <string name="weather_code_57">Freezing Drizzle: Dense intensity</string>
+
+    <!-- Rain -->
+    <string name="weather_code_61">Rain: Slight intensity</string>
+    <string name="weather_code_63">Rain: Moderate intensity</string>
+    <string name="weather_code_65">Rain: Heavy intensity</string>
+
+    <!-- Freezing Rain -->
+    <string name="weather_code_66">Freezing Rain: Light intensity</string>
+    <string name="weather_code_67">Freezing Rain: Heavy intensity</string>
+
+    <!-- Snow -->
+    <string name="weather_code_71">Snow fall: Slight intensity</string>
+    <string name="weather_code_73">Snow fall: Moderate intensity</string>
+    <string name="weather_code_75">Snow fall: Heavy intensity</string>
+    <string name="weather_code_77">Snow grains</string>
+
+    <!-- Rain Showers -->
+    <string name="weather_code_80">Rain showers: Slight</string>
+    <string name="weather_code_81">Rain showers: Moderate</string>
+    <string name="weather_code_82">Rain showers: Violent</string>
+
+    <!-- Snow Showers -->
+    <string name="weather_code_85">Snow showers: Slight</string>
+    <string name="weather_code_86">Snow showers: Heavy</string>
+
+    <!-- Thunderstorm -->
+    <string name="weather_code_95">Thunderstorm: Slight or moderate</string>
+    <string name="weather_code_96">Thunderstorm with slight hail</string>
+    <string name="weather_code_99">Thunderstorm with heavy hail</string>
+
+    <!-- Fallback -->
+    <string name="weather_code_unknown">Unknown weather</string>
+</resources>

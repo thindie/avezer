@@ -1,0 +1,47 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+  <group android:scaleX="0.69"
+      android:scaleY="0.69"
+      android:translateX="79.36"
+      android:translateY="79.36">
+
+    <!-- 1. Базовая плашка-фон (Скругленный квадрат) -->
+    <path
+        android:pathData="M100,0L412,0A100,100 0,0 1,512 100L512,412A100,100 0,0 1,412 512L100,512A100,100 0,0 1,0 412L0,100A100,100 0,0 1,100 0z"
+        android:fillColor="#1A73E8"/>
+
+    <!-- 2. Полупрозрачный диск солнца (Радиус 90) -->
+    <path
+        android:pathData="M316,196m-90,0a90,90 0,1 1,180 0a90,90 0,1 1,-180 0"
+        android:fillColor="#ffffff"
+        android:fillAlpha="0.2"/>
+
+    <!-- 3. Контур облака (Построен по сетке кругов Фибоначчи, обводка 24) -->
+    <path
+        android:pathData="M160,340 C116,340 80,304 80,260 C80,220 110,186 150,180 C170,124 222,84 282,84 C354,84 414,136 420,206 C454,212 480,240 480,274 C480,310 450,340 414,340 Z"
+        android:strokeLineJoin="round"
+        android:strokeWidth="24"
+        android:fillColor="#00000000"
+        android:strokeColor="#ffffff"
+        android:strokeLineCap="round"/>
+
+    <!-- 4. Акцентный центр солнца (Радиус 15. 15 * 1.618 * 1.618 ≈ 40 — внутренний контур солнца) -->
+    <path
+        android:pathData="M316,196m-15,0a15,15 0,1 1,30 0a15,15 0,1 1,-30 0"
+        android:fillColor="#8AB4F8"/>
+
+    <!-- 5. Акцентная точка слева (Малый узел спирали) -->
+    <path
+        android:pathData="M130,290m-10,0a10,10 0,1 1,20 0a10,10 0,1 1,-20 0"
+        android:fillColor="#8AB4F8"/>
+
+    <!-- 6. Акцентная точка справа (Большой узел спирали) -->
+    <path
+        android:pathData="M430,290m-10,0a10,10 0,1 1,20 0a10,10 0,1 1,-20 0"
+    android:fillColor="#8AB4F8"/>
+
+  </group>
+</vector>

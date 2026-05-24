@@ -6,6 +6,7 @@ import com.thindie.avezer.application.weatherCodeRef
 import com.thindie.avezer.application.weatherEmojiString
 import com.thindie.avezer.error.AppError
 import com.thindie.avezer.feature.home.domain.MainRepository
+import com.thindie.avezer.feature.home.domain.MockWeather
 import com.thindie.avezer.feature.home.domain.Weather
 import com.thindie.avezer.network.Client
 import com.thindie.avezer.network.WeatherResponse
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -42,7 +44,11 @@ class MainRepositoryImpl(
     }
   }
 
-  override val forecast: Flow<List<Weather>?> = weather
+  private val mockForecast = flow { emit(listOf(MockWeather.create())) }
+
+  override val forecast: Flow<List<Weather>?> = combine(weather, mockForecast) { w, m ->
+    (w ?: emptyList()) + m
+  }
 
 
   override suspend fun fetch() {

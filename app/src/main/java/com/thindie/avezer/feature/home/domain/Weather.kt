@@ -1,5 +1,7 @@
 package com.thindie.avezer.feature.home.domain
 
+import com.thindie.avezer.feature.home.data.toDomainModel
+import com.thindie.avezer.network.MockWeatherResponse
 import androidx.compose.runtime.Immutable
 
 @Immutable
@@ -18,3 +20,7 @@ data class Weather(
 
   val lastUpdated: Long = System.currentTimeMillis()
 )
+
+object MockWeather {
+  fun create(): Weather = MockWeatherResponse.create().toDomainModel("Kaliningrad")!!
+}

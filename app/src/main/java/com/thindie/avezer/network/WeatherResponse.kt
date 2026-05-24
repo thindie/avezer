@@ -38,3 +38,30 @@ data class CurrentData(
   @SerialName("wind_speed") val windSpeed: Double? = null,
   @SerialName("weather_code") val weatherCode: Int? = null
 )
+
+object MockWeatherResponse {
+  fun create(): WeatherResponse = WeatherResponse(
+    latitude = 52.0,
+    longitude = 53.0,
+    elevation = 10.0,
+    utcOffsetSeconds = 10800,
+    timezone = "Europe/Kaliningrad",
+    hourly = HourlyData(
+      time = listOf("2024-06-15T12:00"),
+      temperature2m = listOf(18.0),
+      relativeHumidity2m = listOf(65),
+      isDay = 1
+    ),
+    daily = DailyData(
+      time = listOf("2024-06-15"),
+      tempMax = listOf(22.0),
+      tempMin = listOf(14.0)
+    ),
+    current = CurrentData(
+      time = "2024-06-15T12:00",
+      temperature = 18.0,
+      windSpeed = 3.5,
+      weatherCode = 1000
+    )
+  )
+}

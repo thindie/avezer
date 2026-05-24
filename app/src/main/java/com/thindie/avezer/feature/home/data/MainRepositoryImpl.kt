@@ -15,10 +15,10 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -27,29 +27,30 @@ class MainRepositoryImpl(
   private val client: Client,
   private val locationResolver: LocationResolver,
 ) : MainRepository {
-
-  private val weather = storage.saved.flatMapLatest { ids ->
-    flow {
-      val stored = coroutineScope {
-        ids?.map { id ->
-          async {
-            val raw = storage.read(id) ?: return@async null
-            JsonUtil.fromJson(raw, Weather::class.java)
+  private val weather =
+    storage.saved.flatMapLatest { ids ->
+      flow {
+        val stored =
+          coroutineScope {
+            ids?.map { id ->
+              async {
+                val raw = storage.read(id) ?: return@async null
+                JsonUtil.fromJson(raw, Weather::class.java)
+              }
+            }?.awaitAll()
           }
-        }?.awaitAll()
-      }
-        ?.filterNotNull()
+            ?.filterNotNull()
 
-      emit(stored)
+        emit(stored)
+      }
     }
-  }
 
   private val mockForecast = flow { emit(listOf(MockWeather.create())) }
 
-  override val forecast: Flow<List<Weather>?> = combine(weather, mockForecast) { w, m ->
-    (w ?: emptyList()) + m
-  }
-
+  override val forecast: Flow<List<Weather>?> =
+    combine(weather, mockForecast) { w, m ->
+      (w ?: emptyList()) + m
+    }
 
   override suspend fun fetch() {
     coroutineScope {
@@ -67,15 +68,13 @@ class MainRepositoryImpl(
     }?.awaitAll()
   }
 
-
   override suspend fun read(cityName: String) {
     val (lat, lon) = locationResolver.read(cityName) ?: (52.0 to 53.0)
-     readInternal {
+    readInternal {
       val weather = client.getForecast(lat = lat, lon = lon)
       storage.write(JsonUtil.toJson(weather.toDomainModel(cityName)))
     }
   }
-
 
   private suspend fun readInternal(block: suspend () -> Unit) =
     withTimeoutOrNull(5_000L) {
@@ -89,9 +88,7 @@ class MainRepositoryImpl(
     } ?: throw AppError.ServerError.TimeOut
 }
 
-fun WeatherResponse.toDomainModel(
-  cityName: String,
-): Weather? {
+fun WeatherResponse.toDomainModel(cityName: String): Weather? {
   val current = this.current
   val hourlyData = this.hourly
   val code = current?.weatherCode ?: 1000

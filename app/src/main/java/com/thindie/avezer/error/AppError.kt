@@ -8,7 +8,9 @@ sealed class AppError : Exception() {
 
   sealed class ServerError : AppError() {
     data object TimeOut : ServerError()
+
     data object ConnectionFailed : ServerError()
+
     data class HttpRequestFailed(val statusCode: Int) : ServerError()
   }
 }

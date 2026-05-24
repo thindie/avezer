@@ -12,9 +12,10 @@ class ApplicationScope(private val application: Application) {
   private val prefs by lazy { application.getSharedPreferences(appScopeStore, Context.MODE_PRIVATE) }
   private val baseUrl = "https://api.open-meteo.com/v1/forecast"
 
-  val appFlowModule = AppFlowModule(
-    storage = StorageImpl(prefs),
-    client = ClientImpl(baseUrl),
-    resolver = LocationResolverImpl(application)
-  )
+  val appFlowModule =
+    AppFlowModule(
+      storage = StorageImpl(prefs),
+      client = ClientImpl(baseUrl),
+      resolver = LocationResolverImpl(application),
+    )
 }

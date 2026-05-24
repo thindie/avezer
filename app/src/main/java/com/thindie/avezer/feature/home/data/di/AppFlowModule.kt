@@ -10,10 +10,12 @@ class AppFlowModule(
   private val client: Client,
   private val storage: Storage,
   private val resolver: LocationResolver,
-  ) {
+) {
   private val _repository by lazy {
     MainRepositoryImpl(
-      locationResolver = resolver, storage = storage, client = client
+      locationResolver = resolver,
+      storage = storage,
+      client = client,
     )
   }
 

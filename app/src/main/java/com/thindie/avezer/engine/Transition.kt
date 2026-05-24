@@ -11,15 +11,16 @@ fun <S : State, C : Command> ScreenScope<S, C>.stateSink(block: ScreenScope<S, C
 }
 
 fun <
-    S : State,
-    C : Command,
-    R : Any?,
-    > ScreenScope<S, C>.sub(flow: Flow<R>): Pair<ScreenScope<S, C>, Flow<Pair<S, R>>> {
-  return this to combine(
-    this.state,
-    flow.distinctUntilChanged(),
-    ::Pair
-  )
+  S : State,
+  C : Command,
+  R : Any?,
+  > ScreenScope<S, C>.sub(flow: Flow<R>): Pair<ScreenScope<S, C>, Flow<Pair<S, R>>> {
+  return this to
+    combine(
+      this.state,
+      flow.distinctUntilChanged(),
+      ::Pair,
+    )
 }
 
 fun <S : State, C : Command, R : Any?> Pair<ScreenScope<S, C>, Flow<Pair<S, R>>>.transition(

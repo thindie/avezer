@@ -38,7 +38,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
-
   // привет!
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -50,7 +49,7 @@ class MainActivity : ComponentActivity() {
       SideEffect {
         HomeFlow(
           router = router,
-          flowModule = app.applicationScope.appFlowModule
+          flowModule = app.applicationScope.appFlowModule,
         )
           .start()
       }
@@ -59,12 +58,13 @@ class MainActivity : ComponentActivity() {
         LocalThemeSwitcher provides themeSwitcher,
       ) {
         val themeColors = LocalThemeSwitcher.current.themeFlow.collectAsState(null)
-        val isDark = when (themeColors.value) {
-          null -> isSystemInDarkTheme()
-          ThemeSwitcher.Choice.Dark -> true
-          ThemeSwitcher.Choice.Light -> false
-          ThemeSwitcher.Choice.Auto -> isSystemInDarkTheme()
-        }
+        val isDark =
+          when (themeColors.value) {
+            null -> isSystemInDarkTheme()
+            ThemeSwitcher.Choice.Dark -> true
+            ThemeSwitcher.Choice.Light -> false
+            ThemeSwitcher.Choice.Auto -> isSystemInDarkTheme()
+          }
         val view = LocalView.current
         if (!view.isInEditMode) {
           SideEffect {
@@ -87,13 +87,13 @@ class MainActivity : ComponentActivity() {
               transitionSpec = {
                 if (isPop) {
                   slideInHorizontally(tween) { -it } + fadeIn(tween()) togetherWith
-                      slideOutHorizontally(tween) { it } + fadeOut(tween())
+                    slideOutHorizontally(tween) { it } + fadeOut(tween())
                 } else {
                   slideInHorizontally(tween) { it } + fadeIn(tween()) togetherWith
-                      slideOutHorizontally(tween) { -it } + fadeOut(tween())
+                    slideOutHorizontally(tween) { -it } + fadeOut(tween())
                 }
               },
-              label = "route"
+              label = "route",
             ) { route -> route.content.invoke() }
           }
         }

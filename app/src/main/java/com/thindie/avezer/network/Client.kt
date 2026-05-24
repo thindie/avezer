@@ -7,6 +7,6 @@ interface Client {
     hourly: List<String>? = listOf("temperature_2m", "relative_humidity_2m"),
     daily: List<String>? = null,
     forecastDays: Int = 7,
-    tempUnit: String = "celsius"
+    tempUnit: String = "celsius",
   ): WeatherResponse
 }

@@ -36,31 +36,27 @@ import com.thindie.avezer.uikit.LocalThemeSwitcher
 import com.thindie.avezer.uikit.ThemeSwitcher
 import com.thindie.avezer.uikit.VSpacer
 
-
 class HomeFlow(
   private val router: Router,
   private val flowModule: AppFlowModule,
 ) : ScreenFlow<Route, Unit>(router) {
-
-
   override fun start() {
     router.push(select())
   }
 
   private fun stateSink(screenScope: ScreenScope<ViewState, ScreenCommand>) {
     screenScope.stateSink {
-      sub(flowModule.repository.forecast).transition(
-        ) { s, forecast: List<Weather>? ->
-          s.copy(forecast = forecast)
-        }
+      sub(flowModule.repository.forecast).transition { s, forecast: List<Weather>? ->
+        s.copy(forecast = forecast)
+      }
     }
   }
 
-
-  fun select() = RouteFactory.create(
+  fun select() =
+    RouteFactory.create(
       initialState = ViewState(),
       stateSink = ::stateSink,
-    initialCommand = RouteFactory.InitialCommand { ScreenCommand.Fetch },
+      initialCommand = RouteFactory.InitialCommand { ScreenCommand.Fetch },
       execute = { c: ScreenCommand, s: ViewState ->
         when (c) {
           ScreenCommand.Fetch -> {
@@ -73,13 +69,15 @@ class HomeFlow(
           }
         }
       },
-      routeContent = { HomeScreen() }
+      routeContent = { HomeScreen() },
     )
 }
 
 private data class ViewState(val forecast: List<Weather>? = null) : com.thindie.avezer.engine.State
+
 private sealed interface ScreenCommand : Command {
   data object Fetch : ScreenCommand
+
   data object Back : ScreenCommand
 }
 
@@ -87,30 +85,32 @@ private sealed interface ScreenCommand : Command {
 private fun ScreenScope<ViewState, ScreenCommand>.HomeScreen() {
   val themeSwitcher = LocalThemeSwitcher.current
   val themeColors = LocalThemeSwitcher.current.themeFlow.collectAsState(null)
-  val isDark = when (themeColors.value) {
-    null -> isSystemInDarkTheme()
-    ThemeSwitcher.Choice.Dark -> true
-    ThemeSwitcher.Choice.Light -> false
-    ThemeSwitcher.Choice.Auto -> isSystemInDarkTheme()
-  }
-  AppScreen(
-    secondary = Action(
-    resRef = R.drawable.ic_theme_24, listener = {
-      themeSwitcher.set(
-        if (isDark) ThemeSwitcher.Choice.Light else ThemeSwitcher.Choice.Dark
-      )
+  val isDark =
+    when (themeColors.value) {
+      null -> isSystemInDarkTheme()
+      ThemeSwitcher.Choice.Dark -> true
+      ThemeSwitcher.Choice.Light -> false
+      ThemeSwitcher.Choice.Auto -> isSystemInDarkTheme()
     }
-    )
+  AppScreen(
+    secondary =
+      Action(
+        resRef = R.drawable.ic_theme_24,
+        listener = {
+          themeSwitcher.set(
+            if (isDark) ThemeSwitcher.Choice.Light else ThemeSwitcher.Choice.Dark,
+          )
+        },
+      ),
   ) {
     BackHandler { send(ScreenCommand.Back) }
     val st by state.collectAsState()
     st.forecast?.forEach {
-      weather ->
+        weather ->
       WeatherCard(weather)
     }
   }
 }
-
 
 @Composable
 fun WeatherCard(
@@ -118,14 +118,15 @@ fun WeatherCard(
   modifier: Modifier = Modifier,
 ) {
   Column(
-    modifier = modifier
-      .padding(24.dp)
-      .fillMaxWidth()
+    modifier =
+      modifier
+        .padding(24.dp)
+        .fillMaxWidth(),
   ) {
     Text(
       text = weather.city,
       style = AppTheme.typography.headlineMedium,
-      color = AppTheme.colors.contentPrimary
+      color = AppTheme.colors.contentPrimary,
     )
 
     VSpacer(16.dp)
@@ -133,16 +134,17 @@ fun WeatherCard(
     Row(
       modifier = Modifier.fillMaxWidth(),
       verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.SpaceBetween
+      horizontalArrangement = Arrangement.SpaceBetween,
     ) {
       Text(
         text = "${weather.temperature.toInt()}°C",
         fontSize = 64.sp,
-        color = AppTheme.colors.contentSecondary
+        color = AppTheme.colors.contentSecondary,
       )
 
       Text(
-        text = weather.emoji, fontSize = 72.sp
+        text = weather.emoji,
+        fontSize = 72.sp,
       )
     }
 
@@ -151,7 +153,7 @@ fun WeatherCard(
     Text(
       text = stringResource(weather.weatherCodeRef),
       style = AppTheme.typography.titleMedium,
-      color = AppTheme.colors.contentPrimary
+      color = AppTheme.colors.contentPrimary,
     )
 
     if (weather.windSpeed != null || weather.humidity != null) {
@@ -160,7 +162,8 @@ fun WeatherCard(
       VSpacer(16.dp)
 
       Row(
-        modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
       ) {
         weather.humidity?.let {
           WeatherMetricItem(label = "Влажность", value = "$it%")
@@ -173,7 +176,6 @@ fun WeatherCard(
   }
 }
 
-
 @Composable
 private fun WeatherMetricItem(
   label: String,
@@ -181,12 +183,14 @@ private fun WeatherMetricItem(
 ) {
   Column {
     Text(
-      text = label, style = AppTheme.typography.bodyMedium, color = AppTheme.colors.contentPrimary
+      text = label,
+      style = AppTheme.typography.bodyMedium,
+      color = AppTheme.colors.contentPrimary,
     )
     Text(
       text = value,
       style = AppTheme.typography.titleMedium,
-      color = AppTheme.colors.contentSecondary
+      color = AppTheme.colors.contentSecondary,
     )
   }
 }

@@ -17,23 +17,27 @@ object JsonUtil {
 
   fun toJson(src: Any?): String = gson.toJson(src)
 
-  fun <T> fromJson(src: String, cls: Class<T>): T? = gson.fromJson(src, cls)
+  fun <T> fromJson(
+    src: String,
+    cls: Class<T>,
+  ): T? = gson.fromJson(src, cls)
 
   /**
    * Pretty JSON for configs; [Double] serialized via [Double.toInt] so core does not see fractional numbers where ints are required.
    * Nullable values: `x?.let { toJsonPretty(it) }`.
    */
   fun toJsonPretty(src: Any): String {
-    val gsonPre = GsonBuilder()
-      .setPrettyPrinting()
-      .disableHtmlEscaping()
-      .registerTypeAdapter(
-        object : TypeToken<Double>() {}.type,
-        JsonSerializer { value: Double?, _: Type?, _: JsonSerializationContext? ->
-          JsonPrimitive(value?.toInt())
-        },
-      )
-      .create()
+    val gsonPre =
+      GsonBuilder()
+        .setPrettyPrinting()
+        .disableHtmlEscaping()
+        .registerTypeAdapter(
+          object : TypeToken<Double>() {}.type,
+          JsonSerializer { value: Double?, _: Type?, _: JsonSerializationContext? ->
+            JsonPrimitive(value?.toInt())
+          },
+        )
+        .create()
     return gsonPre.toJson(src)
   }
 
@@ -50,4 +54,4 @@ object JsonUtil {
     }
 }
 
-  private const val TAG = "Avezer"
+private const val TAG = "Avezer"

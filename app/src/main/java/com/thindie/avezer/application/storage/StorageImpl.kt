@@ -8,8 +8,6 @@ import kotlinx.coroutines.flow.update
 import java.util.UUID
 
 internal class StorageImpl(private val persistence: SharedPreferences) : Storage {
-
-
   private val state = MutableStateFlow<List<StorageId>?>(null)
 
   init {
@@ -35,13 +33,14 @@ internal class StorageImpl(private val persistence: SharedPreferences) : Storage
     get() = state
 
   private fun loadKeys() {
-    val keys = persistence.all
-      .filterKeys { it.startsWith(ID_KEY) }
-      .keys
-      .mapNotNull { key ->
-        val id = key.removePrefix(ID_KEY)
-        StorageId(id)
-      }
+    val keys =
+      persistence.all
+        .filterKeys { it.startsWith(ID_KEY) }
+        .keys
+        .mapNotNull { key ->
+          val id = key.removePrefix(ID_KEY)
+          StorageId(id)
+        }
 
     state.update { keys.toList().ifEmpty { null } }
   }

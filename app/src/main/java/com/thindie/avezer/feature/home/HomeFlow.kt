@@ -50,8 +50,8 @@ class HomeFlow(
     screenScope.stateSink {
       sub(flowModule.repository.forecast)
         .transition { s, forecast: List<Weather>? ->
-        s.copy(forecast = forecast)
-      }
+          s.copy(forecast = forecast)
+        }
     }
   }
 
@@ -62,7 +62,7 @@ class HomeFlow(
       errorMapper = { e ->
         ScreenScopeError(
           message = "An unknown error occurred.",
-          actions = mapOf(ScreenScopeError.Actions.Common.ButtonMain to ScreenCommand.Back)
+          actions = mapOf(ScreenScopeError.Actions.Common.ButtonMain to ScreenCommand.Fetch),
         )
       },
       initialCommand = RouteFactory.InitialCommand { ScreenCommand.Fetch },

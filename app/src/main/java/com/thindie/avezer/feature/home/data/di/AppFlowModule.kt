@@ -1,6 +1,6 @@
 package com.thindie.avezer.feature.home.data.di
 
-import com.thindie.avezer.application.storage.LocationResolver
+import com.thindie.avezer.application.LocationResolver
 import com.thindie.avezer.application.storage.Storage
 import com.thindie.avezer.feature.home.data.MainRepositoryImpl
 import com.thindie.avezer.feature.home.domain.MainRepository

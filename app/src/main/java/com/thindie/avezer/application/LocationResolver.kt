@@ -1,4 +1,4 @@
-package com.thindie.avezer.application.storage
+package com.thindie.avezer.application
 
 interface LocationResolver {
   suspend fun read(name: String): Pair<Double, Double>?

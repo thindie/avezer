@@ -34,24 +34,21 @@ class ClientImpl(val url: String): Client {
   ): WeatherResponse {
     return withContext(Dispatchers.IO) {
       try {
-        client.get(url) {
-          val builder = this
+        val response = client.get(url) {
           parameter("latitude", lat)
           parameter("longitude", lon)
-          hourly?.let { builder.parameter("hourly", it.joinToString(",")) }
-          daily?.let { builder.parameter("daily", it.joinToString(",")) }
+          hourly?.let { parameter("hourly", it.joinToString(",")) }
+          daily?.let { parameter("daily", it.joinToString(",")) }
           parameter("forecast_days", forecastDays)
           parameter("temperature_unit", tempUnit)
-        }.body()
+        }
+        response.body()
       } catch (e: CancellationException) {
         throw e
       } catch (e: Exception) {
         e.printStackTrace()
-        null
+        throw RuntimeException("Failed to fetch weather forecast: ${e.message}", e)
       }
-    } ?: run {
-      throw RuntimeException("Failed to fetch weather forecast")
     }
   }
 }
-

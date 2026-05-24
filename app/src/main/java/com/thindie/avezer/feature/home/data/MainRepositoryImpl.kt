@@ -66,7 +66,6 @@ class MainRepositoryImpl(
     val (lat, lon) = locationResolver.read(cityName) ?: (52.0 to 53.0)
      readInternal {
       val weather = client.getForecast(lat = lat, lon = lon)
-       print(weather)
       storage.write(JsonUtil.toJson(weather.toDomainModel(cityName)))
     }
   }
@@ -86,10 +85,12 @@ class MainRepositoryImpl(
 
 fun WeatherResponse.toDomainModel(
   cityName: String,
-): Weather {
+): Weather? {
   val current = this.current
   val hourlyData = this.hourly
   val code = current?.weatherCode ?: 1000
+  val lat = latitude ?: return null
+  val lng = longitude ?: return null
 
   return Weather(
     city = cityName,
@@ -99,7 +100,7 @@ fun WeatherResponse.toDomainModel(
     emoji = weatherEmojiString(code),
     humidity = null,
     windSpeed = current?.windSpeed,
-    lat = latitude,
-    lon = longitude,
+    lat = lat,
+    lon = lng,
   )
 }

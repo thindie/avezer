@@ -60,7 +60,7 @@ class MainActivity : ComponentActivity() {
       ) {
         val themeColors = LocalThemeSwitcher.current.themeFlow.collectAsState(null)
         val isDark = when (themeColors.value) {
-          null -> isSystemInDarkTheme(
+          null -> isSystemInDarkTheme()
           ThemeSwitcher.Choice.Dark -> true
           ThemeSwitcher.Choice.Light -> false
           ThemeSwitcher.Choice.Auto -> isSystemInDarkTheme()

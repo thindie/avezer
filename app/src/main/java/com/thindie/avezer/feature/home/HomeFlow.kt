@@ -24,6 +24,8 @@ import com.thindie.avezer.engine.RouteFactory
 import com.thindie.avezer.engine.Router
 import com.thindie.avezer.engine.ScreenFlow
 import com.thindie.avezer.engine.ScreenScope
+import com.thindie.avezer.engine.ScreenScopeError
+import com.thindie.avezer.engine.State
 import com.thindie.avezer.engine.stateSink
 import com.thindie.avezer.engine.sub
 import com.thindie.avezer.engine.transition
@@ -46,7 +48,8 @@ class HomeFlow(
 
   private fun stateSink(screenScope: ScreenScope<ViewState, ScreenCommand>) {
     screenScope.stateSink {
-      sub(flowModule.repository.forecast).transition { s, forecast: List<Weather>? ->
+      sub(flowModule.repository.forecast)
+        .transition { s, forecast: List<Weather>? ->
         s.copy(forecast = forecast)
       }
     }
@@ -56,6 +59,12 @@ class HomeFlow(
     RouteFactory.create(
       initialState = ViewState(),
       stateSink = ::stateSink,
+      errorMapper = { e ->
+        ScreenScopeError(
+          message = "An unknown error occurred.",
+          actions = mapOf(ScreenScopeError.Actions.Common.ButtonMain to ScreenCommand.Back)
+        )
+      },
       initialCommand = RouteFactory.InitialCommand { ScreenCommand.Fetch },
       execute = { c: ScreenCommand, s: ViewState ->
         when (c) {
@@ -73,7 +82,7 @@ class HomeFlow(
     )
 }
 
-private data class ViewState(val forecast: List<Weather>? = null) : com.thindie.avezer.engine.State
+private data class ViewState(val forecast: List<Weather>? = null) : State
 
 private sealed interface ScreenCommand : Command {
   data object Fetch : ScreenCommand

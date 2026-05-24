@@ -19,5 +19,5 @@ data class Weather(
 )
 
 object MockWeather {
-  fun create(): Weather = MockWeatherResponse.create().toDomainModel("Kaliningrad")!!
+  fun create(): Weather = MockWeatherResponse.create().toDomainModel("MOCK_WEATHER")!!
 }

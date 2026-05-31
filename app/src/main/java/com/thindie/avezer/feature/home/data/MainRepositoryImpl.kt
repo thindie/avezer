@@ -64,7 +64,8 @@ class MainRepositoryImpl(
 
         if (stored != null) {
           Log.d(
-            { "Successfully processed stored weather data: $stored" })
+            { "Successfully processed stored weather data: $stored" },
+          )
           send(stored)
         } else {
           Log.w(
@@ -127,7 +128,6 @@ class MainRepositoryImpl(
                   )
                 } else {
                   Log.w(
-
                     { "Network call returned null domain model for ID $id." },
                   )
                 }
@@ -157,7 +157,8 @@ class MainRepositoryImpl(
       }
     } catch (e: Exception) {
       Log.e(
-        { "Critical error during the overall fetch process." }, throwable = e
+        { "Critical error during the overall fetch process." },
+        throwable = e,
       )
     }
   }
@@ -165,33 +166,34 @@ class MainRepositoryImpl(
   override suspend fun read(cityName: String) {
     Log.d({ "Starting weather read for city: $cityName" })
     try {
-      val location = locationResolver.read(cityName)
-      if (location == null) {
-        throw IllegalStateException("Location resolver failed to find coordinates for $cityName.")
-      }
+      val location =
+        locationResolver.read(cityName)
+          ?: throw IllegalStateException("Location resolver failed to find coordinates for $cityName.")
       val (lat, lon) = location
 
       Log.d(
-        { "Calling network API for $cityName at ($lat, $lon)" })
-        val weatherResponse = client.getForecast(lat = lat, lon = lon)
-        val domainModel = weatherResponse.toDomainModel(cityName)
+        { "Calling network API for $cityName at ($lat, $lon)" },
+      )
+      val weatherResponse = client.getForecast(lat = lat, lon = lon)
+      val domainModel = weatherResponse.toDomainModel(cityName)
 
-        if (domainModel != null) {
-          storage.write(JsonUtil.toJson(domainModel))
-          Log.d(
-            { "Successfully fetched and stored weather data for $cityName." },
-          )
-        } else {
-          Log.w(
-            { "Failed to convert network response to domain model for $cityName." },
-          )
-        }
+      if (domainModel != null) {
+        storage.write(JsonUtil.toJson(domainModel))
+        Log.d(
+          { "Successfully fetched and stored weather data for $cityName." },
+        )
+      } else {
+        Log.w(
+          { "Failed to convert network response to domain model for $cityName." },
+        )
+      }
     } catch (e: IllegalStateException) {
       Log.e({ "Location resolution failed for $cityName." }, throwable = e)
       throw e // Re-throw specific business logic errors
     } catch (e: AppError.ServerError.TimeOut) {
       Log.e(
-        { "Timeout occurred while reading weather for $cityName." })
+        { "Timeout occurred while reading weather for $cityName." },
+      )
       throw e
     } catch (e: Exception) {
       Log.e(

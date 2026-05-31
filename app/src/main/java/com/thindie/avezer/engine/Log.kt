@@ -4,7 +4,6 @@ package com.thindie.avezer.engine
  * Custom logging object to replace standard Android Log calls for better control and abstraction.
  */
 object Log {
-
   const val LOG_TAG = "[avezer]"
 
   @JvmStatic
@@ -47,4 +46,3 @@ object Log {
     println("$tag ${message.invoke()}")
   }
 }
-

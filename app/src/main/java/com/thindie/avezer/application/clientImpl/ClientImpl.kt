@@ -9,23 +9,24 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 class ClientImpl(url: String) : Client {
-  private val weatherService: WeatherService = Retrofit.Builder()
-    .baseUrl(url)
-    .addConverterFactory(GsonConverterFactory.create())
-    .client(
-      OkHttpClient.Builder()
-        .addInterceptor(
-          HttpLoggingInterceptor()
-            .apply {
-              level = HttpLoggingInterceptor.Level.BODY
-            }
-        )
-        .connectTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(30, TimeUnit.SECONDS)
-        .build()
-    )
-    .build()
-    .create(WeatherService::class.java)
+  private val weatherService: WeatherService =
+    Retrofit.Builder()
+      .baseUrl(url)
+      .addConverterFactory(GsonConverterFactory.create())
+      .client(
+        OkHttpClient.Builder()
+          .addInterceptor(
+            HttpLoggingInterceptor()
+              .apply {
+                level = HttpLoggingInterceptor.Level.BODY
+              },
+          )
+          .connectTimeout(30, TimeUnit.SECONDS)
+          .readTimeout(30, TimeUnit.SECONDS)
+          .build(),
+      )
+      .build()
+      .create(WeatherService::class.java)
 
   override suspend fun getForecast(
     lat: Double,

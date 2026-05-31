@@ -8,7 +8,7 @@ import com.thindie.avezer.engine.Log
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.util.Locale
+import java.util.*
 
 class LocationResolverImpl(
   private val context: Context,
@@ -18,11 +18,11 @@ class LocationResolverImpl(
   override suspend fun read(name: String): Pair<Double, Double>? {
     return try {
       withContext(Dispatchers.IO) {
-        Log.d( { "Attempting to resolve location name for: $name" })
+        Log.d({ "Attempting to resolve location name for: $name" })
 
         val addresses = geocoder.getFromLocationName(name, 1)
         if (addresses == null || addresses.isEmpty()) {
-          Log.w( { "No addresses found for name: $name" })
+          Log.w({ "No addresses found for name: $name" })
           return@withContext null
         }
         val result = addresses.firstOrNull()?.let {
@@ -47,16 +47,17 @@ class LocationResolverImpl(
     return try {
       withContext(Dispatchers.IO) {
         Log.d(
-          { "Attempting to resolve address for coordinates: ($lat, $lon)" })
+          { "Attempting to resolve address for coordinates: ($lat, $lon)" },
+        )
         val addresses = geocoder.getFromLocation(lat, lon, 1)
-        if (addresses == null || addresses.isEmpty()) {
+        if (addresses.isNullOrEmpty()) {
           Log.w(
-            { "No address found for coordinates: ($lat, $lon)" })
+            { "No address found for coordinates: ($lat, $lon)" },
+          )
           return@withContext null
         }
         val address = addresses.firstOrNull()
         Log.d(
-
           { "Found address: Locality=${address?.locality}, SubAdminArea=${address?.subAdminArea}" },
         )
         return@withContext Address(

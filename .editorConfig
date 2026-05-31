@@ -1,0 +1,7 @@
+[*.{kt,kts}]
+# 1. Отключаем стандартное правило для Composable-функций, чтобы оно не требовало строчную букву
+ktlint_function_naming_ignore_when_annotated_with = Composable
+
+# 2. Включаем специфичное правило для проверки именования Compose (от compose-rules)
+# Оно заставит функции, возвращающие Unit (UI-компоненты), начинаться с заглавной буквы
+compose_naming_composable_functions = enabled

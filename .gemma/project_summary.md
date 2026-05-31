@@ -51,11 +51,18 @@ The kit provides reusable components integrated with state management:
 The UI Kit components are not just styled elements; they are integrated into the application's state management system (`AppScreen`), which handles global events like errors and loading states. This ensures high consistency and modularity across the entire interface.
 
 
-**🚀 Common Commands & Inferences:**
-*   **Code Formatting (Ktlint):** If you request code formatting, linting, or style checks, use the command `./gradlew app:ktlintFormat`.
-*   **Debug Build:** To build an APK for testing on an emulator/device, use `./gradlew installDebug`.
-*   **Full Build and Test:** To perform a full project build with all tests executed, use `./gradlew build`.
-*   **Clean Project:** To remove all build artifacts, use `./gradlew clean`.
+**🚀 Common Commands & Inferences**:
+
+| Command | Description |
+|---------|-------------|
+| `./gradlew assembleDebug` | Compile and install APK to a device/emulator |
+| `adb.exe install -r "./app/build/outputs/apk/debug/app-debug.apk"` | Manually install the debug APK on an ADB device |
+| `./gradlew clean` | Remove all build artifacts |
+| `./gradlew ktlintFormat` | Format code using Ktlint |
+| `./gradlew build` | Full project build with tests |
+
+**💡 Notes:**
+*   **Kotlin & Java 21 Toolchain:** The project uses JVM Toolchain to ensure Kotlin and Java tasks both target JVM 21, avoiding compatibility errors.
 
 ### Code Update/Addition Principles
 

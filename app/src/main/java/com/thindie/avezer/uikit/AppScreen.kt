@@ -27,11 +27,11 @@ import androidx.compose.ui.unit.dp
 import com.thindie.avezer.engine.Command
 import com.thindie.avezer.engine.ScreenScope
 import com.thindie.avezer.engine.ServiceCommand
-import com.thindie.avezer.engine.State
+import com.thindie.avezer.engine.ViewState
 import kotlinx.coroutines.delay
 
 @Composable
-fun <S : State, C : Command> ScreenScope<S, C>.AppScreen(
+fun <S : ViewState, C : Command> ScreenScope<S, C>.AppScreen(
   modifier: Modifier = Modifier,
   title: String? = null,
   subtitle: String? = null,

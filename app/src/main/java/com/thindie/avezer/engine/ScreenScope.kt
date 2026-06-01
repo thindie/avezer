@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 
 @Stable
-interface ScreenScope<S : State, C : Command> {
+interface ScreenScope<S : ViewState, C : Command> {
   val state: StateFlow<S>
   val processing: androidx.compose.runtime.State<C?>
   val error: androidx.compose.runtime.State<ScreenScopeError?>

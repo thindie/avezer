@@ -49,7 +49,7 @@ import com.thindie.avezer.engine.Command
 import com.thindie.avezer.engine.ScreenScope
 import com.thindie.avezer.engine.ScreenScopeError
 import com.thindie.avezer.engine.ServiceCommand
-import com.thindie.avezer.engine.State
+import com.thindie.avezer.engine.ViewState
 
 private object ContentAlpha {
   const val disabled: Float = 0.3f
@@ -144,7 +144,7 @@ fun Modifier.surface(
   )
 
 @Composable
-fun <S : State, C : Command> ScreenScope<S, C>.ErrorMessage() {
+fun <S : ViewState, C : Command> ScreenScope<S, C>.ErrorMessage() {
   val error = this@ErrorMessage.error.value ?: return
   Column(
     modifier =

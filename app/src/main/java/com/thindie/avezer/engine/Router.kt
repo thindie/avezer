@@ -98,7 +98,7 @@ interface Route {
 @Stable
 object RouteFactory {
   @Stable
-  fun <C : Command, S : State> create(
+  fun <C : Command, S : ViewState> create(
     initialState: S,
     execute: suspend (c: C, s: S) -> S,
     stateSink: (ScreenScope<S, C>) -> Unit = {},

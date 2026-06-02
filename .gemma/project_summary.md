@@ -3,7 +3,7 @@
 **🎯 Overview:**
 *   **Type:** Native Android Mobile Application.
 *   **Goal:** (Inferred) A modern mobile app utilizing Compose and network services.
-*   **Root Directory:** `D:\Android\Avezer`
+*   **Root Directory:** `E:\AndroidProject\avezer`
 
 **🛠️ Tech Stack & Configuration:**
 *   **Language/Platform:** Kotlin, Java 21.
@@ -13,15 +13,16 @@
 *   **Code Style:** Enforced by Ktlint.
 
 **🌐 Key Dependencies (Networking & Data):**
-*   **HTTP Client:** Ktor (`ktor-client-core`, `ktor-client-cio`).
-*   **Authentication:** Ktor Auth support (`ktor-client-auth`).
-*   **Serialization:** KotlinX Serialization (`libs.kotlinx.serialization`) and Gson (`libs.google.gson`).
+*   **HTTP Client:** Retrofit 2.9.0 (`retrofit`, `converter-gson`, `logging-interceptor`).
+*   **Serialization:** Gson (via Retrofit converter).
+*   **Note:** KotlinX Serialization plugin is declared in `libs.versions.toml` but not actively used in networking.
 
 **📂 Project Structure (High Level):**
-*   `D:\Android\Avezer`: Root project files, global Gradle configuration.
-*   `D:\Android\Avezer\app`: Application module.
-    *   `src/main`: Primary source code (Kotlin/Compose UI).
-    *   `src/test`/`androidTest`: Unit and Instrumentation tests.
+*   `E:\AndroidProject\avezer`: Root project files, global Gradle configuration.
+*   `E:\AndroidProject\avezer\app`: Application module.
+    *   `src/main\java\com\thindie\avezer`: Primary source code (Kotlin/Compose UI).
+    *   `src/main\res`: Resources.
+    *   **Note:** No test directories (`src/test`/`androidTest`) currently exist.
 
 
 **🧭 Navigation & Architecture (Engine Module):**

@@ -13,7 +13,10 @@ ktlint {
     reporter(ReporterType.PLAIN)
   }
   additionalEditorconfig.set(
-    mapOf("indent_size" to "2"),
+    mapOf(
+        "indent_size" to "2",
+        "ktlint.compose.function-names" to "PascalCase"
+    )
   )
 }
 

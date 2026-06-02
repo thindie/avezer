@@ -52,7 +52,7 @@ import com.thindie.avezer.engine.ServiceCommand
 import com.thindie.avezer.engine.ViewState
 
 private object ContentAlpha {
-  const val disabled: Float = 0.3f
+  const val DISABLED: Float = 0.3f
 }
 
 @Composable
@@ -225,14 +225,14 @@ fun SentenceRow(
     if (enabled) {
       AppTheme.colors.backgroundPrimary
     } else {
-      AppTheme.colors.backgroundPrimary.copy(alpha = ContentAlpha.disabled)
+      AppTheme.colors.backgroundPrimary.copy(alpha = ContentAlpha.DISABLED)
     }
 
   val tint =
     if (enabled) {
       AppTheme.colors.accentPrimary
     } else {
-      AppTheme.colors.accentPrimary.copy(alpha = ContentAlpha.disabled)
+      AppTheme.colors.accentPrimary.copy(alpha = ContentAlpha.DISABLED)
     }
   val iconTint = if (tintIcon) tint else Color.Unspecified
 
@@ -240,7 +240,7 @@ fun SentenceRow(
     if (enabled) {
       AppTheme.colors.backgroundSecondary
     } else {
-      AppTheme.colors.backgroundSecondary.copy(alpha = ContentAlpha.disabled)
+      AppTheme.colors.backgroundSecondary.copy(alpha = ContentAlpha.DISABLED)
     }
   val interactionModifier =
     when {

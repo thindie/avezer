@@ -1,7 +1,8 @@
 [*.{kt,kts}]
-# 1. Отключаем стандартное правило для Composable-функций, чтобы оно не требовало строчную букву
+# Отключаем стандартное правило ktlint function-naming для @Composable функций,
+# чтобы разрешить имена с заглавной буквы (Compose convention)
 ktlint_function_naming_ignore_when_annotated_with = Composable
 
-# 2. Включаем специфичное правило для проверки именования Compose (от compose-rules)
-# Оно заставит функции, возвращающие Unit (UI-компоненты), начинаться с заглавной буквы
-compose_naming_composable_functions = enabled
+# Настройки для compose-rules (подключаются через Gradle плагин):
+# Разрешённые паттерны имён Composable-функций, которые возвращают значение
+# compose_allowed_composable_function_names = .*Presenter,.*MoleculePresenter

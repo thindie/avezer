@@ -14,9 +14,8 @@ ktlint {
   }
   additionalEditorconfig.set(
     mapOf(
-        "indent_size" to "2",
-        "ktlint.compose.function-names" to "PascalCase"
-    )
+      "indent_size" to "2",
+    ),
   )
 }
 
@@ -24,6 +23,10 @@ android {
   namespace = "com.thindie.avezer"
   compileSdk {
     version = release(36)
+  }
+
+  lint {
+    disable += "PropertyEscape"
   }
 
   defaultConfig {

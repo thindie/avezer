@@ -8,7 +8,7 @@ import com.thindie.avezer.engine.Log
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.util.*
+import java.util.Locale
 
 class LocationResolverImpl(
   private val context: Context,
@@ -25,7 +25,8 @@ class LocationResolverImpl(
           Log.w({ "No addresses found for name: $name" })
           return@withContext null
         }
-        val result = addresses.firstOrNull()?.let {
+        val result =
+          addresses.firstOrNull()?.let {
             Log.d({
               "Found location: ${it.locality}, Lat: ${it.latitude}, Lon: ${it.longitude}"
             })

@@ -31,11 +31,27 @@ internal class StorageImpl(private val persistence: SharedPreferences) : Storage
     }
   }
 
+  @Deprecated("Use createOrUpdate(id,value) for deterministic keys")
   override suspend fun write(value: String) {
+    internalWrite(UUID.randomUUID().toString(), value)
+  }
+
+  /** Create or replace an entry with the supplied id. */
+  override suspend fun createOrUpdate(
+    id: StorageId,
+    value: String,
+  ) {
+    internalWrite(id.value, value)
+  }
+
+  private suspend fun internalWrite(
+    keySuffix: String,
+    value: String,
+  ) {
     try {
-      val key = UUID.randomUUID().toString()
-      persistence.edit { putString(ID_KEY + key, value) }
-      Log.d({ "Write successful. Key: ${ID_KEY + key}" })
+      val key = ID_KEY + keySuffix
+      persistence.edit { putString(key, value) }
+      Log.d({ "Write successful. Key: $key" })
       loadKeys()
     } catch (e: Exception) {
       Log.e({ "Error writing storage." }, throwable = e)
@@ -63,11 +79,10 @@ internal class StorageImpl(private val persistence: SharedPreferences) : Storage
           .filterKeys { it.startsWith(ID_KEY) }
           .keys
           .mapNotNull { key ->
-            val id = key.removePrefix(ID_KEY)
-            StorageId(id)
+            StorageId(key.removePrefix(ID_KEY))
           }
       Log.d({ "Successfully loaded keys: $keys" })
-      state.update { keys.toList().ifEmpty { null } }
+      state.update { if (keys.isEmpty()) null else keys.toList() }
     } catch (e: Exception) {
       Log.e({ "Error loading storage keys." }, throwable = e)
       state.update { null }

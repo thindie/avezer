@@ -2,6 +2,7 @@ package com.thindie.avezer.feature.home.data
 
 import com.thindie.avezer.application.LocationResolver
 import com.thindie.avezer.application.storage.Storage
+import com.thindie.avezer.application.storage.StorageId
 import com.thindie.avezer.application.weatherCodeRef
 import com.thindie.avezer.application.weatherEmojiString
 import com.thindie.avezer.engine.Log
@@ -122,7 +123,7 @@ class MainRepositoryImpl(
                 val weather =
                   client.getForecast(lat = stored.lat, lon = stored.lon).toDomainModel(stored.city)
                 if (weather != null) {
-                  storage.write(JsonUtil.toJson(weather))
+                  storage.createOrUpdate(id, JsonUtil.toJson(weather))
                   Log.d(
                     { "Successfully fetched and wrote new weather data for ID $id." },
                   )
@@ -178,7 +179,8 @@ class MainRepositoryImpl(
       val domainModel = weatherResponse.toDomainModel(cityName)
 
       if (domainModel != null) {
-        storage.write(JsonUtil.toJson(domainModel))
+        val id = StorageId(cityName.lowercase())
+        storage.createOrUpdate(id, JsonUtil.toJson(domainModel))
         Log.d(
           { "Successfully fetched and stored weather data for $cityName." },
         )

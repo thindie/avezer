@@ -59,4 +59,10 @@
 
     <!-- Fallback -->
     <string name="weather_code_unknown">Unknown weather</string>
+
+    <!-- Places -->
+    <string name="places_no_forecast">Нет данных о прогнозе</string>
+<string name="weather_humidity">Влажность</string>
+<string name="weather_wind_speed">Скорость ветра</string>
+
 </resources>

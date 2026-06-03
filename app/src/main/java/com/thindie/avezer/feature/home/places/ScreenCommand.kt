@@ -1,6 +1,7 @@
 package com.thindie.avezer.feature.home.places
 
 import com.thindie.avezer.engine.Command
+import com.thindie.avezer.feature.home.HomeFlow
 import com.thindie.avezer.feature.home.domain.MainRepository
 
 internal sealed interface ScreenCommand : Command {
@@ -9,7 +10,7 @@ internal sealed interface ScreenCommand : Command {
   data object Back : ScreenCommand
 }
 
-internal suspend fun exec(
+internal suspend fun HomeFlow.exec(
   command: ScreenCommand,
   state: ScreenState,
   repository: MainRepository,
@@ -21,6 +22,7 @@ internal suspend fun exec(
     }
 
     is ScreenCommand.Back -> {
+      back()
       state
     }
   }

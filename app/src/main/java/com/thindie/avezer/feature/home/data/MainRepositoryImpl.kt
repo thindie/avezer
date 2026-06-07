@@ -219,23 +219,30 @@ class MainRepositoryImpl(
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun WeatherResponse.toDomainModel(cityName: String): Weather? {
-  Log.d(message = { "Mapping response: current ${this.current}" })
-  val current = this.current
+  Log.d(message = { "Mapping response for $cityName" })
+
+  val currentData = this.current
   val hourlyData = this.hourly
-  val code = current.weather_code
+  val code = currentData.weather_code
   val lat = latitude
-  val lng = longitude
+  val lon = longitude
+  val timezone = timezone
+  val timezoneAbbreviation = timezone_abbreviation
+  val utcOffsetSeconds = utc_offset_seconds
   val currentHour = java.time.Instant.now().atZone(ZoneId.of(timezone)).hour
 
   return Weather(
     city = cityName,
-    temperature = current.temperature_2m,
-    isDay = false,
+    temperature = currentData.temperature_2m,
+    isDay = currentData.is_day == 1,
     weatherCodeRef = weatherCodeRef(code),
     emoji = weatherEmojiString(code),
     humidity = hourlyData.relative_humidity_2m[currentHour],
-    windSpeed = current.wind_speed_10m,
+    windSpeed = currentData.wind_speed_10m,
     lat = lat,
-    lon = lng,
+    lon = lon,
+    timezone = timezone,
+    timezoneAbbreviation = timezoneAbbreviation,
+    utcOffsetSeconds = utcOffsetSeconds,
   )
 }

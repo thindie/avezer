@@ -14,4 +14,7 @@ data class Weather(
   val humidity: Int? = null,
   val windSpeed: Double? = null,
   val lastUpdated: Long = System.currentTimeMillis(),
+  val timezone: String,
+  val timezoneAbbreviation: String,
+  val utcOffsetSeconds: Int,
 )

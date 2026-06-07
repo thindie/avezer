@@ -9,8 +9,9 @@ import com.thindie.avezer.application.weatherCodeRef
 import com.thindie.avezer.application.weatherEmojiString
 import com.thindie.avezer.engine.Log
 import com.thindie.avezer.error.AppError
+import com.thindie.avezer.feature.home.domain.DailyForecast
+import com.thindie.avezer.feature.home.domain.HourlyForecast
 import com.thindie.avezer.feature.home.domain.MainRepository
-import com.thindie.avezer.feature.home.domain.MockWeather
 import com.thindie.avezer.feature.home.domain.Weather
 import com.thindie.avezer.network.Client
 import com.thindie.avezer.network.WeatherResponse
@@ -19,11 +20,8 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
-import java.time.ZoneId
 
 class MainRepositoryImpl(
   private val storage: Storage,
@@ -80,12 +78,7 @@ class MainRepositoryImpl(
       }
     }
 
-  private val mockForecast = flow { emit(listOf(MockWeather.create())) }
-
-  override val forecast: Flow<List<Weather>?> =
-    combine(weather, mockForecast) { weather, mock ->
-      weather ?: mock
-    }
+  override val forecast: Flow<List<Weather>?> = weather
 
   override suspend fun fetch() {
     val storedIds = storage.saved.firstOrNull() ?: return
@@ -219,17 +212,39 @@ class MainRepositoryImpl(
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun WeatherResponse.toDomainModel(cityName: String): Weather? {
-  Log.d(message = { "Mapping response for $cityName" })
-
   val currentData = this.current
   val hourlyData = this.hourly
+  val dailyData = this.daily
   val code = currentData.weather_code
-  val lat = latitude
-  val lon = longitude
-  val timezone = timezone
-  val timezoneAbbreviation = timezone_abbreviation
-  val utcOffsetSeconds = utc_offset_seconds
-  val currentHour = java.time.Instant.now().atZone(ZoneId.of(timezone)).hour
+
+  // Map hourly forecast data
+  val hourlyForecast =
+    hourlyData.time.mapIndexed { index, time ->
+      HourlyForecast(
+        time = time,
+        temperature = hourlyData.temperature_2m[index],
+        humidity = hourlyData.relative_humidity_2m[index],
+        windSpeed = hourlyData.wind_speed_10m[index],
+        precipitation = hourlyData.precipitation[index],
+        weatherCodeRef = weatherCodeRef(hourlyData.weather_code[index]),
+        emoji = weatherEmojiString(hourlyData.weather_code[index]),
+      )
+    }
+
+  // Map daily forecast data
+  val forecast =
+    dailyData.time.mapIndexed { index, string ->
+      DailyForecast(
+        time = string,
+        temperatureMax = dailyData.temperature_2m_max[index],
+        temperatureMin = dailyData.temperature_2m_min[index],
+        weatherCodeRef = weatherCodeRef(dailyData.weather_code[index]),
+        emoji = weatherEmojiString(dailyData.weather_code[index]),
+        sunrise = dailyData.sunrise[index],
+        sunset = dailyData.sunset[index],
+        precipitationSum = dailyData.precipitation_sum[index],
+      )
+    }
 
   return Weather(
     city = cityName,
@@ -237,12 +252,14 @@ fun WeatherResponse.toDomainModel(cityName: String): Weather? {
     isDay = currentData.is_day == 1,
     weatherCodeRef = weatherCodeRef(code),
     emoji = weatherEmojiString(code),
-    humidity = hourlyData.relative_humidity_2m[currentHour],
+    humidity = hourlyData.relative_humidity_2m[0],
     windSpeed = currentData.wind_speed_10m,
-    lat = lat,
-    lon = lon,
+    lat = latitude,
+    lon = longitude,
     timezone = timezone,
-    timezoneAbbreviation = timezoneAbbreviation,
-    utcOffsetSeconds = utcOffsetSeconds,
+    timezoneAbbreviation = timezone_abbreviation,
+    utcOffsetSeconds = utc_offset_seconds,
+    forecast = forecast,
+    hourlyForecast = hourlyForecast,
   )
 }

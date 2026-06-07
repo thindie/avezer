@@ -21,6 +21,9 @@ data class HourlyData(
   val time: List<String>,
   @SerialName("temperature_2m") val temperature_2m: List<Double>,
   @SerialName("relative_humidity_2m") val relative_humidity_2m: List<Int>,
+  @SerialName("wind_speed_10m") val wind_speed_10m: List<Double>,
+  @SerialName("precipitation") val precipitation: List<Double>,
+  @SerialName("weather_code") val weather_code: List<Int>,
 )
 
 @Serializable

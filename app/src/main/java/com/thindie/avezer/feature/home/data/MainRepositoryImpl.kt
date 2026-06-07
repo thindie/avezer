@@ -1,5 +1,7 @@
 package com.thindie.avezer.feature.home.data
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.thindie.avezer.application.LocationResolver
 import com.thindie.avezer.application.storage.Storage
 import com.thindie.avezer.application.storage.StorageId
@@ -21,6 +23,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import java.time.ZoneId
 
 class MainRepositoryImpl(
   private val storage: Storage,
@@ -123,7 +126,11 @@ class MainRepositoryImpl(
                 val weather =
                   client.getForecast(lat = stored.lat, lon = stored.lon).toDomainModel(stored.city)
                 if (weather != null) {
-                  storage.createOrUpdate(id, JsonUtil.toJson(weather))
+                  val createRaw = JsonUtil.toJson(weather)
+                  Log.d(
+                    { "Created Raw weather: $createRaw" },
+                  )
+                  storage.createOrUpdate(id, createRaw)
                   Log.d(
                     { "Successfully fetched and wrote new weather data for ID $id." },
                   )
@@ -175,7 +182,7 @@ class MainRepositoryImpl(
       Log.d(
         { "Calling network API for $cityName at ($lat, $lon)" },
       )
-      val weatherResponse = client.getForecast(lat = lat, lon = lon)
+      val weatherResponse: WeatherResponse = client.getForecast(lat = lat, lon = lon)
       val domainModel = weatherResponse.toDomainModel(cityName)
 
       if (domainModel != null) {
@@ -210,21 +217,24 @@ class MainRepositoryImpl(
   }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun WeatherResponse.toDomainModel(cityName: String): Weather? {
+  Log.d(message = { "Mapping response: current ${this.current}" })
   val current = this.current
   val hourlyData = this.hourly
-  val code = current?.weatherCode ?: 1000
-  val lat = latitude ?: return null
-  val lng = longitude ?: return null
+  val code = current.weather_code
+  val lat = latitude
+  val lng = longitude
+  val currentHour = java.time.Instant.now().atZone(ZoneId.of(timezone)).hour
 
   return Weather(
     city = cityName,
-    temperature = current?.temperature ?: 0.0,
-    isDay = hourlyData?.isDay == 1,
+    temperature = current.temperature_2m,
+    isDay = false,
     weatherCodeRef = weatherCodeRef(code),
     emoji = weatherEmojiString(code),
-    humidity = null,
-    windSpeed = current?.windSpeed,
+    humidity = hourlyData.relative_humidity_2m[currentHour],
+    windSpeed = current.wind_speed_10m,
     lat = lat,
     lon = lng,
   )

@@ -33,6 +33,7 @@ class ClientImpl(url: String) : Client {
     lon: Double,
     hourly: List<String>?,
     daily: List<String>?,
+    current: List<String>?,
     forecastDays: Int,
     tempUnit: String,
   ): WeatherResponse {
@@ -42,6 +43,7 @@ class ClientImpl(url: String) : Client {
       hourly = hourly,
       daily = daily,
       forecastDays = forecastDays,
+      current = current,
       tempUnit = tempUnit,
     )
   }

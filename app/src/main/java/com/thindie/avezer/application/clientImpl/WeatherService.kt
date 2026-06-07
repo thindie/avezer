@@ -9,8 +9,10 @@ interface WeatherService {
   suspend fun getForecast(
     @Query("latitude") lat: Double,
     @Query("longitude") lon: Double,
-    @Query("hourly") hourly: List<String>?,
-    @Query("daily") daily: List<String>?,
+    @Query("timezone") timezone: String = "auto",
+    @Query("hourly", encoded = true) hourly: List<String>?,
+    @Query("daily", encoded = true) daily: List<String>?,
+    @Query("current", encoded = true) current: List<String>?,
     @Query("forecast_days") forecastDays: Int,
     @Query("temperature_unit") tempUnit: String,
   ): WeatherResponse

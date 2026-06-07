@@ -62,7 +62,9 @@
 
     <!-- Places -->
     <string name="places_no_forecast">Нет данных о прогнозе</string>
-<string name="weather_humidity">Влажность</string>
-<string name="weather_wind_speed">Скорость ветра</string>
+    <string name="weather_humidity">Влажность</string>
+    <string name="weather_humidity_value">%d%%</string>
+    <string name="weather_wind_speed">Скорость ветра</string>
+    <string name="weather_wind_speed_value">%d км/ч</string>
 
 </resources>

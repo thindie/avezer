@@ -1,5 +1,6 @@
 package com.thindie.avezer.feature.home.places.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,6 +25,7 @@ import com.thindie.avezer.uikit.VSpacer
 internal fun WeatherCard(
   weather: Weather,
   modifier: Modifier = Modifier,
+  onClick: () -> Unit,
 ) {
   Card(
     modifier = modifier.padding(8.dp),
@@ -81,17 +83,40 @@ internal fun WeatherCard(
           weather.humidity?.let { h ->
             WeatherMetricItem(
               label = stringResource(id = R.string.weather_humidity),
-              value = "$h%",
+              value =
+                stringResource(
+                  id = R.string.percent_sign,
+                  h.toString(),
+                ),
             )
           }
           weather.windSpeed?.let { w ->
             WeatherMetricItem(
               label = stringResource(R.string.weather_wind_speed),
-              value = "${w.toInt()} km/h",
+              value =
+                stringResource(
+                  id = R.string.kilometers_per_hour,
+                  w.toInt().toString(),
+                ),
             )
           }
         }
       }
+    }
+    Row(
+      modifier =
+        Modifier
+          .fillMaxWidth()
+          .clickable { onClick() },
+      horizontalArrangement = Arrangement.Center,
+      verticalAlignment = Alignment.CenterVertically,
+    ) {
+      Text(
+        text = stringResource(R.string.places_see_hourly),
+        style = AppTheme.typography.bodyMedium,
+        color = AppTheme.colors.accentPrimary,
+        modifier = Modifier.padding(start = 8.dp),
+      )
     }
   }
 }

@@ -54,6 +54,7 @@ internal fun ScreenScope<ScreenState, ScreenCommand>.PlacesScreen() {
       forecast = screenState.forecast,
       isProcessing = processing.value != null,
       onBack = { send(ScreenCommand.Back) },
+      onClick = { send(ScreenCommand.SeeHourlyForecast(it)) },
     )
   }
 }
@@ -63,6 +64,7 @@ internal fun PlacesContent(
   forecast: List<Weather>?,
   isProcessing: Boolean,
   onBack: () -> Unit,
+  onClick: (Weather) -> Unit,
 ) {
   BackHandler { onBack() }
 
@@ -97,7 +99,9 @@ internal fun PlacesContent(
       modifier = Modifier.fillMaxSize(),
     ) {
       items(forecast) { weather ->
-        WeatherCard(weather = weather)
+        WeatherCard(weather = weather) {
+          onClick(weather)
+        }
       }
     }
   }

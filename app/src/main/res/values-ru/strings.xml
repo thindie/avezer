@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Avezer</string>
+
+    <!-- Errors -->
+    <string name="error_unexpected">Что-то пошло не так. Пожалуйста, попробуйте снова.</string>
+    <string name="btn_close">Закрыть</string>
+    <string name="error_action_ok">OK</string>
+    <string name="error_action_retry">Попробовать снова</string>
+
+    <!-- Key names are designed to be easily retrieved dynamically via ID -->
+
+    <!-- Clear / Cloudy -->
+    <string name="weather_code_0">Ясно</string>
+    <string name="weather_code_1">Преимущественно ясно</string>
+    <string name="weather_code_2">Переменная облачность</string>
+    <string name="weather_code_3">Пасмурно</string>
+
+    <!-- Fog -->
+    <string name="weather_code_45">Туман</string>
+    <string name="weather_code_48">Слоистый туман</string>
+
+    <!-- Drizzle -->
+    <string name="weather_code_51">Морось: слабая интенсивность</string>
+    <string name="weather_code_53">Морось: умеренная интенсивность</string>
+    <string name="weather_code_55">Морось: сильная интенсивность</string>
+
+    <!-- Freezing Drizzle -->
+    <string name="weather_code_56">Ледяная морось: слабая интенсивность</string>
+    <string name="weather_code_57">Ледяная морось: сильная интенсивность</string>
+
+    <!-- Rain -->
+    <string name="weather_code_61">Дождь: слабая интенсивность</string>
+    <string name="weather_code_63">Дождь: умеренная интенсивность</string>
+    <string name="weather_code_65">Дождь: сильная интенсивность</string>
+
+    <!-- Freezing Rain -->
+    <string name="weather_code_66">Ледяной дождь: слабая интенсивность</string>
+    <string name="weather_code_67">Ледяной дождь: сильная интенсивность</string>
+
+    <!-- Snow -->
+    <string name="weather_code_71">Снег: слабая интенсивность</string>
+    <string name="weather_code_73">Снег: умеренная интенсивность</string>
+    <string name="weather_code_75">Снег: сильная интенсивность</string>
+    <string name="weather_code_77">Снегопад</string>
+
+    <!-- Rain Showers -->
+    <string name="weather_code_80">Дождь с грозами: слабая интенсивность</string>
+    <string name="weather_code_81">Дождь с грозами: умеренная интенсивность</string>
+    <string name="weather_code_82">Дождь с грозами: сильная интенсивность</string>
+
+    <!-- Snow Showers -->
+    <string name="weather_code_85">Снег с грозами: слабая интенсивность</string>
+    <string name="weather_code_86">Снег с грозами: сильная интенсивность</string>
+
+    <!-- Thunderstorm -->
+    <string name="weather_code_95">Гроза: слабая или умеренная</string>
+    <string name="weather_code_96">Гроза со слабым градом</string>
+    <string name="weather_code_99">Гроза с сильным градом</string>
+
+    <!-- Fallback -->
+    <string name="weather_code_unknown">Неизвестная погоa</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Сettings</string>
+
+    <!-- Theme -->
+    <string name="theme_auto">Auto</string>
+    <string name="theme_light">Светая</string>
+    <string name="theme_dark">Темная</string>
+    <string name="theme_title">Тheme</string>
+
+    <!-- Places -->
+    <string name="places_no_forecast">Прогноз недоступен</string>
+    <string name="places_see_hourly">Почасовой</string>
+    <string name="weather_humidity">Влажность</string>
+    <string name="weather_humidity_value">%d%%</string>
+    <string name="weather_wind_speed">Скорость ветра</string>
+    <string name="weather_wind_speed_value">%d км/ч</string>
+    <string name="weather_precipitation">Осадки</string>
+    <string name="percent_sign">%</string>
+    <string name="kilometers_per_hour">км/ч</string>
+    <string name="millimeter">мм</string>
+
+</resources>

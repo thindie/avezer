@@ -1,13 +1,23 @@
 <resources>
     <string name="app_name">Avezer</string>
 
-    <string name="error_unexpected">Что-то пошло не так. Попробуйте ещё раз.</string>
-    <string name="btn_close">Закрыть</string>
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
 
-    <string name="error_action_ok">Ок</string>
-    <string name="error_action_retry">Попробовать снова</string>
+    <string name="theme_auto">Auto</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_title">Theme</string>
 
-    <!-- Имена ключей сделаны так, чтобы их было удобно доставать динамически через ID -->
+    <!-- Theme title (shown on the card) -->
+
+    <string name="error_unexpected">Something went wrong. Please try again.</string>
+    <string name="btn_close">Close</string>
+
+    <string name="error_action_ok">OK</string>
+    <string name="error_action_retry">Try again</string>
+
+    <!-- Key names are designed to be easily retrieved dynamically via ID -->
 
     <!-- Clear / Cloudy -->
     <string name="weather_code_0">Clear sky</string>
@@ -60,11 +70,18 @@
     <!-- Fallback -->
     <string name="weather_code_unknown">Unknown weather</string>
 
-    <!-- Places -->
-    <string name="places_no_forecast">Нет данных о прогнозе</string>
-    <string name="weather_humidity">Влажность</string>
+    <!-- Units & Weather (restored) -->
+    <string name="percent_sign">%s%%</string>
+    <string name="kilometers_per_hour">km/h</string>
+    <string name="millimeter">mm</string>
+
+    <!-- Places (restored) -->
+    <string name="places_no_forecast">No forecast data available</string>
+    <string name="places_see_hourly">See hourly</string>
+    <string name="weather_humidity">Humidity</string>
+    <string name="weather_precipitation">Precipitation</string>
     <string name="weather_humidity_value">%d%%</string>
-    <string name="weather_wind_speed">Скорость ветра</string>
-    <string name="weather_wind_speed_value">%d км/ч</string>
+    <string name="weather_wind_speed">Wind speed</string>
+    <string name="weather_wind_speed_value">%d km/h</string>
 
 </resources>

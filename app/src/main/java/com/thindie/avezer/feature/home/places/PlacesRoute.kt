@@ -1,5 +1,6 @@
 package com.thindie.avezer.feature.home.places
 
+import com.thindie.avezer.HomeSection
 import com.thindie.avezer.engine.RouteFactory
 import com.thindie.avezer.engine.ScreenScope
 import com.thindie.avezer.feature.home.HomeFlow
@@ -15,4 +16,5 @@ val HomeFlow.places
       errorMapper = placesScreenErrorMapper(),
       initialCommand = { ScreenCommand.Fetch },
       routeContent = { PlacesScreen() },
+      section = HomeSection.Places,
     )

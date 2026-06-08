@@ -13,4 +13,8 @@ class HomeFlow(
   override fun start() {
     router.push(places)
   }
+
+  fun switch() {
+    router.replaceTop(places)
+  }
 }

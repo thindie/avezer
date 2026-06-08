@@ -11,4 +11,8 @@ class SettingsFlow(
   override fun start() {
     router.push(selection)
   }
+
+  fun switch() {
+    router.replaceTop(selection)
+  }
 }

@@ -51,6 +51,23 @@ class Router(val onPopLast: () -> Unit) {
   }
 
   @Stable
+  fun replaceTop(route: Route) {
+    current.update { routes ->
+      val last = routes.lastOrNull()
+      if (last != null) {
+        val newStack = routes - last
+        last.dispose()
+        if (newStack.isEmpty()) {
+          listOf(route)
+        }
+        newStack + route
+      } else {
+        listOf(route)
+      }
+    }
+  }
+
+  @Stable
   fun pop() {
     current.update { routes ->
       val route = routes.lastOrNull()
@@ -87,12 +104,17 @@ class Router(val onPopLast: () -> Unit) {
 interface Route {
   val id: Id
   val content: @Composable () -> Unit
+  val section: Section
 
   @Stable
   fun dispose()
 
   @JvmInline
   value class Id(val id: String)
+}
+
+interface Section {
+  object Leaf : Section
 }
 
 @Stable
@@ -111,6 +133,7 @@ object RouteFactory {
     initialCommand: InitialCommand<C>? = null,
     // strict invariant struggle with compiler's frontend - SAM
     routeContent: @Composable ScreenScope<S, C>.() -> Unit,
+    section: Section = Section.Leaf,
   ): Route {
     return object : Route {
       @Stable
@@ -248,6 +271,7 @@ object RouteFactory {
         }
         screenScope?.routeContent()
       }
+      override val section: Section = section
 
       @Stable
       override fun dispose() {

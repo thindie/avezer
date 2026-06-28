@@ -2,6 +2,27 @@
 <resources>
     <string name="app_name">Avezer</string>
 
+    <!-- Navigation labels -->
+    <string name="places">Погода</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Настройки</string>
+    <string name="settings_section_appearance">Внешний вид</string>
+    <string name="settings_section_general">Основные</string>
+    <string name="settings_section_language">Язык</string>
+    <string name="settings_language_label">Язык</string>
+    <string name="settings_language_title">Выберите язык</string>
+    <string name="settings_theme_auto_subtitle">Следует за системой</string>
+
+    <string name="language_en">Английский</string>
+    <string name="language_ru">Русский</string>
+
+    <!-- Theme -->
+    <string name="theme_auto">Авто</string>
+    <string name="theme_light">Светлая</string>
+    <string name="theme_dark">Тёмная</string>
+    <string name="theme_title">Тема</string>
+
     <!-- Errors -->
     <string name="error_unexpected">Что-то пошло не так. Пожалуйста, попробуйте снова.</string>
     <string name="btn_close">Закрыть</string>
@@ -45,13 +66,13 @@
     <string name="weather_code_77">Снегопад</string>
 
     <!-- Rain Showers -->
-    <string name="weather_code_80">Дождь с грозами: слабая интенсивность</string>
-    <string name="weather_code_81">Дождь с грозами: умеренная интенсивность</string>
-    <string name="weather_code_82">Дождь с грозами: сильная интенсивность</string>
+    <string name="weather_code_80">Ливень: слабый</string>
+    <string name="weather_code_81">Ливень: умеренный</string>
+    <string name="weather_code_82">Ливень: сильный</string>
 
     <!-- Snow Showers -->
-    <string name="weather_code_85">Снег с грозами: слабая интенсивность</string>
-    <string name="weather_code_86">Снег с грозами: сильная интенсивность</string>
+    <string name="weather_code_85">Снежный ливень: слабый</string>
+    <string name="weather_code_86">Снежный ливень: сильный</string>
 
     <!-- Thunderstorm -->
     <string name="weather_code_95">Гроза: слабая или умеренная</string>
@@ -59,30 +80,20 @@
     <string name="weather_code_99">Гроза с сильным градом</string>
 
     <!-- Fallback -->
-    <string name="weather_code_unknown">Неизвестная погоa</string>
+    <string name="weather_code_unknown">Неизвестная погода</string>
 
-    <!-- Navigation labels -->
-    <string name="places">Погода</string>
-
-    <!-- Settings -->
-    <string name="settings_title">Настройки</string>
-
-    <!-- Theme -->
-    <string name="theme_auto">Auto</string>
-    <string name="theme_light">Светая</string>
-    <string name="theme_dark">Темная</string>
-    <string name="theme_title">Тheme</string>
+    <!-- Units & Weather -->
+    <string name="percent_sign">%s%%</string>
+    <string name="kilometers_per_hour">км/ч</string>
+    <string name="millimeter">мм</string>
 
     <!-- Places -->
     <string name="places_no_forecast">Прогноз недоступен</string>
     <string name="places_see_hourly">Почасовой</string>
     <string name="weather_humidity">Влажность</string>
+    <string name="weather_precipitation">Осадки</string>
     <string name="weather_humidity_value">%d%%</string>
     <string name="weather_wind_speed">Скорость ветра</string>
     <string name="weather_wind_speed_value">%d км/ч</string>
-    <string name="weather_precipitation">Осадки</string>
-    <string name="percent_sign">%</string>
-    <string name="kilometers_per_hour">км/ч</string>
-    <string name="millimeter">мм</string>
 
 </resources>

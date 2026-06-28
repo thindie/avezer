@@ -6,6 +6,15 @@
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>
+    <string name="settings_section_appearance">Appearance</string>
+    <string name="settings_section_general">General</string>
+    <string name="settings_section_language">Language</string>
+    <string name="settings_language_label">Language</string>
+    <string name="settings_language_title">Select language</string>
+    <string name="settings_theme_auto_subtitle">Follows system settings</string>
+
+    <string name="language_en">English</string>
+    <string name="language_ru">Russian</string>
 
     <string name="theme_auto">Auto</string>
     <string name="theme_light">Light</string>

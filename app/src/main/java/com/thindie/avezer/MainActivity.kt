@@ -10,6 +10,8 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -42,6 +44,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -141,16 +144,24 @@ class MainActivity : ComponentActivity() {
                               context = app,
                             ).switch()
                           },
+                          selected = route.section,
                         )
                       }
                     }
+
                     is HomeSection.Settings -> {
                       Box(modifier = Modifier.systemBarsPadding()) {
                         route.content.invoke()
                         BottomNavigationBar(
                           modifier = Modifier.align(Alignment.BottomCenter),
-                          onPlacesClick = { HomeFlow(router = router, flowModule = app.applicationScope.appFlowModule).switch() },
+                          onPlacesClick = {
+                            HomeFlow(
+                              router = router,
+                              flowModule = app.applicationScope.appFlowModule,
+                            ).switch()
+                          },
                           onSettingsClick = {},
+                          selected = route.section,
                         )
                       }
                     }
@@ -178,8 +189,15 @@ fun BottomNavigationBar(
   modifier: Modifier = Modifier,
   onPlacesClick: () -> Unit,
   onSettingsClick: () -> Unit,
+  selected: Section,
 ) {
-  val iconSize = 24.dp
+  val sections =
+    remember {
+      listOf(
+        HomeSection.Places,
+        HomeSection.Settings,
+      )
+    }
 
   Row(
     modifier =
@@ -191,42 +209,73 @@ fun BottomNavigationBar(
     horizontalArrangement = Arrangement.SpaceEvenly,
     verticalAlignment = Alignment.CenterVertically,
   ) {
-    Column(
-      modifier = Modifier.clickable(onClick = onPlacesClick),
-    ) {
-      Icon(
-        painter = painterResource(R.drawable.ic_home_24),
-        contentDescription = null,
-        tint = AppTheme.colors.accentPrimary,
-        modifier = Modifier.size(iconSize),
-      )
-      Text(
-        text = stringResource(R.string.places),
-        style = AppTheme.typography.bodySmall,
-        color = AppTheme.colors.accentPrimary,
-        modifier = Modifier.padding(top = 4.dp),
-        maxLines = 1,
-      )
-    }
+    sections.forEach {
+      val (icon, title) =
+        when (it) {
+          HomeSection.Places -> R.drawable.ic_home_24 to R.string.places
+          HomeSection.Settings -> R.drawable.ic_settings_24 to R.string.settings_title
+        }
 
-    // Settings Tab
-    Column(
-      modifier = Modifier.clickable(onClick = onSettingsClick),
-    ) {
-      Icon(
-        painter = painterResource(R.drawable.ic_settings_24),
-        contentDescription = null,
-        tint = AppTheme.colors.contentSecondary,
-        modifier = Modifier.size(iconSize),
-      )
-      Text(
-        text = stringResource(R.string.settings_title),
-        style = AppTheme.typography.bodySmall,
-        color = AppTheme.colors.contentSecondary,
-        modifier = Modifier.padding(top = 4.dp),
-        maxLines = 1,
+      Section(
+        title = stringResource(title),
+        icon = painterResource(icon),
+        onClick = {
+          when (it) {
+            HomeSection.Places -> onPlacesClick.invoke()
+            HomeSection.Settings -> onSettingsClick.invoke()
+          }
+        },
+        isSelected = selected == it,
       )
     }
+  }
+}
+
+@Composable
+fun Section(
+  modifier: Modifier = Modifier,
+  title: String,
+  icon: Painter,
+  onClick: () -> Unit,
+  isSelected: Boolean,
+) {
+  val color by animateColorAsState(
+    targetValue =
+      when {
+        isSelected -> {
+          AppTheme.colors.accentPrimary
+        }
+
+        else -> {
+          AppTheme.colors.contentSecondary
+        }
+      },
+    animationSpec = tween(durationMillis = 400, easing = LinearOutSlowInEasing),
+  )
+  Column(
+    modifier =
+      modifier
+        .clickable(
+          onClick = onClick,
+          indication = null,
+          interactionSource = null,
+        ),
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally,
+  ) {
+    Icon(
+      painter = icon,
+      contentDescription = null,
+      tint = color,
+      modifier = Modifier.size(40.dp),
+    )
+    Text(
+      text = title,
+      style = AppTheme.typography.bodySmall,
+      color = color,
+      modifier = Modifier.padding(top = 4.dp),
+      maxLines = 1,
+    )
   }
 }
 

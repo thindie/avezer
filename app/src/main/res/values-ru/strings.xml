@@ -61,8 +61,11 @@
     <!-- Fallback -->
     <string name="weather_code_unknown">Неизвестная погоa</string>
 
+    <!-- Navigation labels -->
+    <string name="places">Погода</string>
+
     <!-- Settings -->
-    <string name="settings_title">Сettings</string>
+    <string name="settings_title">Настройки</string>
 
     <!-- Theme -->
     <string name="theme_auto">Auto</string>

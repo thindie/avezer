@@ -8,9 +8,9 @@ val SettingsFlow.selection
   get() =
     RouteFactory.create(
       id = "settings",
-      initialState = SettingsState(),
+      initialState = SettingsState(language = repository.language()),
       execute = { cmd, state -> exec(cmd, state) },
       errorMapper = { settingsScreenErrorMapper(it) },
-      routeContent = { scope -> SettingsScreen(scope) },
+      routeContent = { scope -> SettingsScreenContent(scope) },
       section = HomeSection.Settings,
     )

@@ -6,6 +6,8 @@ import com.thindie.avezer.engine.ViewState
 @Immutable
 data class SettingsState(
   val themeChoice: ThemeChoice? = null,
+  val language: String? = null,
+  val legacyRestart: Boolean = false,
 ) : ViewState {
   @Immutable
   sealed interface ThemeChoice {

@@ -134,7 +134,13 @@ class MainActivity : ComponentActivity() {
                         BottomNavigationBar(
                           modifier = Modifier.align(Alignment.BottomCenter),
                           onPlacesClick = {},
-                          onSettingsClick = { SettingsFlow(router = router).switch() },
+                          onSettingsClick = {
+                            SettingsFlow(
+                              router = router,
+                              repository = app.applicationScope.settingsRepository,
+                              context = app,
+                            ).switch()
+                          },
                         )
                       }
                     }
@@ -226,10 +232,9 @@ fun BottomNavigationBar(
 
 @Immutable
 sealed interface HomeSection : Section {
-
   @Immutable
   data object Settings : HomeSection
-  @Immutable
 
+  @Immutable
   data object Places : HomeSection
 }

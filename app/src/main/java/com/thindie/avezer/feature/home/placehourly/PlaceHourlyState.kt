@@ -18,8 +18,8 @@ internal fun ScreenScope<PlaceHourlyState, PlaceHourlyCommand>.subscriptions(
   repository: MainRepository,
   weather: Weather,
 ) {
-  stateSink {
-    sub(repository.forecast.filter { it?.any { it.city == weather.city } == true }).transition(
+  stateSink(this) { scope ->
+    scope.sub(repository.forecast.filter { it?.any { it.city == weather.city } == true }).transition(
       block = { _, forecast ->
         // Weather contains hourlyForecast as List<HourlyForecast>
         // We need to map it to HourlyForecastItem which has additional fields like emoji and weatherCodeRef

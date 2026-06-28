@@ -7,11 +7,12 @@ import com.thindie.avezer.feature.home.domain.Weather
 
 fun HomeFlow.placeHourly(weather: Weather) =
   RouteFactory.create(
+    id = "place_hourly",
     initialState = PlaceHourlyState(),
     execute = { cmd, state -> exec(cmd, state) },
     stateSink = { screenScope: ScreenScope<PlaceHourlyState, PlaceHourlyCommand> ->
       screenScope.subscriptions(flowModule.repository, weather)
     },
     errorMapper = placeHourlyScreenErrorMapper(),
-    routeContent = { PlaceHourlyScreen() },
+    routeContent = { scope -> PlaceHourlyScreen(scope) },
   )

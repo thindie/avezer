@@ -28,7 +28,7 @@ import com.thindie.avezer.uikit.ThemeSwitcher
 import com.thindie.avezer.uikit.VSpacer
 
 @Composable
-internal fun ScreenScope<SettingsState, SettingsCommand>.SettingsScreen() {
+internal fun SettingsScreen(screenScope: ScreenScope<SettingsState, SettingsCommand>) {
   val themeSwitcher = LocalThemeSwitcher.current
   val themeChoice by themeSwitcher.themeFlow.collectAsState(ThemeSwitcher.Choice.Auto)
   val isDark =
@@ -38,9 +38,10 @@ internal fun ScreenScope<SettingsState, SettingsCommand>.SettingsScreen() {
       else -> isSystemInDarkTheme()
     }
 
-  val screenState by state.collectAsState()
+  val screenState by screenScope.state.collectAsState()
 
   AppScreen(
+    screenScope = screenScope,
     secondary =
       Action(
         resRef = R.drawable.ic_theme_24,
@@ -53,8 +54,8 @@ internal fun ScreenScope<SettingsState, SettingsCommand>.SettingsScreen() {
   ) {
     SettingsContent(
       currentThemeChoice = screenState.themeChoice,
-      onBack = { send(SettingsCommand.Back) },
-      onSetThemeChoice = { themeChoice -> send(SettingsCommand.SetThemeChoice(themeChoice)) },
+      onBack = { screenScope.send(SettingsCommand.Back) },
+      onSetThemeChoice = { themeChoice -> screenScope.send(SettingsCommand.SetThemeChoice(themeChoice)) },
     )
   }
 }

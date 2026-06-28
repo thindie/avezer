@@ -26,7 +26,7 @@ import com.thindie.avezer.uikit.LocalThemeSwitcher
 import com.thindie.avezer.uikit.ThemeSwitcher
 
 @Composable
-internal fun ScreenScope<PlaceHourlyState, PlaceHourlyCommand>.PlaceHourlyScreen() {
+internal fun PlaceHourlyScreen(screenScope: ScreenScope<PlaceHourlyState, PlaceHourlyCommand>) {
   val themeSwitcher = LocalThemeSwitcher.current
   val themeChoice by themeSwitcher.themeFlow.collectAsState(ThemeSwitcher.Choice.Auto)
   val isDark =
@@ -36,9 +36,10 @@ internal fun ScreenScope<PlaceHourlyState, PlaceHourlyCommand>.PlaceHourlyScreen
       else -> isSystemInDarkTheme()
     }
 
-  val screenState by state.collectAsState()
+  val screenState by screenScope.state.collectAsState()
 
   AppScreen(
+    screenScope = screenScope,
     secondary =
       Action(
         resRef = R.drawable.ic_theme_24,
@@ -51,7 +52,7 @@ internal fun ScreenScope<PlaceHourlyState, PlaceHourlyCommand>.PlaceHourlyScreen
   ) {
     PlaceHourlyContent(
       hourlyForecast = screenState.hourlyForecast,
-      onBack = { send(PlaceHourlyCommand.Back) },
+      onBack = { screenScope.send(PlaceHourlyCommand.Back) },
     )
   }
 }

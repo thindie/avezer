@@ -13,8 +13,8 @@ import com.thindie.avezer.feature.home.domain.Weather
 data class ScreenState(val forecast: List<Weather>? = null) : ViewState
 
 internal fun ScreenScope<ScreenState, ScreenCommand>.subscriptions(repository: MainRepository) {
-  stateSink {
-    sub(repository.forecast).transition(
+  stateSink(this) { scope ->
+    scope.sub(repository.forecast).transition(
       block = { _, forecast -> ScreenState(forecast) },
     )
   }

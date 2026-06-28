@@ -7,9 +7,10 @@ import com.thindie.avezer.feature.settings.SettingsFlow
 val SettingsFlow.selection
   get() =
     RouteFactory.create(
+      id = "settings",
       initialState = SettingsState(),
       execute = { cmd, state -> exec(cmd, state) },
       errorMapper = { settingsScreenErrorMapper(it) },
-      routeContent = { SettingsScreen() },
+      routeContent = { scope -> SettingsScreen(scope) },
       section = HomeSection.Settings,
     )

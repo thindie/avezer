@@ -8,6 +8,7 @@ import com.thindie.avezer.feature.home.HomeFlow
 val HomeFlow.places
   get() =
     RouteFactory.create(
+      id = "places",
       initialState = ScreenState(),
       execute = { cmd, state -> exec(cmd, state, flowModule.repository) },
       stateSink = { screenScope: ScreenScope<ScreenState, ScreenCommand> ->
@@ -15,6 +16,6 @@ val HomeFlow.places
       },
       errorMapper = placesScreenErrorMapper(),
       initialCommand = { ScreenCommand.Fetch },
-      routeContent = { PlacesScreen() },
+      routeContent = { scope -> PlacesScreen(scope) },
       section = HomeSection.Places,
     )

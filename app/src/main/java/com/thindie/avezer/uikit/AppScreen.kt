@@ -31,22 +31,23 @@ import com.thindie.avezer.engine.ViewState
 import kotlinx.coroutines.delay
 
 @Composable
-fun <S : ViewState, C : Command> ScreenScope<S, C>.AppScreen(
+fun <S : ViewState, C : Command> AppScreen(
+  screenScope: ScreenScope<S, C>,
   modifier: Modifier = Modifier,
   title: String? = null,
   subtitle: String? = null,
   primary: Action? = null,
   secondary: Action? = null,
-  content: @Composable ScreenScope<S, C>.() -> Unit,
+  content: @Composable () -> Unit,
 ) {
   AnimatedContent(
     modifier =
       modifier
         .background(AppTheme.colors.backgroundPrimary),
-    targetState = this,
-  ) { screenScope ->
-    if (error.value != null) {
-      ErrorMessage()
+    targetState = screenScope,
+  ) { _ ->
+    if (screenScope.error.value != null) {
+      screenScope.ErrorMessage()
     } else {
       Box(
         Modifier
@@ -62,11 +63,11 @@ fun <S : ViewState, C : Command> ScreenScope<S, C>.AppScreen(
             primary = primary,
             secondary = secondary,
           )
-          content(screenScope)
+          content()
         }
         var showEvent by remember { mutableStateOf<ServiceCommand.UiEvent?>(null) }
         LaunchedEffect(screenScope) {
-          event
+          screenScope.event
             .collect {
               showEvent = it
             }
@@ -147,7 +148,7 @@ fun <S : ViewState, C : Command> ScreenScope<S, C>.AppScreen(
             null -> error("Must not be reached")
           }
         }
-        if (this@AppScreen.processing.value != null) {
+        if (screenScope.processing.value != null) {
           Box(
             Modifier
               .fillMaxSize()

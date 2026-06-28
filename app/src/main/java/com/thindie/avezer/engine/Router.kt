@@ -1,5 +1,6 @@
 package com.thindie.avezer.engine
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
@@ -22,7 +23,8 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.UUID
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlin.coroutines.cancellation.CancellationException
 
 @Stable
@@ -51,23 +53,6 @@ class Router(val onPopLast: () -> Unit) {
   }
 
   @Stable
-  fun replaceTop(route: Route) {
-    current.update { routes ->
-      val last = routes.lastOrNull()
-      if (last != null) {
-        val newStack = routes - last
-        last.dispose()
-        if (newStack.isEmpty()) {
-          listOf(route)
-        }
-        newStack + route
-      } else {
-        listOf(route)
-      }
-    }
-  }
-
-  @Stable
   fun pop() {
     current.update { routes ->
       val route = routes.lastOrNull()
@@ -82,6 +67,15 @@ class Router(val onPopLast: () -> Unit) {
         onPopLast()
         emptyList()
       }
+    }
+  }
+
+  @Stable
+  fun replaceTop(route: Route) {
+    current.update { routes ->
+      val last = routes.lastOrNull()
+      last?.dispose()
+      routes.dropLast(1) + route
     }
   }
 
@@ -121,6 +115,7 @@ interface Section {
 object RouteFactory {
   @Stable
   fun <C : Command, S : ViewState> create(
+    id: String,
     initialState: S,
     execute: suspend (c: C, s: S) -> S,
     stateSink: (ScreenScope<S, C>) -> Unit = {},
@@ -131,9 +126,8 @@ object RouteFactory {
       )
     },
     initialCommand: InitialCommand<C>? = null,
-    // strict invariant struggle with compiler's frontend - SAM
-    routeContent: @Composable ScreenScope<S, C>.() -> Unit,
     section: Section = Section.Leaf,
+    routeContent: @Composable (ScreenScope<S, C>) -> Unit,
   ): Route {
     return object : Route {
       @Stable
@@ -148,7 +142,12 @@ object RouteFactory {
       var screenScope: ScreenScope<S, C>? =
         object : ScreenScope<S, C> {
           override var scope: CoroutineScope? =
-            CoroutineScope(SupervisorJob() + Dispatchers.Default + CoroutineExceptionHandler { _, _ -> })
+            CoroutineScope(
+              SupervisorJob() + Dispatchers.Default +
+                CoroutineExceptionHandler { _, e ->
+                  Log.e("Avezer", "${e.cause} + ${e.message}")
+                },
+            )
             private set
 
           private val _state = MutableStateFlow(initialState)
@@ -162,6 +161,8 @@ object RouteFactory {
           private val _error = mutableStateOf<ScreenScopeError?>(null)
           override val error: androidx.compose.runtime.State<ScreenScopeError?>
             get() = _error
+
+          private val commandMutex = Mutex()
 
           @Stable
           private val _event =
@@ -178,16 +179,12 @@ object RouteFactory {
             _event.send(event)
           }
 
-          init {
-            stateSink.invoke(this)
-          }
-
           override fun update(s: S) {
             _state.update { s }
           }
 
           override fun send(command: C) {
-            println("Received command: $command")
+            Log.d("Avezer", "Received command: $command")
             scope?.launch {
               when (command) {
                 ServiceCommand.Dispose -> {
@@ -198,32 +195,7 @@ object RouteFactory {
                   _error.value = null
                 }
                 else -> {
-                  if (_error.value == null) {
-                    try {
-                      // non-nervous loading treatment region
-                      val loadingJob =
-                        launch {
-                          delay(200)
-                          _processing.value = command
-                        }
-                      val newState = execute(command, _state.value)
-                      if (_processing.value != null) {
-                        delay(300)
-                      }
-                      loadingJob.cancel()
-                      // end region
-                      _state.value = newState
-                      _processing.value = null
-                    } catch (e: CancellationException) {
-                      dispose()
-                      disposeCommand.tryEmit(command)
-                      throw e
-                    } catch (e: Throwable) {
-                      val error = errorMapper(e)
-                      _error.value = error
-                      _processing.value = null
-                    }
-                  } else {
+                  commandMutex.withLock {
                     try {
                       // non-nervous loading treatment region
                       val loadingJob =
@@ -263,13 +235,13 @@ object RouteFactory {
         private set
 
       @Stable
-      override val id: Route.Id = Route.Id(UUID.randomUUID().toString())
+      override val id: Route.Id = Route.Id(id)
 
       override val content: @Composable () -> Unit = {
         LaunchedEffect(initialState, id) {
           disposeCommand.collect { _ -> screenScope = null }
         }
-        screenScope?.routeContent()
+        screenScope?.let { routeContent(it) }
       }
       override val section: Section = section
 
@@ -280,6 +252,9 @@ object RouteFactory {
 
       init {
         initialCommand?.let { initial -> screenScope?.send(initial.execute()) }
+        screenScope?.let {
+          stateSink.invoke(it)
+        }
       }
     }
   }

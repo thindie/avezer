@@ -41,6 +41,40 @@ class LocationResolverImpl(
     }
   }
 
+  override suspend fun readAddresses(name: String): List<Address> {
+    return try {
+      withContext(Dispatchers.IO) {
+        Log.d(
+          { "Attempting to resolve address for name: ($name)" },
+        )
+        val addresses =
+          geocoder.getFromLocationName(
+            // locationName =
+            name,
+            // maxResults =
+            10,
+          )
+
+        if (addresses.isNullOrEmpty()) {
+          Log.w(
+            { "No address found for name: ($name)" },
+          )
+          return@withContext emptyList()
+        }
+        return@withContext addresses.mapNotNull {
+          Address(
+            it.locality,
+            it.subAdminArea,
+          )
+        }
+      }
+    } catch (e: CancellationException) {
+      throw e
+    } catch (e: Throwable) {
+      TODO("Nominatim fallback")
+    }
+  }
+
   override suspend fun read(
     lat: Double,
     lon: Double,

@@ -89,6 +89,7 @@
 
     <!-- Places -->
     <string name="places_no_forecast">Прогноз недоступен</string>
+    <string name="places_search_button">Поиск мест</string>
     <string name="places_see_hourly">Почасовой</string>
     <string name="weather_humidity">Влажность</string>
     <string name="weather_precipitation">Осадки</string>

@@ -16,6 +16,8 @@ val HomeFlow.places
       },
       errorMapper = placesScreenErrorMapper(),
       initialCommand = { ScreenCommand.Fetch },
-      routeContent = { scope -> PlacesScreen(scope) },
+      routeContent = { scope ->
+        PlacesScreen(scope)
+      },
       section = HomeSection.Places,
     )

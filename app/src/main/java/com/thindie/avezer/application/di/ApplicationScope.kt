@@ -33,6 +33,7 @@ class ApplicationScope(private val application: Application) {
       storage = storage,
       client = ClientImpl(baseUrl),
       resolver = LocationResolverImpl(application),
+      appCoroutineScope = scope,
     )
 
   val settingsRepository: SettingsRepository by lazy {

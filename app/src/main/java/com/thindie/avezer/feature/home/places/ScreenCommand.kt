@@ -5,11 +5,14 @@ import com.thindie.avezer.feature.home.HomeFlow
 import com.thindie.avezer.feature.home.domain.MainRepository
 import com.thindie.avezer.feature.home.domain.Weather
 import com.thindie.avezer.feature.home.placehourly.placeHourly
+import com.thindie.avezer.feature.home.search.searchPlaces
 
 internal sealed interface ScreenCommand : Command {
   data object Fetch : ScreenCommand
 
   data object Back : ScreenCommand
+
+  data object OpenSearch : ScreenCommand
 
   data class SeeHourlyForecast(val weather: Weather) : ScreenCommand
 }
@@ -27,6 +30,11 @@ internal suspend fun HomeFlow.exec(
 
     is ScreenCommand.Back -> {
       back()
+      state
+    }
+
+    is ScreenCommand.OpenSearch -> {
+      go(searchPlaces)
       state
     }
 

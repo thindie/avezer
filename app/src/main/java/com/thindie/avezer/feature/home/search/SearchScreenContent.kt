@@ -1,6 +1,8 @@
 package com.thindie.avezer.feature.home.search
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -35,39 +38,71 @@ import com.thindie.avezer.uikit.WSpacer
 internal fun SearchScreen(scope: ScreenScope<SearchScreenState, SearchScreenCommand>) {
   val state by scope.state.collectAsState()
   AppScreen(
-    scope,
+    screenScope = scope,
     primary =
       Action(
         listener = { scope.send(SearchScreenCommand.Back) },
         resRef = R.drawable.ic_arrow_back_24,
       ),
   ) {
+    BackHandler { scope.send(SearchScreenCommand.Back) }
+
     Column(
-      modifier =
-        Modifier
-          .imePadding()
-          .fillMaxSize(),
-      horizontalAlignment = Alignment.CenterHorizontally,
+      modifier = Modifier.imePadding().fillMaxSize(),
     ) {
+      Text(
+        modifier = Modifier.align(Alignment.Start).padding(horizontal = 16.dp),
+        text = stringResource(R.string.search_title),
+        style = AppTheme.typography.headlineLarge,
+        color = AppTheme.colors.contentPrimary,
+      )
+
       VSpacer(16.dp)
 
       TextField(
         value = state.query,
         onValueChange = { q: String -> scope.send(SearchScreenCommand.Search(q)) },
-        placeholder = "Поиск города...",
-        modifier =
-          Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+        placeholder = stringResource(R.string.places_search_button),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
         singleLine = true,
+        leadingContent = {
+          Image(
+            painter = androidx.compose.ui.res.painterResource(id = R.drawable.ic_search_24),
+            contentDescription = null,
+            modifier = Modifier.size(20.dp),
+          )
+        },
+        trailingContent = {
+          if (state.query.isNotEmpty()) {
+            Image(
+              painter = androidx.compose.ui.res.painterResource(id = R.drawable.ic_close_16),
+              contentDescription = null,
+              modifier =
+                Modifier.size(16.dp).clickable {
+                  scope.send(SearchScreenCommand.ClearQuery)
+                },
+            )
+          }
+        },
       )
 
       VSpacer(8.dp)
 
       state.results.forEach { result ->
-        SearchResultItem(result, onClick = { /* stub */ })
+        SearchResultItem(
+          result = result,
+          onClick = {
+            scope.send(SearchScreenCommand.SelectCity(result))
+          },
+        )
       }
       WSpacer()
-      AnimatedVisibility(visible = state.query.length > 4) {
+      AnimatedVisibility(
+        modifier = Modifier.padding(horizontal = 16.dp),
+        visible = state.query.length > 4,
+      ) {
         Button(
+          modifier = Modifier.padding(horizontal = 16.dp),
           text = stringResource(id = R.string.places),
           onClick = { scope.send(SearchScreenCommand.ConfirmSearch) },
         )

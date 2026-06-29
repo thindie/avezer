@@ -3,6 +3,7 @@
 
     <!-- Navigation labels -->
     <string name="places">Places</string>
+    <string name="search_title">Search</string>
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>

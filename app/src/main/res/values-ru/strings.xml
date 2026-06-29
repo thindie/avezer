@@ -4,6 +4,7 @@
 
     <!-- Navigation labels -->
     <string name="places">Погода</string>
+    <string name="search_title">Поиск</string>
 
     <!-- Settings -->
     <string name="settings_title">Настройки</string>

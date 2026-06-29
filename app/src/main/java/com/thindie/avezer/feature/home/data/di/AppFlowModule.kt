@@ -11,7 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 
 class AppFlowModule(
   private val client: Client,
-  private val storage: Storage,
+  val storage: Storage,
   private val resolver: LocationResolver,
   private val appCoroutineScope: CoroutineScope,
 ) {

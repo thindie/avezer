@@ -36,6 +36,7 @@ full path: <full path>
 4. Validate via build
 
 **Bad approach:** Jumping straight into editing without a plan — this often leads to missed edge cases or broken related code.
+**rule** once plan is done, must proceed to implement without confirm. proceed with spawn_agent or directly. 
 
 ## Getting Job Done
 

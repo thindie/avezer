@@ -7,6 +7,7 @@ import com.thindie.avezer.engine.ViewState
 data class SettingsState(
   val themeChoice: ThemeChoice? = null,
   val language: String? = null,
+  val startWithFavorites: Boolean = false,
   val legacyRestart: Boolean = false,
 ) : ViewState {
   @Immutable

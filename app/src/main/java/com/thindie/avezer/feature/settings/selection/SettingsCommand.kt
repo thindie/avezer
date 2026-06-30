@@ -16,7 +16,7 @@ internal sealed interface SettingsCommand : Command {
   data object StartWithFavorites : SettingsCommand
 }
 
-internal fun SettingsFlow.exec(
+internal suspend fun SettingsFlow.exec(
   command: SettingsCommand,
   state: SettingsState,
 ): SettingsState =
@@ -39,5 +39,9 @@ internal fun SettingsFlow.exec(
 
     is SettingsCommand.SetThemeChoice -> state.copy(themeChoice = command.themeChoice)
 
-    is SettingsCommand.StartWithFavorites -> state
+    is SettingsCommand.StartWithFavorites -> {
+      val newState = !state.startWithFavorites
+      repository.toggleStartWithFavorite(newState)
+      state.copy(startWithFavorites = newState)
+    }
   }

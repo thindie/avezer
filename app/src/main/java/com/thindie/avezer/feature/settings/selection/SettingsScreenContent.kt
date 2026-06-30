@@ -124,6 +124,13 @@ internal fun SettingsScreenContent(scope: ScreenScope<SettingsState, SettingsCom
       SectionTitle(stringResource(R.string.settings_section_general))
       VSpacer(16.dp)
 
+      ToggleRow(
+        label = stringResource(R.string.settings_start_with_favorites_label),
+        subtitle = stringResource(R.string.settings_start_with_favorites_subtitle),
+        checked = state.startWithFavorites,
+        onCheckedChange = { scope.send(SettingsCommand.StartWithFavorites) },
+      )
+
       // === Language ===
       VSpacer(24.dp)
       Divider()

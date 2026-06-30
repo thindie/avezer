@@ -13,6 +13,8 @@
     <string name="settings_language_label">Language</string>
     <string name="settings_language_title">Select language</string>
     <string name="settings_theme_auto_subtitle">Follows system settings</string>
+    <string name="settings_start_with_favorites_label">Start with favorites</string>
+    <string name="settings_start_with_favorites_subtitle">Open favorite places on app launch</string>
 
     <string name="language_en">English</string>
     <string name="language_ru">Russian</string>

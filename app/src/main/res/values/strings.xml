@@ -97,6 +97,13 @@
     <string name="places_search_button">Search places</string>
     <string name="search_hint">e.g. Moscow, Kaliningrad, SPb</string>
     <string name="places_see_hourly">See hourly</string>
+
+    <!-- Search -->
+    <string name="search_hint_multiple">Can enter multiple locations</string>
+    <string name="latitude_label">lat, %s</string>
+    <string name="longitude_label">lon, %s</string>
+    <string name="remember_button">remember</string>
+
     <string name="weather_humidity">Humidity</string>
     <string name="weather_precipitation">Precipitation</string>
     <string name="weather_humidity_value">%d%%</string>

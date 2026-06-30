@@ -125,7 +125,7 @@ private fun SearchScreenContent(state: SearchScreenState) {
     VSpacer(2.dp)
     Text(
       modifier = Modifier.padding(horizontal = 16.dp),
-      text = "!можно ввести несколько локаций",
+      text = stringResource(R.string.search_hint_multiple),
       style = AppTheme.typography.labelMedium,
       color = AppTheme.colors.contentSecondary,
     )
@@ -186,12 +186,12 @@ private fun SearchResultItem(
         val lonStr = "%.2f".format(result.lon).takeWhile { it != '.' }.padEnd(6, ' ')
         VSpacer(16.dp)
         Text(
-          text = "!широта, $latStr",
+          text = stringResource(R.string.latitude_label, latStr),
           style = AppTheme.typography.bodySmall,
           color = AppTheme.colors.contentSecondary.copy(alpha = 0.7f),
         )
         Text(
-          text = "!долгота, $lonStr",
+          text = stringResource(R.string.longitude_label, lonStr),
           style = AppTheme.typography.bodySmall,
           color = AppTheme.colors.contentSecondary.copy(alpha = 0.7f),
         )
@@ -200,7 +200,7 @@ private fun SearchResultItem(
         Toggle(checked = result.isFavorite)
         VSpacer(2.dp)
         Text(
-          text = "!запомнить",
+          text = stringResource(R.string.remember_button),
           style = AppTheme.typography.labelMedium,
           color = AppTheme.colors.contentSecondary.copy(alpha = 0.7f),
         )

@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.thindie.avezer.R
 import com.thindie.avezer.engine.ScreenScope
@@ -57,8 +58,57 @@ internal fun PlaceHourlyScreen(screenScope: ScreenScope<PlaceHourlyState, PlaceH
   }
 }
 
+@Preview(name = "Place Hourly Preview")
 @Composable
-internal fun PlaceHourlyContent(
+private fun PlaceHourlyPreview() {
+  val mockHourlyForecast =
+    listOf(
+      HourlyForecastItem(
+        time = "12:00",
+        temperature = 24.5,
+        humidity = 45,
+        windSpeed = 8.3,
+        precipitation = 0.0,
+        weatherCodeRef = R.string.weather_code_0,
+        emoji = "☀️",
+      ),
+      HourlyForecastItem(
+        time = "15:00",
+        temperature = 26.1,
+        humidity = 40,
+        windSpeed = 10.1,
+        precipitation = 0.0,
+        weatherCodeRef = R.string.weather_code_0,
+        emoji = "☀️",
+      ),
+      HourlyForecastItem(
+        time = "18:00",
+        temperature = 22.3,
+        humidity = 55,
+        windSpeed = 6.7,
+        precipitation = 0.5,
+        weatherCodeRef = R.string.weather_code_2,
+        emoji = "☁️",
+      ),
+      HourlyForecastItem(
+        time = "21:00",
+        temperature = 18.9,
+        humidity = 68,
+        windSpeed = 4.2,
+        precipitation = 2.3,
+        weatherCodeRef = R.string.weather_code_63,
+        emoji = "🌧️",
+      ),
+    )
+
+  PlaceHourlyContent(
+    hourlyForecast = mockHourlyForecast,
+    onBack = {},
+  )
+}
+
+@Composable
+private fun PlaceHourlyContent(
   hourlyForecast: List<HourlyForecastItem>?,
   onBack: () -> Unit,
 ) {

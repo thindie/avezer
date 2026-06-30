@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.thindie.avezer.R
 import com.thindie.avezer.engine.ScreenScope
@@ -33,117 +34,147 @@ import com.thindie.avezer.uikit.HSpacer
 import com.thindie.avezer.uikit.LocalThemeSwitcher
 import com.thindie.avezer.uikit.ThemeSwitcher
 import com.thindie.avezer.uikit.Toggle
-import com.thindie.avezer.uikit.TopAppBar
 import com.thindie.avezer.uikit.VSpacer
+
+@Preview(name = "Settings Preview")
+@Composable
+private fun SettingsPreview() {
+  val mockState =
+    SettingsState(
+      themeChoice = SettingsState.ThemeChoice.Auto,
+      language = "en",
+      startWithFavorites = false,
+      legacyRestart = false,
+    )
+
+  SettingsScreenBody(state = mockState)
+}
 
 @Composable
 internal fun SettingsScreenContent(scope: ScreenScope<SettingsState, SettingsCommand>) {
-  AppScreen(scope) {
+  AppScreen(
+    primary =
+      Action(
+        listener = { scope.send(SettingsCommand.Back) },
+        resRef = R.drawable.ic_arrow_back_24,
+      ),
+    screenScope = scope,
+  ) {
     val state by scope.state.collectAsState()
-    val themeSwitcher = LocalThemeSwitcher.current
-    val theme by themeSwitcher.themeFlow.collectAsState(ThemeSwitcher.Choice.Auto)
-    BackHandler { scope.send(SettingsCommand.Back) }
-    if (state.legacyRestart) {
-      val context = LocalActivity.current
-      LaunchedEffect(Unit) {
-        context?.recreate()
-      }
+    SettingsScreenBody(
+      state = state,
+      onBack = { scope.send(SettingsCommand.Back) },
+      onSetThemeChoice = { scope.send(SettingsCommand.SetThemeChoice(it)) },
+      onStartWithFavorites = { scope.send(SettingsCommand.StartWithFavorites) },
+      onSelectLanguage = { scope.send(SettingsCommand.SelectLanguage(it)) },
+    )
+  }
+}
+
+@Composable
+private fun SettingsScreenBody(
+  state: SettingsState,
+  onBack: () -> Unit = {},
+  onSetThemeChoice: (SettingsState.ThemeChoice) -> Unit = {},
+  onStartWithFavorites: () -> Unit = {},
+  onSelectLanguage: (String) -> Unit = {},
+) {
+  val themeSwitcher = LocalThemeSwitcher.current
+  val theme by themeSwitcher.themeFlow.collectAsState(ThemeSwitcher.Choice.Auto)
+  BackHandler { onBack() }
+  if (state.legacyRestart) {
+    val context = LocalActivity.current
+    LaunchedEffect(Unit) {
+      context?.recreate()
     }
-    TopAppBar(
-      primary =
-        Action(
-          listener = { scope.send(SettingsCommand.Back) },
-          resRef = R.drawable.ic_arrow_back_24,
-        ),
+  }
+  Column(
+    modifier =
+      Modifier
+        .fillMaxSize()
+        .verticalScroll(rememberScrollState())
+        .padding(16.dp),
+  ) {
+    Text(
+      text = stringResource(R.string.settings_title),
+      style = AppTheme.typography.headlineLarge,
+      color = AppTheme.colors.contentPrimary,
     )
 
-    Column(
-      modifier =
-        Modifier
-          .fillMaxSize()
-          .verticalScroll(rememberScrollState())
-          .padding(16.dp),
-    ) {
+    // === Appearance ===
+    VSpacer(24.dp)
+    SectionTitle(stringResource(R.string.settings_section_appearance))
+    VSpacer(16.dp)
+
+    ThemeOption(
+      label = stringResource(R.string.theme_auto),
+      subtitle = stringResource(R.string.settings_theme_auto_subtitle),
+      checked = theme == ThemeSwitcher.Choice.Auto,
+      onCheckedChange = {
+        val next =
+          if (theme == ThemeSwitcher.Choice.Auto) ThemeSwitcher.Choice.Dark else ThemeSwitcher.Choice.Auto
+        themeSwitcher.set(next)
+        onSetThemeChoice(next.toSettingsThemeChoice())
+      },
+    )
+
+    if (theme == ThemeSwitcher.Choice.Auto) {
+      VSpacer(8.dp)
       Text(
-        text = stringResource(R.string.settings_title),
-        style = AppTheme.typography.headlineLarge,
-        color = AppTheme.colors.contentPrimary,
-      )
-
-      // === Appearance ===
-      VSpacer(24.dp)
-      SectionTitle(stringResource(R.string.settings_section_appearance))
-      VSpacer(16.dp)
-
-      ThemeOption(
-        label = stringResource(R.string.theme_auto),
-        subtitle = stringResource(R.string.settings_theme_auto_subtitle),
-        checked = theme == ThemeSwitcher.Choice.Auto,
-        onCheckedChange = {
-          val next = if (theme == ThemeSwitcher.Choice.Auto) ThemeSwitcher.Choice.Dark else ThemeSwitcher.Choice.Auto
-          themeSwitcher.set(next)
-          scope.send(SettingsCommand.SetThemeChoice(next.toSettingsThemeChoice()))
-        },
-      )
-
-      if (theme == ThemeSwitcher.Choice.Auto) {
-        VSpacer(8.dp)
-        Text(
-          text = stringResource(R.string.theme_auto),
-          style = AppTheme.typography.bodySmall,
-          color = AppTheme.colors.contentSecondary,
-        )
-      }
-
-      ThemeOption(
-        label = stringResource(R.string.theme_light),
-        checked = theme == ThemeSwitcher.Choice.Light,
-        enabled = theme != ThemeSwitcher.Choice.Auto,
-        onCheckedChange = {
-          if (theme == ThemeSwitcher.Choice.Auto) return@ThemeOption
-          themeSwitcher.set(ThemeSwitcher.Choice.Light)
-          scope.send(SettingsCommand.SetThemeChoice(SettingsState.ThemeChoice.Light))
-        },
-      )
-
-      ThemeOption(
-        label = stringResource(R.string.theme_dark),
-        checked = theme == ThemeSwitcher.Choice.Dark,
-        enabled = theme != ThemeSwitcher.Choice.Auto,
-        onCheckedChange = {
-          if (theme == ThemeSwitcher.Choice.Auto) return@ThemeOption
-          themeSwitcher.set(ThemeSwitcher.Choice.Dark)
-          scope.send(SettingsCommand.SetThemeChoice(SettingsState.ThemeChoice.Dark))
-        },
-      )
-
-      // === General ===
-      VSpacer(24.dp)
-      Divider()
-      VSpacer(16.dp)
-      SectionTitle(stringResource(R.string.settings_section_general))
-      VSpacer(16.dp)
-
-      ToggleRow(
-        label = stringResource(R.string.settings_start_with_favorites_label),
-        subtitle = stringResource(R.string.settings_start_with_favorites_subtitle),
-        checked = state.startWithFavorites,
-        onCheckedChange = { scope.send(SettingsCommand.StartWithFavorites) },
-      )
-
-      // === Language ===
-      VSpacer(24.dp)
-      Divider()
-      VSpacer(16.dp)
-      SectionTitle(stringResource(R.string.settings_section_language))
-      VSpacer(16.dp)
-
-      LanguageSection(
-        label = stringResource(R.string.settings_language_label),
-        subtitle = languageLabel(state.language),
-        onClick = { selectLanguage(scope, state.language.orEmpty()) },
+        text = stringResource(R.string.theme_auto),
+        style = AppTheme.typography.bodySmall,
+        color = AppTheme.colors.contentSecondary,
       )
     }
+
+    ThemeOption(
+      label = stringResource(R.string.theme_light),
+      checked = theme == ThemeSwitcher.Choice.Light,
+      enabled = theme != ThemeSwitcher.Choice.Auto,
+      onCheckedChange = {
+        if (theme == ThemeSwitcher.Choice.Auto) return@ThemeOption
+        themeSwitcher.set(ThemeSwitcher.Choice.Light)
+        onSetThemeChoice(SettingsState.ThemeChoice.Light)
+      },
+    )
+
+    ThemeOption(
+      label = stringResource(R.string.theme_dark),
+      checked = theme == ThemeSwitcher.Choice.Dark,
+      enabled = theme != ThemeSwitcher.Choice.Auto,
+      onCheckedChange = {
+        if (theme == ThemeSwitcher.Choice.Auto) return@ThemeOption
+        themeSwitcher.set(ThemeSwitcher.Choice.Dark)
+        onSetThemeChoice(SettingsState.ThemeChoice.Dark)
+      },
+    )
+
+    // === General ===
+    VSpacer(24.dp)
+    Divider()
+    VSpacer(16.dp)
+    SectionTitle(stringResource(R.string.settings_section_general))
+    VSpacer(16.dp)
+
+    ToggleRow(
+      label = stringResource(R.string.settings_start_with_favorites_label),
+      subtitle = stringResource(R.string.settings_start_with_favorites_subtitle),
+      checked = state.startWithFavorites,
+      onCheckedChange = onStartWithFavorites,
+    )
+
+    // === Language ===
+    VSpacer(24.dp)
+    Divider()
+    VSpacer(16.dp)
+    SectionTitle(stringResource(R.string.settings_section_language))
+    VSpacer(16.dp)
+
+    LanguageSection(
+      label = stringResource(R.string.settings_language_label),
+      subtitle = languageLabel(state.language),
+      onClick = { onSelectLanguage(state.language.orEmpty()) },
+    )
   }
 }
 
@@ -167,7 +198,11 @@ private fun ThemeOption(
   onCheckedChange: () -> Unit,
 ) {
   Row(
-    modifier = Modifier.fillMaxWidth().clickable(enabled = enabled, onClick = onCheckedChange).padding(12.dp),
+    modifier =
+      Modifier
+        .fillMaxWidth()
+        .clickable(enabled = enabled, onClick = onCheckedChange)
+        .padding(12.dp),
     verticalAlignment = Alignment.CenterVertically,
   ) {
     Column(modifier = Modifier.weight(1f)) {
@@ -202,11 +237,13 @@ private fun ToggleRow(
 ) {
   Row(
     modifier =
-      Modifier.fillMaxWidth().clickable(
-        onClick = onCheckedChange,
-        indication = null,
-        interactionSource = null,
-      )
+      Modifier
+        .fillMaxWidth()
+        .clickable(
+          onClick = onCheckedChange,
+          indication = null,
+          interactionSource = null,
+        )
         .padding(12.dp),
     horizontalArrangement = Arrangement.SpaceBetween,
     verticalAlignment = Alignment.CenterVertically,
@@ -227,7 +264,11 @@ private fun LanguageSection(
   onClick: () -> Unit,
 ) {
   Row(
-    modifier = Modifier.fillMaxWidth().clickable(onClick = onClick).padding(12.dp),
+    modifier =
+      Modifier
+        .fillMaxWidth()
+        .clickable(onClick = onClick)
+        .padding(12.dp),
     horizontalArrangement = Arrangement.SpaceBetween,
     verticalAlignment = Alignment.CenterVertically,
   ) {

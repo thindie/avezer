@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.thindie.avezer.R
 import com.thindie.avezer.engine.ScreenScope
@@ -33,6 +34,23 @@ import com.thindie.avezer.uikit.Button
 import com.thindie.avezer.uikit.TextField
 import com.thindie.avezer.uikit.VSpacer
 import com.thindie.avezer.uikit.WSpacer
+
+@Preview(name = "Search Preview")
+@Composable
+private fun SearchPreview() {
+  val mockState =
+    SearchScreenState(
+      query = "Moscow",
+      results =
+        listOf(
+          WeatherSearchResult(city = "Moscow", lat = 55.7558, lon = 37.6173, isFavorite = true),
+          WeatherSearchResult(city = "Moskva", lat = 55.7558, lon = 37.6173, isFavorite = false),
+        ),
+      favorites = listOf("Moscow"),
+    )
+
+  SearchScreenContent(state = mockState)
+}
 
 @Composable
 internal fun SearchScreen(scope: ScreenScope<SearchScreenState, SearchScreenCommand>) {
@@ -47,66 +65,66 @@ internal fun SearchScreen(scope: ScreenScope<SearchScreenState, SearchScreenComm
   ) {
     BackHandler { scope.send(SearchScreenCommand.Back) }
 
-    Column(
-      modifier = Modifier.imePadding().fillMaxSize(),
-    ) {
-      Text(
-        modifier = Modifier.align(Alignment.Start).padding(horizontal = 16.dp),
-        text = stringResource(R.string.search_title),
-        style = AppTheme.typography.headlineLarge,
-        color = AppTheme.colors.contentPrimary,
-      )
+    SearchScreenContent(state = state)
+  }
+}
 
-      VSpacer(16.dp)
+@Composable
+private fun SearchScreenContent(state: SearchScreenState) {
+  Column(
+    modifier = Modifier.imePadding().fillMaxSize(),
+  ) {
+    Text(
+      modifier = Modifier.align(Alignment.Start).padding(horizontal = 16.dp),
+      text = stringResource(R.string.search_title),
+      style = AppTheme.typography.headlineLarge,
+      color = AppTheme.colors.contentPrimary,
+    )
 
-      TextField(
-        value = state.query,
-        onValueChange = { q: String -> scope.send(SearchScreenCommand.Search(q)) },
-        placeholder = stringResource(R.string.places_search_button),
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-        singleLine = true,
-        leadingContent = {
+    VSpacer(16.dp)
+
+    TextField(
+      value = state.query,
+      onValueChange = { /* preview only */ },
+      placeholder = stringResource(R.string.places_search_button),
+      modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+      singleLine = true,
+      leadingContent = {
+        Image(
+          painter = androidx.compose.ui.res.painterResource(id = R.drawable.ic_search_24),
+          contentDescription = null,
+          modifier = Modifier.size(20.dp),
+        )
+      },
+      trailingContent = {
+        if (state.query.isNotEmpty()) {
           Image(
-            painter = androidx.compose.ui.res.painterResource(id = R.drawable.ic_search_24),
+            painter = androidx.compose.ui.res.painterResource(id = R.drawable.ic_close_16),
             contentDescription = null,
-            modifier = Modifier.size(20.dp),
+            modifier = Modifier.size(16.dp),
           )
-        },
-        trailingContent = {
-          if (state.query.isNotEmpty()) {
-            Image(
-              painter = androidx.compose.ui.res.painterResource(id = R.drawable.ic_close_16),
-              contentDescription = null,
-              modifier =
-                Modifier.size(16.dp).clickable {
-                  scope.send(SearchScreenCommand.ClearQuery)
-                },
-            )
-          }
-        },
+        }
+      },
+    )
+
+    VSpacer(8.dp)
+
+    state.results.forEach { result ->
+      SearchResultItem(
+        result = result,
+        onClick = {},
       )
-
-      VSpacer(8.dp)
-
-      state.results.forEach { result ->
-        SearchResultItem(
-          result = result,
-          onClick = {
-            scope.send(SearchScreenCommand.SelectCity(result))
-          },
-        )
-      }
-      WSpacer()
-      AnimatedVisibility(
+    }
+    WSpacer()
+    AnimatedVisibility(
+      modifier = Modifier.padding(horizontal = 16.dp),
+      visible = state.query.length > 4,
+    ) {
+      Button(
         modifier = Modifier.padding(horizontal = 16.dp),
-        visible = state.query.length > 4,
-      ) {
-        Button(
-          modifier = Modifier.padding(horizontal = 16.dp),
-          text = stringResource(id = R.string.places),
-          onClick = { scope.send(SearchScreenCommand.ConfirmSearch) },
-        )
-      }
+        text = stringResource(id = R.string.places),
+        onClick = {},
+      )
     }
   }
 }

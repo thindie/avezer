@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.thindie.avezer.R
 import com.thindie.avezer.engine.ScreenScope
@@ -40,8 +41,65 @@ internal fun PlacesScreen(screenScope: ScreenScope<ScreenState, ScreenCommand>) 
   }
 }
 
+@Preview(name = "Places Preview")
 @Composable
-internal fun PlacesContent(
+private fun PlacesPreview() {
+  val mockForecast =
+    listOf(
+      Weather(
+        lat = 55.7558,
+        lon = 37.6173,
+        city = "Moscow",
+        temperature = 22.5,
+        isDay = true,
+        weatherCodeRef = R.string.weather_code_0,
+        emoji = "☀️",
+        humidity = 45,
+        windSpeed = 12.3,
+        timezone = "Europe/Moscow",
+        timezoneAbbreviation = "MSK",
+        utcOffsetSeconds = 10800,
+      ),
+      Weather(
+        lat = 59.9343,
+        lon = 30.3351,
+        city = "Saint Petersburg",
+        temperature = 18.2,
+        isDay = true,
+        weatherCodeRef = R.string.weather_code_2,
+        emoji = "☁️",
+        humidity = 62,
+        windSpeed = 8.7,
+        timezone = "Europe/Moscow",
+        timezoneAbbreviation = "MSK",
+        utcOffsetSeconds = 10800,
+      ),
+      Weather(
+        lat = 56.8389,
+        lon = 60.6057,
+        city = "Yekaterinburg",
+        temperature = 15.8,
+        isDay = false,
+        weatherCodeRef = R.string.weather_code_63,
+        emoji = "🌧️",
+        humidity = 78,
+        windSpeed = 15.2,
+        timezone = "Asia/Yekaterinburg",
+        timezoneAbbreviation = "YEKT",
+        utcOffsetSeconds = 14400,
+      ),
+    )
+
+  PlacesContent(
+    forecast = mockForecast,
+    onBack = {},
+    onClick = {},
+    onSearchClick = {},
+  )
+}
+
+@Composable
+private fun PlacesContent(
   forecast: List<Weather>?,
   onBack: () -> Unit,
   onClick: (Weather) -> Unit,

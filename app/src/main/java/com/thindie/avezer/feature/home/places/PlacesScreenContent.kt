@@ -1,18 +1,17 @@
 package com.thindie.avezer.feature.home.places
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -106,21 +105,31 @@ private fun PlacesContent(
   onSearchClick: () -> Unit = {},
 ) {
   BackHandler { onBack() }
-  if (forecast.isNullOrEmpty()) {
-    Box(
-      modifier =
-        Modifier
-          .fillMaxSize()
-          .padding(16.dp),
-      contentAlignment = Alignment.Center,
-    ) {
-      Column {
+
+  Column(
+    modifier =
+      Modifier
+        .fillMaxSize()
+        .padding(16.dp),
+  ) {
+    Text(
+      text = stringResource(R.string.places),
+      style = AppTheme.typography.headlineLarge,
+      color = AppTheme.colors.contentPrimary,
+    )
+
+    VSpacer(24.dp)
+    Divider()
+    VSpacer(16.dp)
+
+    if (forecast.isNullOrEmpty()) {
+      Column(modifier = Modifier.fillMaxSize()) {
         Text(
           text = stringResource(R.string.places_no_forecast),
           style = AppTheme.typography.bodyMedium,
           color = AppTheme.colors.contentSecondary,
         )
-        VSpacer(2.dp)
+        VSpacer(8.dp)
         TextButton(onClick = onSearchClick) {
           Text(
             text = stringResource(R.string.places_search_button),
@@ -129,14 +138,14 @@ private fun PlacesContent(
           )
         }
       }
-    }
-  } else {
-    LazyColumn(
-      modifier = Modifier.fillMaxSize(),
-    ) {
-      items(forecast) { weather ->
-        WeatherCard(weather = weather) {
-          onClick(weather)
+    } else {
+      LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+      ) {
+        items(forecast) { weather ->
+          WeatherCard(weather = weather) {
+            onClick(weather)
+          }
         }
       }
     }

@@ -60,7 +60,7 @@ internal fun DailyForecastCard(
         ) {
           Text(
             text = stringResource(R.string.weather_max_temp),
-            style = AppTheme.typography.bodyMedium,
+            style = AppTheme.typography.bodySmall,
             color = AppTheme.colors.contentSecondary,
           )
 
@@ -80,7 +80,7 @@ internal fun DailyForecastCard(
         ) {
           Text(
             text = stringResource(R.string.weather_min_temp),
-            style = AppTheme.typography.bodyMedium,
+            style = AppTheme.typography.bodySmall,
             color = AppTheme.colors.contentSecondary,
           )
 
@@ -105,7 +105,7 @@ internal fun DailyForecastCard(
         ) {
           Text(
             text = stringResource(R.string.weather_precipitation),
-            style = AppTheme.typography.bodyMedium,
+            style = AppTheme.typography.bodySmall,
             color = AppTheme.colors.contentSecondary,
           )
 
@@ -130,7 +130,7 @@ internal fun DailyForecastCard(
         ) {
           Text(
             text = stringResource(R.string.weather_sunrise),
-            style = AppTheme.typography.bodyMedium,
+            style = AppTheme.typography.bodySmall,
             color = AppTheme.colors.contentSecondary,
           )
 
@@ -150,7 +150,7 @@ internal fun DailyForecastCard(
         ) {
           Text(
             text = stringResource(R.string.weather_sunset),
-            style = AppTheme.typography.bodyMedium,
+            style = AppTheme.typography.bodySmall,
             color = AppTheme.colors.contentSecondary,
           )
 

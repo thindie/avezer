@@ -72,22 +72,21 @@ internal fun SearchScreen(scope: ScreenScope<SearchScreenState, SearchScreenComm
 @Composable
 private fun SearchScreenContent(state: SearchScreenState) {
   Column(
-    modifier = Modifier.imePadding().fillMaxSize(),
+    modifier = Modifier.imePadding().fillMaxSize().padding(16.dp),
   ) {
     Text(
-      modifier = Modifier.align(Alignment.Start).padding(horizontal = 16.dp),
       text = stringResource(R.string.search_title),
       style = AppTheme.typography.headlineLarge,
       color = AppTheme.colors.contentPrimary,
     )
 
-    VSpacer(16.dp)
+    VSpacer(24.dp)
 
     TextField(
       value = state.query,
       onValueChange = { /* preview only */ },
       placeholder = stringResource(R.string.places_search_button),
-      modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+      modifier = Modifier.fillMaxWidth(),
       singleLine = true,
       leadingContent = {
         Image(
@@ -135,21 +134,25 @@ private fun SearchResultItem(
   onClick: () -> Unit,
 ) {
   Card(
-    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).clickable { onClick() },
+    modifier = Modifier.fillMaxWidth().clickable { onClick() },
     colors = CardDefaults.cardColors(containerColor = AppTheme.colors.backgroundSecondary),
-    shape = RoundedCornerShape(8.dp),
+    shape = RoundedCornerShape(12.dp),
   ) {
     Row(
       modifier = Modifier.padding(12.dp),
       horizontalArrangement = Arrangement.SpaceBetween,
       verticalAlignment = Alignment.CenterVertically,
     ) {
-      Column {
-        Text(text = result.city, style = AppTheme.typography.titleMedium)
-        VSpacer(4.dp)
+      Column(modifier = Modifier.weight(1f)) {
+        Text(
+          text = result.city,
+          style = AppTheme.typography.titleMedium,
+          color = AppTheme.colors.contentPrimary,
+        )
+        VSpacer(2.dp)
         Text(
           text = "${result.lat}, ${result.lon}",
-          style = AppTheme.typography.labelLarge,
+          style = AppTheme.typography.bodySmall,
           color = AppTheme.colors.contentSecondary,
         )
       }

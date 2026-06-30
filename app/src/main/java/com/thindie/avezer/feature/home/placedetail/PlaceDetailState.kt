@@ -12,7 +12,10 @@ import com.thindie.avezer.feature.home.domain.Weather
 import kotlinx.coroutines.flow.filter
 
 @Immutable
-data class PlaceDetailState(val dailyForecast: List<DailyForecast>? = null) : ViewState
+data class PlaceDetailState(
+  val title: String? = null,
+  val dailyForecast: List<DailyForecast>? = null,
+) : ViewState
 
 internal fun ScreenScope<PlaceDetailState, PlaceDetailCommand>.subscriptions(
   repository: MainRepository,
@@ -30,7 +33,7 @@ internal fun ScreenScope<PlaceDetailState, PlaceDetailCommand>.subscriptions(
           forecast?.flatMap { w ->
             if (w.city == cityFilter) w.forecast else emptyList()
           } ?: emptyList()
-        PlaceDetailState(result)
+        PlaceDetailState(title = weather.city, dailyForecast = result)
       },
     )
   }

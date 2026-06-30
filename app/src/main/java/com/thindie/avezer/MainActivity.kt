@@ -99,6 +99,9 @@ class MainActivity : ComponentActivity() {
           }
         }
         AppTheme(isDark) {
+          // Back handler disabled intentionally — native back button
+          // triggers router.pop(), and when stack is empty, onPopLast()
+          // emits finishCommand which closes the activity.
           BackHandler { }
           val routes by router.route.collectAsState(null)
           var prev by remember { mutableStateOf<Pair<Route, Route?>?>(null) }
@@ -167,6 +170,7 @@ class MainActivity : ComponentActivity() {
                     }
                   }
                 }
+
                 else -> error("Unexpected section")
               }
             }

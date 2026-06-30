@@ -194,6 +194,11 @@ object RouteFactory {
                 ServiceCommand.DismissError -> {
                   _error.value = null
                 }
+
+                is ServiceCommand.Prioritized -> {
+                  command.execute()
+                }
+
                 else -> {
                   commandMutex.withLock {
                     try {

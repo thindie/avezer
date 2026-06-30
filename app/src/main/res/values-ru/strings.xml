@@ -3,7 +3,7 @@
     <string name="app_name">Avezer</string>
 
     <!-- Navigation labels -->
-    <string name="places">Погода</string>
+    <string name="places">Места</string>
     <string name="search_title">Поиск</string>
 
     <!-- Settings -->
@@ -45,11 +45,11 @@
     <!-- Drizzle -->
     <string name="weather_code_51">Морось: слабая интенсивность</string>
     <string name="weather_code_53">Морось: умеренная интенсивность</string>
-    <string name="weather_code_55">Морось: сильная интенсивность</string>
+    <string name="weather_code_55">Морось: высокая интенсивность</string>
 
     <!-- Freezing Drizzle -->
     <string name="weather_code_56">Ледяная морось: слабая интенсивность</string>
-    <string name="weather_code_57">Ледяная морось: сильная интенсивность</string>
+    <string name="weather_code_57">Ледяная морось: высокая интенсивность</string>
 
     <!-- Rain -->
     <string name="weather_code_61">Дождь: слабая интенсивность</string>
@@ -58,30 +58,36 @@
 
     <!-- Freezing Rain -->
     <string name="weather_code_66">Ледяной дождь: слабая интенсивность</string>
-    <string name="weather_code_67">Ледяной дождь: сильная интенсивность</string>
+    <string name="weather_code_67">Ледяной дождь: высокая интенсивность</string>
 
     <!-- Snow -->
     <string name="weather_code_71">Снег: слабая интенсивность</string>
     <string name="weather_code_73">Снег: умеренная интенсивность</string>
-    <string name="weather_code_75">Снег: сильная интенсивность</string>
-    <string name="weather_code_77">Снегопад</string>
+    <string name="weather_code_75">Снег: высокая интенсивность</string>
+    <string name="weather_code_77">Кристаллы льда (снежная крупа)</string>
 
     <!-- Rain Showers -->
     <string name="weather_code_80">Ливень: слабый</string>
     <string name="weather_code_81">Ливень: умеренный</string>
-    <string name="weather_code_82">Ливень: сильный</string>
+    <string name="weather_code_82">Сильный ливень (ливни)</string>
 
     <!-- Snow Showers -->
-    <string name="weather_code_85">Снежный ливень: слабый</string>
-    <string name="weather_code_86">Снежный ливень: сильный</string>
+    <string name="weather_code_85">Снегопад: слабый</string>
+    <string name="weather_code_86">Снегопад: сильный</string>
 
     <!-- Thunderstorm -->
-    <string name="weather_code_95">Гроза: слабая или умеренная</string>
+    <string name="weather_code_95">Гроза: слабая или умеренная интенсивность</string>
     <string name="weather_code_96">Гроза со слабым градом</string>
     <string name="weather_code_99">Гроза с сильным градом</string>
 
     <!-- Fallback -->
     <string name="weather_code_unknown">Неизвестная погода</string>
+
+    <!-- Temperature & Time -->
+    <string name="weather_max_temp">Макс. температура</string>
+    <string name="weather_min_temp">Мин. температура</string>
+    <string name="weather_sunrise">Рассвет</string>
+    <string name="weather_sunset">Закат</string>
 
     <!-- Units & Weather -->
     <string name="percent_sign">%s%%</string>
@@ -89,7 +95,7 @@
     <string name="millimeter">мм</string>
 
     <!-- Places -->
-    <string name="places_no_forecast">Прогноз недоступен</string>
+    <string name="places_no_forecast">Нет данных о прогнозе</string>
     <string name="places_search_button">Поиск мест</string>
     <string name="places_see_hourly">Почасовой</string>
     <string name="weather_humidity">Влажность</string>

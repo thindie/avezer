@@ -1,7 +1,6 @@
 package com.thindie.avezer.feature.home.places
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,21 +22,10 @@ import com.thindie.avezer.feature.home.domain.Weather
 import com.thindie.avezer.feature.home.places.components.WeatherCard
 import com.thindie.avezer.uikit.AppScreen
 import com.thindie.avezer.uikit.AppTheme
-import com.thindie.avezer.uikit.LocalThemeSwitcher
-import com.thindie.avezer.uikit.ThemeSwitcher
 import com.thindie.avezer.uikit.VSpacer
 
 @Composable
 internal fun PlacesScreen(screenScope: ScreenScope<ScreenState, ScreenCommand>) {
-  val themeSwitcher = LocalThemeSwitcher.current
-  val themeChoice by themeSwitcher.themeFlow.collectAsState(ThemeSwitcher.Choice.Auto)
-  val isDark =
-    when (themeChoice) {
-      ThemeSwitcher.Choice.Dark -> true
-      ThemeSwitcher.Choice.Light -> false
-      else -> isSystemInDarkTheme()
-    }
-
   val screenState by screenScope.state.collectAsState()
 
   AppScreen(
@@ -46,7 +34,7 @@ internal fun PlacesScreen(screenScope: ScreenScope<ScreenState, ScreenCommand>) 
     PlacesContent(
       forecast = screenState.forecast,
       onBack = { screenScope.send(ScreenCommand.Back) },
-      onClick = { screenScope.send(ScreenCommand.SeeHourlyForecast(it)) },
+      onClick = { screenScope.send(ScreenCommand.SeeDailyForecast(it)) },
       onSearchClick = { screenScope.send(ScreenCommand.OpenSearch) },
     )
   }

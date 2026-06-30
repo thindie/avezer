@@ -97,5 +97,9 @@
     <string name="weather_humidity_value">%d%%</string>
     <string name="weather_wind_speed">Wind speed</string>
     <string name="weather_wind_speed_value">%d km/h</string>
+    <string name="weather_max_temp">Max temp</string>
+    <string name="weather_min_temp">Min temp</string>
+    <string name="weather_sunrise">Sunrise</string>
+    <string name="weather_sunset">Sunset</string>
 
 </resources>

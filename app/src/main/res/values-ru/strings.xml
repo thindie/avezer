@@ -97,6 +97,7 @@
     <!-- Places -->
     <string name="places_no_forecast">Нет данных о прогнозе</string>
     <string name="places_search_button">Поиск мест</string>
+    <string name="search_hint">напр. Москва, Калининград, Питер</string>
     <string name="places_see_hourly">Почасовой</string>
     <string name="weather_humidity">Влажность</string>
     <string name="weather_precipitation">Осадки</string>

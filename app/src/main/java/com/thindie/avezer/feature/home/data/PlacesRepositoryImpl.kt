@@ -11,6 +11,7 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -49,7 +50,6 @@ class PlacesRepositoryImpl(
           city = it.name,
           lat = coordinates.first,
           lon = coordinates.second,
-          isFavorite = it.name in cache.value.favorites,
         )
       }
     }
@@ -61,6 +61,8 @@ class PlacesRepositoryImpl(
       favs.copy(favorites = updated)
     }
   }
+
+  override val favoriteCities: Flow<List<String>> = cache.map { it.favorites }
 
   companion object {
     private val FAVORITES_KEY = StorageId("places_favorites")

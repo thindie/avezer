@@ -8,4 +8,6 @@ interface PlacesRepository {
   val result: Flow<List<WeatherSearchResult>>
 
   suspend fun toggleFavorite(city: String)
+
+  val favoriteCities: Flow<List<String>>
 }

@@ -171,24 +171,7 @@ class MainRepositoryImpl(
         locationResolver.read(cityName)
           ?: throw IllegalStateException("Location resolver failed to find coordinates for $cityName.")
       val (lat, lon) = location
-
-      Log.d(
-        { "Calling network API for $cityName at ($lat, $lon)" },
-      )
-      val weatherResponse: WeatherResponse = client.getForecast(lat = lat, lon = lon)
-      val domainModel = weatherResponse.toDomainModel(cityName)
-
-      if (domainModel != null) {
-        val id = StorageId(cityName.lowercase())
-        storage.createOrUpdate(id, JsonUtil.toJson(domainModel))
-        Log.d(
-          { "Successfully fetched and stored weather data for $cityName." },
-        )
-      } else {
-        Log.w(
-          { "Failed to convert network response to domain model for $cityName." },
-        )
-      }
+      readInternal(lat, lon, cityName)
     } catch (e: IllegalStateException) {
       Log.e({ "Location resolution failed for $cityName." }, throwable = e)
       throw e // Re-throw specific business logic errors
@@ -205,6 +188,58 @@ class MainRepositoryImpl(
       throw AppError.UnexpectedError(
         cause = e,
         message = e.message,
+      )
+    }
+  }
+
+  override suspend fun read(
+    lat: Double,
+    lon: Double,
+    cityName: String,
+  ) {
+    Log.d({ "Starting weather read for city: $cityName" })
+    try {
+      readInternal(lat, lon, cityName)
+    } catch (e: IllegalStateException) {
+      Log.e({ "Location resolution failed for $cityName." }, throwable = e)
+      throw e // Re-throw specific business logic errors
+    } catch (e: AppError.ServerError.TimeOut) {
+      Log.e(
+        { "Timeout occurred while reading weather for $cityName." },
+      )
+      throw e
+    } catch (e: Exception) {
+      Log.e(
+        { "An unexpected error occurred during read operation for $cityName." },
+        throwable = e,
+      )
+      throw AppError.UnexpectedError(
+        cause = e,
+        message = e.message,
+      )
+    }
+  }
+
+  private suspend fun readInternal(
+    lat: Double,
+    lon: Double,
+    cityName: String,
+  ) {
+    Log.d(
+      { "Calling network API at ($lat, $lon)" },
+    )
+    val weatherResponse: WeatherResponse = client.getForecast(lat = lat, lon = lon)
+    val domainModel = weatherResponse.toDomainModel(cityName)
+
+    if (domainModel != null) {
+      val id = StorageId(cityName.lowercase())
+      storage.createOrUpdate(id, JsonUtil.toJson(domainModel))
+      Log.d(
+        { "Successfully fetched and stored weather data for $cityName." },
+      )
+    } else {
+      Log.w(
+        { "Failed to convert network response to domain model for $cityName." },
       )
     }
   }

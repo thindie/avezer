@@ -8,4 +8,10 @@ interface MainRepository {
   suspend fun fetch()
 
   suspend fun read(cityName: String)
+
+  suspend fun read(
+    lat: Double,
+    lon: Double,
+    cityName: String,
+  )
 }

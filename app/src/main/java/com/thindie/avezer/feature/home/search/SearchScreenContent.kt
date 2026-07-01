@@ -13,8 +13,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
@@ -24,6 +26,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -47,13 +50,19 @@ private fun SearchPreview() {
       query = "Moscow",
       results =
         listOf(
-          WeatherSearchResult(city = "Moscow", lat = 55.7558, lon = 37.6173, isFavorite = true),
-          WeatherSearchResult(city = "Moskva", lat = 55.7558, lon = 37.6173, isFavorite = false),
+          WeatherSearchResult(city = "Moscow", lat = 55.7558, lon = 37.6173),
+          WeatherSearchResult(city = "Moskva", lat = 55.7558, lon = 37.6173),
         ),
       favorites = listOf("Moscow"),
     )
 
-  SearchScreenContent(state = mockState)
+  SearchScreenContent(
+    state = mockState,
+    onSearchQuery = { },
+    onSearchResultClick = { },
+    onToggleFavorite = { },
+    onConfirmSearch = { },
+  )
 }
 
 @Composable
@@ -69,83 +78,108 @@ internal fun SearchScreen(scope: ScreenScope<SearchScreenState, SearchScreenComm
   ) {
     BackHandler { scope.send(SearchScreenCommand.Back) }
 
-    SearchScreenContent(state = state)
+    SearchScreenContent(
+      state = state,
+      onSearchQuery = { scope.send(SearchScreenCommand.Search(it)) },
+      onSearchResultClick = { scope.send(SearchScreenCommand.SelectCity(it)) },
+      onToggleFavorite = { scope.send(SearchScreenCommand.ToggleFavorite(it.city)) },
+      onConfirmSearch = { scope.send(SearchScreenCommand.ConfirmSearch) },
+    )
   }
 }
 
 @Composable
-private fun SearchScreenContent(state: SearchScreenState) {
+private fun SearchScreenContent(
+  state: SearchScreenState,
+  onSearchQuery: (String) -> Unit,
+  onSearchResultClick: (WeatherSearchResult) -> Unit,
+  onToggleFavorite: (WeatherSearchResult) -> Unit,
+  onConfirmSearch: () -> Unit,
+) {
   Column(
-    modifier = Modifier.imePadding().fillMaxSize().padding(16.dp),
+    modifier =
+      Modifier.imePadding()
+        .fillMaxSize()
+        .padding(16.dp),
   ) {
-    Text(
-      text = stringResource(R.string.search_title),
-      style = AppTheme.typography.headlineLarge,
-      color = AppTheme.colors.contentPrimary,
-    )
-    VSpacer(2.dp)
-    Text(
-      text = stringResource(R.string.search_hint),
-      style = AppTheme.typography.labelMedium,
-      color = AppTheme.colors.contentSecondary,
-    )
-
-    VSpacer(24.dp)
-
-    TextField(
-      value = state.query,
-      onValueChange = { /* preview only */ },
-      placeholder = stringResource(R.string.places_search_button),
-      modifier = Modifier.fillMaxWidth(),
-      singleLine = true,
-      leadingContent = {
-        Image(
-          painter = androidx.compose.ui.res.painterResource(id = R.drawable.ic_search_24),
-          contentDescription = null,
-          modifier = Modifier.size(20.dp),
-        )
-      },
-      trailingContent = {
-        AnimatedVisibility(
-          visible = state.query.isNotEmpty(),
-        ) {
-          Image(
-            modifier =
-              Modifier
-                .background(AppTheme.colors.backgroundPrimary, CircleShape)
-                .padding(8.dp)
-                .size(16.dp),
-            painter = androidx.compose.ui.res.painterResource(id = R.drawable.ic_close_16),
-            contentDescription = null,
-          )
-        }
-      },
-    )
-
-    VSpacer(2.dp)
-    Text(
-      modifier = Modifier.padding(horizontal = 16.dp),
-      text = stringResource(R.string.search_hint_multiple),
-      style = AppTheme.typography.labelMedium,
-      color = AppTheme.colors.contentSecondary,
-    )
-
-    VSpacer(1.dp)
-
-    if (state.results.isNotEmpty()) {
-      VSpacer(24.dp)
-      Divider()
-      VSpacer(24.dp)
-    }
-
-    state.results.forEach { result ->
-      SearchResultItem(
-        result = result,
-        onClick = {},
+    Column(
+      modifier =
+        Modifier
+          .verticalScroll(rememberScrollState()),
+    ) {
+      Text(
+        text = stringResource(R.string.search_title),
+        style = AppTheme.typography.headlineLarge,
+        color = AppTheme.colors.contentPrimary,
       )
-      VSpacer(8.dp)
+      VSpacer(2.dp)
+      Text(
+        text = stringResource(R.string.search_hint),
+        style = AppTheme.typography.labelMedium,
+        color = AppTheme.colors.contentSecondary,
+      )
+
+      VSpacer(24.dp)
+
+      TextField(
+        value = state.query,
+        onValueChange = { onSearchQuery(it) },
+        placeholder = stringResource(R.string.places_search_button),
+        modifier = Modifier.fillMaxWidth(),
+        singleLine = true,
+        leadingContent = {
+          Image(
+            painter = painterResource(id = R.drawable.ic_search_24),
+            contentDescription = null,
+            modifier = Modifier.size(20.dp),
+          )
+        },
+        trailingContent = {
+          AnimatedVisibility(
+            visible = state.query.isNotEmpty(),
+          ) {
+            Image(
+              modifier =
+                Modifier
+                  .background(AppTheme.colors.backgroundPrimary, CircleShape)
+                  .padding(8.dp)
+                  .size(16.dp)
+                  .clickable(onClick = { onSearchQuery("") }),
+              painter = painterResource(id = R.drawable.ic_close_16),
+              contentDescription = null,
+            )
+          }
+        },
+      )
+
+      VSpacer(2.dp)
+      Text(
+        modifier = Modifier.padding(horizontal = 16.dp),
+        text = stringResource(R.string.search_hint_multiple),
+        style = AppTheme.typography.labelMedium,
+        color = AppTheme.colors.contentSecondary,
+      )
+
+      VSpacer(1.dp)
+
+      if (state.results.isNotEmpty()) {
+        VSpacer(24.dp)
+        Divider()
+        VSpacer(24.dp)
+      }
+
+      state.results.forEach { result ->
+        SearchResultItem(
+          result = result,
+          onClick = { onSearchResultClick(result) },
+          onToggleFavorite = { onToggleFavorite(result) },
+          isFavorite = result.city in state.favorites,
+        )
+        VSpacer(8.dp)
+      }
     }
     WSpacer()
+
     AnimatedVisibility(
       modifier = Modifier.padding(horizontal = 16.dp),
       visible = state.query.length > 4,
@@ -153,7 +187,7 @@ private fun SearchScreenContent(state: SearchScreenState) {
       Button(
         modifier = Modifier.padding(horizontal = 16.dp),
         text = stringResource(id = R.string.places),
-        onClick = {},
+        onClick = { onConfirmSearch() },
       )
     }
   }
@@ -162,7 +196,9 @@ private fun SearchScreenContent(state: SearchScreenState) {
 @Composable
 private fun SearchResultItem(
   result: WeatherSearchResult,
+  isFavorite: Boolean,
   onClick: () -> Unit,
+  onToggleFavorite: () -> Unit,
 ) {
   Card(
     modifier = Modifier.fillMaxWidth().clickable { onClick() },
@@ -197,7 +233,7 @@ private fun SearchResultItem(
         )
       }
       Column {
-        Toggle(checked = result.isFavorite)
+        Toggle(checked = isFavorite, onClick = { onToggleFavorite() })
         VSpacer(2.dp)
         Text(
           text = stringResource(R.string.remember_button),

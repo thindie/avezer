@@ -9,7 +9,7 @@ fun searchScreenErrorMapper(): SearchScreenErrorMapper {
   return { _ ->
     ScreenScopeError(
       message = AppStrings.errorUnexpected,
-      actions = mapOf(ScreenScopeError.Actions.Common.ButtonMain to SearchScreenCommand.ClearSearch),
+      actions = mapOf(ScreenScopeError.Actions.Common.ButtonMain to SearchScreenCommand.Back),
     )
   }
 }

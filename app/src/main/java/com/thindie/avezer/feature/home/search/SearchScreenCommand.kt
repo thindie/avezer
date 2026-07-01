@@ -8,10 +8,6 @@ internal sealed interface SearchScreenCommand : Command {
 
   data object ConfirmSearch : SearchScreenCommand
 
-  data object ClearSearch : SearchScreenCommand
-
-  data object ClearQuery : SearchScreenCommand
-
   data class SelectCity(val result: WeatherSearchResult) : SearchScreenCommand
 
   data class ToggleFavorite(val city: String) : SearchScreenCommand

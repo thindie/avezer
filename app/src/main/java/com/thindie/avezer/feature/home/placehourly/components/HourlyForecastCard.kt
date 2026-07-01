@@ -25,14 +25,15 @@ internal fun HourlyForecastCard(
   modifier: Modifier = Modifier,
 ) {
   Card(
-    modifier = modifier.padding(horizontal = 8.dp),
+    modifier = modifier.padding(horizontal = 8.dp, vertical = 4.dp),
     colors = CardDefaults.cardColors(containerColor = AppTheme.colors.backgroundSecondary),
     shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
+    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
   ) {
     Column(
       modifier =
         Modifier
-          .padding(16.dp)
+          .padding(12.dp)
           .fillMaxWidth(),
     ) {
       Row(
@@ -88,12 +89,12 @@ internal fun HourlyForecastCard(
         )
       }
 
-      VSpacer(8.dp)
+      VSpacer(4.dp)
 
       Text(
         text = stringResource(item.weatherCodeRef),
-        style = AppTheme.typography.bodyMedium,
-        color = AppTheme.colors.contentSecondary,
+        style = AppTheme.typography.labelMedium,
+        color = AppTheme.colors.contentSecondary.copy(alpha = 0.8f),
       )
     }
   }

@@ -1,6 +1,7 @@
 package com.thindie.avezer.feature.home.places
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -141,9 +142,13 @@ private fun PlacesContent(
     } else {
       LazyColumn(
         modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
       ) {
         items(forecast) { weather ->
-          WeatherCard(weather = weather) {
+          WeatherCard(
+            weather = weather,
+            modifier = Modifier.padding(horizontal = 8.dp),
+          ) {
             onClick(weather)
           }
         }

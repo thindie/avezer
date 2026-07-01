@@ -25,14 +25,15 @@ internal fun DailyForecastCard(
   modifier: Modifier = Modifier,
 ) {
   Card(
-    modifier = modifier.padding(8.dp),
+    modifier = modifier.padding(horizontal = 8.dp, vertical = 4.dp),
     colors = CardDefaults.cardColors(containerColor = AppTheme.colors.backgroundSecondary),
     shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
+    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
   ) {
     Column(
       modifier =
         Modifier
-          .padding(16.dp)
+          .padding(12.dp)
           .fillMaxWidth(),
     ) {
       Row(
@@ -93,7 +94,7 @@ internal fun DailyForecastCard(
       }
 
       if (dailyForecast.precipitationSum > 0) {
-        VSpacer(8.dp)
+        VSpacer(6.dp)
 
         Divider(color = AppTheme.colors.backgroundSecondary)
         VSpacer(8.dp)
@@ -118,7 +119,7 @@ internal fun DailyForecastCard(
       }
 
       if (dailyForecast.sunrise != null || dailyForecast.sunset != null) {
-        VSpacer(8.dp)
+        VSpacer(6.dp)
 
         Divider(color = AppTheme.colors.backgroundSecondary)
         VSpacer(8.dp)

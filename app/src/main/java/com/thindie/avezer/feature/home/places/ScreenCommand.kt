@@ -9,6 +9,8 @@ import com.thindie.avezer.feature.home.placehourly.placeHourly
 import com.thindie.avezer.feature.home.search.searchPlaces
 
 internal sealed interface ScreenCommand : Command {
+  data object Refresh : ScreenCommand
+
   data object Fetch : ScreenCommand
 
   data object Back : ScreenCommand
@@ -26,6 +28,11 @@ internal suspend fun HomeFlow.exec(
   repository: MainRepository,
 ): ScreenState =
   when (command) {
+    is ScreenCommand.Refresh -> {
+      repository.fetch()
+      state
+    }
+
     is ScreenCommand.Fetch -> {
       repository.fetch()
       state

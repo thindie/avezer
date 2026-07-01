@@ -8,7 +8,7 @@ internal fun placesScreenErrorMapper(): (
   return { e ->
     ScreenScopeError(
       message = "An unknown error occurred.",
-      actions = mapOf(ScreenScopeError.Actions.Common.ButtonMain to ScreenCommand.Fetch),
+      actions = mapOf(ScreenScopeError.Actions.Common.ButtonMain to ScreenCommand.Refresh),
     )
   }
 }

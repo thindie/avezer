@@ -53,11 +53,6 @@ private fun SettingsPreview() {
 @Composable
 internal fun SettingsScreenContent(scope: ScreenScope<SettingsState, SettingsCommand>) {
   AppScreen(
-    primary =
-      Action(
-        listener = { scope.send(SettingsCommand.Back) },
-        resRef = R.drawable.ic_arrow_back_24,
-      ),
     screenScope = scope,
   ) {
     val state by scope.state.collectAsState()

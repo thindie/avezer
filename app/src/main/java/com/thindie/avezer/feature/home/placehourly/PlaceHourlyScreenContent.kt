@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -51,10 +52,17 @@ internal fun PlaceHourlyScreen(screenScope: ScreenScope<PlaceHourlyState, PlaceH
         },
       ),
   ) {
-    PlaceHourlyContent(
-      hourlyForecast = screenState.hourlyForecast,
-      onBack = { screenScope.send(PlaceHourlyCommand.Back) },
-    )
+    PullToRefreshBox(
+      isRefreshing =
+        screenScope.processing.value is PlaceHourlyCommand.Refresh,
+      onRefresh = { screenScope.send(PlaceHourlyCommand.Refresh) },
+      indicator = {},
+    ) {
+      PlaceHourlyContent(
+        hourlyForecast = screenState.hourlyForecast,
+        onBack = { screenScope.send(PlaceHourlyCommand.Back) },
+      )
+    }
   }
 }
 

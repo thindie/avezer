@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -29,11 +30,19 @@ internal fun PlaceDetailScreen(screenScope: ScreenScope<PlaceDetailState, PlaceD
   AppScreen(
     screenScope = screenScope,
   ) {
-    PlaceDetailContent(
-      title = screenState.title.orEmpty(),
-      dailyForecast = screenState.dailyForecast,
-      onBack = { screenScope.send(PlaceDetailCommand.Back) },
-    )
+    PullToRefreshBox(
+      isRefreshing =
+        screenScope.processing.value is PlaceDetailCommand.Refresh ||
+          screenScope.processing.value is PlaceDetailCommand.Fetch,
+      onRefresh = { screenScope.send(PlaceDetailCommand.Refresh) },
+      indicator = {},
+    ) {
+      PlaceDetailContent(
+        title = screenState.title.orEmpty(),
+        dailyForecast = screenState.dailyForecast,
+        onBack = { screenScope.send(PlaceDetailCommand.Back) },
+      )
+    }
   }
 }
 

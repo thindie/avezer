@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.thindie.avezer.R
 import com.thindie.avezer.engine.ScreenScope
+import com.thindie.avezer.feature.home.domain.FavoriteLocation
 import com.thindie.avezer.feature.home.domain.WeatherSearchResult
 import com.thindie.avezer.uikit.Action
 import com.thindie.avezer.uikit.AppScreen
@@ -53,7 +54,10 @@ private fun SearchPreview() {
           WeatherSearchResult(city = "Moscow", lat = 55.7558, lon = 37.6173),
           WeatherSearchResult(city = "Moskva", lat = 55.7558, lon = 37.6173),
         ),
-      favorites = listOf("Moscow"),
+      favorites =
+        listOf(
+          FavoriteLocation(city = "Moscow", lat = 55.7558, lon = 37.6173),
+        ),
     )
 
   SearchScreenContent(
@@ -82,7 +86,7 @@ internal fun SearchScreen(scope: ScreenScope<SearchScreenState, SearchScreenComm
       state = state,
       onSearchQuery = { scope.send(SearchScreenCommand.Search(it)) },
       onSearchResultClick = { scope.send(SearchScreenCommand.SelectCity(it)) },
-      onToggleFavorite = { scope.send(SearchScreenCommand.ToggleFavorite(it.city)) },
+      onToggleFavorite = { scope.send(SearchScreenCommand.ToggleFavorite(it)) },
       onConfirmSearch = { scope.send(SearchScreenCommand.ConfirmSearch) },
     )
   }
@@ -93,7 +97,7 @@ private fun SearchScreenContent(
   state: SearchScreenState,
   onSearchQuery: (String) -> Unit,
   onSearchResultClick: (WeatherSearchResult) -> Unit,
-  onToggleFavorite: (WeatherSearchResult) -> Unit,
+  onToggleFavorite: (FavoriteLocation) -> Unit,
   onConfirmSearch: () -> Unit,
 ) {
   Column(
@@ -169,11 +173,12 @@ private fun SearchScreenContent(
       }
 
       state.results.forEach { result ->
+        val favoriteLocation = FavoriteLocation(result.city, result.lat, result.lon)
         SearchResultItem(
-          result = result,
+          searchResult = result,
+          isFavorite = favoriteLocation in state.favorites,
           onClick = { onSearchResultClick(result) },
-          onToggleFavorite = { onToggleFavorite(result) },
-          isFavorite = result.city in state.favorites,
+          onToggleFavorite = { onToggleFavorite(favoriteLocation) },
         )
         VSpacer(8.dp)
       }
@@ -195,7 +200,7 @@ private fun SearchScreenContent(
 
 @Composable
 private fun SearchResultItem(
-  result: WeatherSearchResult,
+  searchResult: WeatherSearchResult,
   isFavorite: Boolean,
   onClick: () -> Unit,
   onToggleFavorite: () -> Unit,
@@ -213,13 +218,13 @@ private fun SearchResultItem(
     ) {
       Column(modifier = Modifier.weight(1f)) {
         Text(
-          text = result.city,
+          text = searchResult.city,
           style = AppTheme.typography.headlineSmall,
           color = AppTheme.colors.contentPrimary,
         )
         VSpacer(2.dp)
-        val latStr = "%.2f".format(result.lat).takeWhile { it != '.' }.padEnd(6, ' ')
-        val lonStr = "%.2f".format(result.lon).takeWhile { it != '.' }.padEnd(6, ' ')
+        val latStr = "%.2f".format(searchResult.lat).takeWhile { it != '.' }.padEnd(6, ' ')
+        val lonStr = "%.2f".format(searchResult.lon).takeWhile { it != '.' }.padEnd(6, ' ')
         VSpacer(16.dp)
         Text(
           text = stringResource(R.string.latitude_label, latStr),

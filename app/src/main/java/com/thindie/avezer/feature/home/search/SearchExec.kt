@@ -33,7 +33,7 @@ internal suspend fun HomeFlow.exec(
     }
 
     is SearchScreenCommand.ToggleFavorite -> {
-      flowModule.placesRepository.toggleFavorite(command.city)
+      flowModule.placesRepository.toggleFavorite(command.favoriteLocation)
       val favorites = flowModule.placesRepository.favoriteCities.firstOrNull().orEmpty()
       state.copy(favorites = favorites)
     }

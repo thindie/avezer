@@ -34,35 +34,15 @@ class MainRepositoryImpl(
 
       channelFlow {
         val stored =
-          coroutineScope {
-            ids?.map { id ->
-              async {
-                try {
-                  Log.d({ "Attempting to read stored ID: $id" })
-                  val raw =
-                    storage.read(id) ?: run {
-                      Log.e(
-                        { "Failed to read storage for ID: $id (null value)" },
-                      )
-                      return@async null
-                    }
-                  try {
-                    JsonUtil.fromJson(raw, Weather::class.java)
-                  } catch (e: Exception) {
-                    Log.e({ "Error parsing JSON for ID: $id" }, throwable = e)
-                    null
-                  }
-                } catch (e: Exception) {
-                  Log.e(
-                    { "Unexpected error reading/parsing storage for ID: $id" },
-                    throwable = e,
-                  )
-                  null
-                }
-              }
-            }?.awaitAll()
+          if (ids == null) {
+            null
+          } else {
+            coroutineScope {
+              ids.map { id -> async { readStoredWeather(id) } }
+                .awaitAll()
+                .filterNotNull()
+            }
           }
-            ?.filterNotNull()
 
         if (stored != null) {
           Log.d(
@@ -93,25 +73,9 @@ class MainRepositoryImpl(
             async {
               try {
                 Log.d({ "Fetching and updating data for ID: $id" })
-                val raw =
-                  storage.read(id) ?: run {
-                    Log.e(
-                      { "Cannot fetch weather for ID $id: No stored data found." },
-                    )
-                    return@async null
-                  }
 
                 val stored =
-                  try {
-                    JsonUtil.fromJson(raw, Weather::class.java) ?: run {
-                      Log.e({ "Failed to parse JSON for ID $id." })
-                      return@async null
-                    }
-                  } catch (e: Exception) {
-                    Log.e(
-                      { "Error parsing stored weather data for ID $id." },
-                      throwable = e,
-                    )
+                  readStoredWeather(id) ?: run {
                     return@async null
                   }
 
@@ -146,13 +110,15 @@ class MainRepositoryImpl(
             }
           }
         val results = deferredResults.awaitAll()
-        if (results.isEmpty()) {
+        val successfulUpdates = results.count { it != null }
+
+        if (successfulUpdates == 0) {
           Log.w(
-            { "Finished fetching weather, but no successful updates were recorded." },
+            { "Finished fetching weather, but no forecasts were successfully updated." },
           )
         } else {
           Log.d(
-            { "Successfully processed and updated ${results.size} weather forecasts." },
+            { "Successfully fetched and updated $successfulUpdates weather forecasts." },
           )
         }
       }
@@ -241,6 +207,28 @@ class MainRepositoryImpl(
       Log.w(
         { "Failed to convert network response to domain model for $cityName." },
       )
+    }
+  }
+
+  private suspend fun readStoredWeather(id: StorageId): Weather? {
+    return try {
+      val raw =
+        storage.read(id) ?: run {
+          Log.e({ "Failed to read weather for ID $id." })
+          null
+        }
+
+      if (raw == null) {
+        null
+      } else {
+        JsonUtil.fromJson(raw, Weather::class.java)
+      }
+    } catch (e: Exception) {
+      Log.e(
+        { "Error reading or parsing weather data for ID $id." },
+        throwable = e,
+      )
+      null
     }
   }
 }

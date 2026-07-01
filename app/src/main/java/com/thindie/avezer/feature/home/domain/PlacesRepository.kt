@@ -7,7 +7,7 @@ interface PlacesRepository {
 
   val result: Flow<List<WeatherSearchResult>>
 
-  suspend fun toggleFavorite(city: String)
+  suspend fun toggleFavorite(location: FavoriteLocation)
 
-  val favoriteCities: Flow<List<String>>
+  val favoriteCities: Flow<List<FavoriteLocation>>
 }

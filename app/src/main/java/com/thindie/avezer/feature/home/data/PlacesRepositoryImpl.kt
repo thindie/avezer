@@ -3,7 +3,7 @@ package com.thindie.avezer.feature.home.data
 import com.thindie.avezer.application.Address
 import com.thindie.avezer.application.LocationResolver
 import com.thindie.avezer.application.storage.Storage
-import com.thindie.avezer.application.storage.StorageId
+import com.thindie.avezer.feature.home.domain.FavoriteLocation
 import com.thindie.avezer.feature.home.domain.PlacesRepository
 import com.thindie.avezer.feature.home.domain.WeatherSearchResult
 import kotlinx.coroutines.CoroutineScope
@@ -21,7 +21,7 @@ class PlacesRepositoryImpl(
   private val scope: CoroutineScope,
   private val resolver: LocationResolver,
 ) : PlacesRepository {
-  private data class Cache(val favorites: List<String>)
+  private data class Cache(val favorites: List<FavoriteLocation>)
 
   private val cache = MutableStateFlow(Cache(emptyList()))
   private val addressesRequest =
@@ -32,8 +32,7 @@ class PlacesRepositoryImpl(
 
   init {
     scope.launch {
-      val favs = storage.read(FAVORITES_KEY)
-      cache.update { it.copy(favorites = parseFavorites(favs)) }
+      cache.update { it.copy(favorites = FavoriteLocationStorage.read(storage, resolver)) }
     }
   }
 
@@ -54,22 +53,18 @@ class PlacesRepositoryImpl(
       }
     }
 
-  override suspend fun toggleFavorite(city: String) {
-    cache.update { favs ->
-      val updated = if (city in favs.favorites) favs.favorites - city else favs.favorites + city
-      scope.launch { storage.createOrUpdate(FAVORITES_KEY, updated.joinToString(SEPARATOR)) }
-      favs.copy(favorites = updated)
-    }
+  override suspend fun toggleFavorite(location: FavoriteLocation) {
+    val currentFavorites = cache.value.favorites
+    val updatedFavorites =
+      if (currentFavorites.any { it == location }) {
+        currentFavorites.filterNot { it == location }
+      } else {
+        currentFavorites + location
+      }
+
+    storage.createOrUpdate(HomeStorageIds.Favorites, JsonUtil.toJson(updatedFavorites))
+    cache.update { it.copy(favorites = updatedFavorites) }
   }
 
-  override val favoriteCities: Flow<List<String>> = cache.map { it.favorites }
-
-  companion object {
-    private val FAVORITES_KEY = StorageId("places_favorites")
-    private const val SEPARATOR = "#$#$#$#$#$#"
-  }
-
-  private fun parseFavorites(raw: String?): List<String> {
-    return raw?.split(SEPARATOR)?.filter { it.isNotBlank() } ?: emptyList()
-  }
+  override val favoriteCities: Flow<List<FavoriteLocation>> = cache.map { it.favorites }
 }

@@ -22,7 +22,11 @@ internal class StorageImpl(private val persistence: SharedPreferences) : Storage
       if (value != null) {
         Log.d({ "Read successful for ID ${id.value}. Value found." })
       } else {
-        Log.w({ "Read attempt successful for ID ${id.value}, but value is null (key might be missing)." })
+        Log.w(
+          {
+            "Read attempt successful for ID ${id.value}, but value is null (key might be missing)."
+          },
+        )
       }
       value
     } catch (e: Exception) {
@@ -78,9 +82,7 @@ internal class StorageImpl(private val persistence: SharedPreferences) : Storage
           .also { Log.d({ "whole keys: $it" }) }
           .filterKeys { it.startsWith(ID_KEY) }
           .keys
-          .mapNotNull { key ->
-            StorageId(key.removePrefix(ID_KEY))
-          }
+          .mapNotNull { key -> StorageId(key.removePrefix(ID_KEY)) }
       Log.d({ "Successfully loaded keys: $keys" })
       state.update { if (keys.isEmpty()) null else keys.toList() }
     } catch (e: Exception) {

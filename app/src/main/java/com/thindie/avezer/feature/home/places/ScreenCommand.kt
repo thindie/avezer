@@ -26,35 +26,35 @@ internal suspend fun HomeFlow.exec(
   command: ScreenCommand,
   state: ScreenState,
   repository: MainRepository,
-): ScreenState =
+): ScreenState? =
   when (command) {
     is ScreenCommand.Refresh -> {
       repository.fetch()
-      state
+      null
     }
 
     is ScreenCommand.Fetch -> {
       repository.fetch()
-      state
+      null
     }
 
     is ScreenCommand.Back -> {
       back()
-      state
+      null
     }
 
     is ScreenCommand.OpenSearch -> {
       go(searchPlaces)
-      state
+      null
     }
 
     is ScreenCommand.SeeDailyForecast -> {
       go(placeDetail(command.weather))
-      state
+      null
     }
 
     is ScreenCommand.SeeHourlyForecast -> {
       go(placeHourly(command.weather))
-      state
+      null
     }
   }

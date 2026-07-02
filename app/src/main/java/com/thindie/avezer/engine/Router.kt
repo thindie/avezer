@@ -117,7 +117,7 @@ object RouteFactory {
   fun <C : Command, S : ViewState> create(
     id: String,
     initialState: S,
-    execute: suspend (c: C, s: S) -> S,
+    execute: suspend (c: C, s: S) -> S?,
     stateSink: (ScreenScope<S, C>) -> Unit = {},
     errorMapper: (e: Throwable) -> ScreenScopeError = { _ ->
       ScreenScopeError(
@@ -214,7 +214,9 @@ object RouteFactory {
                       }
                       loadingJob.cancel()
                       // end region
-                      _state.value = newState
+                      if (newState != null) {
+                        _state.value = newState
+                      }
                       _error.value = null
                       _processing.value = null
                     } catch (e: CancellationException) {

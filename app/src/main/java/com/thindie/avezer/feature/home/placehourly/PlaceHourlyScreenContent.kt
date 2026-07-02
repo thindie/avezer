@@ -72,7 +72,7 @@ private fun PlaceHourlyPreview() {
   val mockHourlyForecast =
     listOf(
       HourlyForecastItem(
-        time = "12:00",
+        time = "2025-07-01T12:00",
         temperature = 24.5,
         humidity = 45,
         windSpeed = 8.3,
@@ -81,7 +81,7 @@ private fun PlaceHourlyPreview() {
         emoji = "☀️",
       ),
       HourlyForecastItem(
-        time = "15:00",
+        time = "2025-07-01T15:00",
         temperature = 26.1,
         humidity = 40,
         windSpeed = 10.1,
@@ -90,7 +90,7 @@ private fun PlaceHourlyPreview() {
         emoji = "☀️",
       ),
       HourlyForecastItem(
-        time = "18:00",
+        time = "2025-07-01T18:00",
         temperature = 22.3,
         humidity = 55,
         windSpeed = 6.7,
@@ -99,7 +99,7 @@ private fun PlaceHourlyPreview() {
         emoji = "☁️",
       ),
       HourlyForecastItem(
-        time = "21:00",
+        time = "2025-07-01T21:00",
         temperature = 18.9,
         humidity = 68,
         windSpeed = 4.2,

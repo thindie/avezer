@@ -14,6 +14,8 @@
     <string name="settings_language_label">Язык</string>
     <string name="settings_language_title">Выберите язык</string>
     <string name="settings_theme_auto_subtitle">Следует за системой</string>
+    <string name="settings_start_with_favorites_label">Начинать с избранного</string>
+    <string name="settings_start_with_favorites_subtitle">Открывать избранные места при запуске приложения</string>
 
     <string name="language_en">Английский</string>
     <string name="language_ru">Русский</string>
@@ -96,6 +98,7 @@
 
     <!-- Places -->
     <string name="places_no_forecast">Нет данных о прогнозе</string>
+    <string name="place_detail_forecast_title">Прогноз на день</string>
     <string name="places_search_button">Поиск мест</string>
     <string name="search_hint">напр. Москва, Калининград, Питер</string>
     <string name="places_see_hourly">Почасовой</string>

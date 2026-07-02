@@ -52,7 +52,7 @@ private fun PlaceDetailPreview() {
   val mockDailyForecast =
     listOf(
       com.thindie.avezer.feature.home.domain.DailyForecast(
-        time = "Mon",
+        time = "2025-07-01",
         temperatureMax = 25.0,
         temperatureMin = 18.0,
         weatherCodeRef = R.string.weather_code_0,
@@ -62,7 +62,7 @@ private fun PlaceDetailPreview() {
         precipitationSum = 0.0,
       ),
       com.thindie.avezer.feature.home.domain.DailyForecast(
-        time = "Tue",
+        time = "2025-07-02",
         temperatureMax = 23.5,
         temperatureMin = 17.2,
         weatherCodeRef = R.string.weather_code_2,
@@ -72,7 +72,7 @@ private fun PlaceDetailPreview() {
         precipitationSum = 2.5,
       ),
       com.thindie.avezer.feature.home.domain.DailyForecast(
-        time = "Wed",
+        time = "2025-07-03",
         temperatureMax = 20.1,
         temperatureMin = 15.8,
         weatherCodeRef = R.string.weather_code_63,

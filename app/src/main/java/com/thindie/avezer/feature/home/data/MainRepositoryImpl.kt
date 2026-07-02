@@ -1,14 +1,11 @@
 package com.thindie.avezer.feature.home.data
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.thindie.avezer.application.LocationResolver
 import com.thindie.avezer.application.storage.Storage
 import com.thindie.avezer.application.storage.StorageId
 import com.thindie.avezer.application.weatherCodeRef
 import com.thindie.avezer.application.weatherEmojiString
 import com.thindie.avezer.engine.Log
-import com.thindie.avezer.error.AppError
 import com.thindie.avezer.feature.home.domain.DailyForecast
 import com.thindie.avezer.feature.home.domain.FavoriteLocation
 import com.thindie.avezer.feature.home.domain.HourlyForecast
@@ -16,11 +13,14 @@ import com.thindie.avezer.feature.home.domain.MainRepository
 import com.thindie.avezer.feature.home.domain.Weather
 import com.thindie.avezer.network.Client
 import com.thindie.avezer.network.WeatherResponse
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 import java.util.Locale
 
 class MainRepositoryImpl(
@@ -43,50 +43,21 @@ class MainRepositoryImpl(
   override suspend fun fetch() {
     Log.d({ "Starting weather cache refresh." })
 
-    val cachedLocations = knownWeatherKeys()
-    if (cachedLocations.isEmpty()) {
-      Log.w({ "Finished fetching weather, but no cached locations were found." })
-      return
-    }
-
-    try {
+    val cachedLocations = knownWeatherKeys().ifEmpty { return }
+    supervisorScope {
       for (location in cachedLocations) {
         updateCachedWeather(location)
       }
-    } catch (e: Exception) {
-      Log.e(
-        { "Critical error during the overall fetch process." },
-        throwable = e,
-      )
     }
   }
 
   override suspend fun read(cityName: String) {
     Log.d({ "Starting weather read for city: $cityName" })
-    try {
-      val location =
-        locationResolver.read(cityName)
-          ?: throw IllegalStateException("Location resolver failed to find coordinates for $cityName.")
-      val (lat, lon) = location
-      readInternal(lat, lon, cityName)
-    } catch (e: IllegalStateException) {
-      Log.e({ "Location resolution failed for $cityName." }, throwable = e)
-      throw e
-    } catch (e: AppError.ServerError.TimeOut) {
-      Log.e(
-        { "Timeout occurred while reading weather for $cityName." },
-      )
-      throw e
-    } catch (e: Exception) {
-      Log.e(
-        { "An unexpected error occurred during read operation for $cityName." },
-        throwable = e,
-      )
-      throw AppError.UnexpectedError(
-        cause = e,
-        message = e.message,
-      )
-    }
+    val location =
+      locationResolver.read(cityName)
+        ?: throw IllegalStateException("Location resolver failed to find coordinates for $cityName.")
+    val (lat, lon) = location
+    readInternal(lat, lon, cityName)
   }
 
   override suspend fun read(
@@ -95,26 +66,7 @@ class MainRepositoryImpl(
     cityName: String,
   ) {
     Log.d({ "Starting weather read for city: $cityName" })
-    try {
-      readInternal(lat, lon, cityName)
-    } catch (e: IllegalStateException) {
-      Log.e({ "Location resolution failed for $cityName." }, throwable = e)
-      throw e
-    } catch (e: AppError.ServerError.TimeOut) {
-      Log.e(
-        { "Timeout occurred while reading weather for $cityName." },
-      )
-      throw e
-    } catch (e: Exception) {
-      Log.e(
-        { "An unexpected error occurred during read operation for $cityName." },
-        throwable = e,
-      )
-      throw AppError.UnexpectedError(
-        cause = e,
-        message = e.message,
-      )
-    }
+    readInternal(lat, lon, cityName)
   }
 
   private suspend fun readInternal(
@@ -122,49 +74,32 @@ class MainRepositoryImpl(
     lon: Double,
     cityName: String,
   ) {
-    Log.d({ "Calling network API at ($lat, $lon)" })
     val weatherResponse = client.getForecast(lat = lat, lon = lon)
     val domainModel = weatherResponse.toDomainModel(cityName)
-
     if (domainModel != null) {
       storeWeather(domainModel)
-      Log.d(
-        { "Successfully fetched and stored weather data for $cityName." },
-      )
-    } else {
-      Log.w(
-        { "Failed to convert network response to domain model for $cityName." },
-      )
     }
   }
 
-  private suspend fun updateCachedWeather(location: CachedWeatherLocation): Boolean {
-    try {
-      Log.d({ "Fetching and updating data for ID: ${location.storageId.value}" })
-
-      val weather = client.getForecast(lat = location.lat, lon = location.lon).toDomainModel(location.city)
-      if (weather != null) {
-        storeWeather(weather)
-        Log.d(
-          { "Successfully fetched and wrote new weather data for ID ${location.storageId.value}." },
-        )
-      } else {
-        Log.w({ "Network call returned null domain model for location ${location.city}." })
+  private suspend fun updateCachedWeather(location: CachedWeatherLocation) {
+    coroutineScope {
+      launch {
+        val weather =
+          client.getForecast(lat = location.lat, lon = location.lon).toDomainModel(location.city)
+        if (weather != null) {
+          storeWeather(weather)
+        }
       }
-
-      return true
-    } catch (e: AppError.ServerError.TimeOut) {
-      Log.e(
-        { "Timeout occurred while fetching weather for ID ${location.storageId.value}." },
-        throwable = e,
-      )
-      return false
-    } catch (e: Exception) {
-      Log.e(
-        { "An unexpected error occurred during fetch for location ${location.city}." },
-        throwable = e,
-      )
-      return false
+      if (weatherCache.value == null) {
+        val id = location.storageId
+        val weatherRaw = storage.read(id)
+        if (weatherRaw != null) {
+          val weather = JsonUtil.fromJson<Weather>(weatherRaw, Weather::class.java)
+          if (weather != null) {
+            weatherCache.update { it.orEmpty() + (id to weather) }
+          }
+        }
+      }
     }
   }
 
@@ -190,13 +125,7 @@ class MainRepositoryImpl(
         )
       }
 
-    val allSavedIds =
-      try {
-        storage.saved.first()
-      } catch (e: Exception) {
-        null
-      }
-    if (allSavedIds == null) return fromFavorites
+    val allSavedIds = storage.saved.firstOrNull() ?: return fromFavorites
     val fromStorage =
       allSavedIds.mapNotNull { id: StorageId ->
         if (id.value.startsWith(WEATHER_KEY_PREFIX)) parseStorageKey(id) else null
@@ -219,34 +148,11 @@ class MainRepositoryImpl(
       return null
     }
 
-    val city = parts.first()
+    val city = parts.first().ifBlank { null } ?: return null
     val lat =
-      parts.getOrNull(1)?.toDoubleOrNull() ?: run {
-        Log.w(
-          {
-            "Invalid latitude in weather storage key: ${id.value}"
-          },
-        )
-        return null
-      }
+      parts.getOrNull(1)?.toDoubleOrNull() ?: return null
     val lon =
-      parts.getOrNull(2)?.toDoubleOrNull() ?: run {
-        Log.w(
-          {
-            "Invalid longitude in weather storage key: ${id.value}"
-          },
-        )
-        return null
-      }
-
-    if (city.isBlank()) {
-      Log.w(
-        {
-          "Empty city in weather storage key: ${id.value}"
-        },
-      )
-      return null
-    }
+      parts.getOrNull(2)?.toDoubleOrNull() ?: return null
 
     return CachedWeatherLocation(
       storageId = id,
@@ -273,7 +179,6 @@ class MainRepositoryImpl(
     private const val WEATHER_KEY_PREFIX = "id_key_###weather"
   }
 
-  @RequiresApi(Build.VERSION_CODES.O)
   fun WeatherResponse.toDomainModel(cityName: String): Weather? {
     val currentData = this.current
     val hourlyData = this.hourly

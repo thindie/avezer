@@ -8,14 +8,15 @@ import com.thindie.avezer.engine.sub
 import com.thindie.avezer.engine.transition
 import com.thindie.avezer.feature.home.domain.MainRepository
 import com.thindie.avezer.feature.home.domain.Weather
+import kotlinx.coroutines.flow.filterNotNull
 
 @Immutable
 data class ScreenState(val forecast: List<Weather>? = null) : ViewState
 
 internal fun ScreenScope<ScreenState, ScreenCommand>.subscriptions(repository: MainRepository) {
   stateSink(this) { scope ->
-    scope.sub(repository.forecast).transition(
-      block = { _, forecast -> ScreenState(forecast) },
+    scope.sub(repository.forecast.filterNotNull()).transition(
+      block = { s, forecast -> s.copy(forecast = forecast) },
     )
   }
 }

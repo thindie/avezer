@@ -16,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.thindie.avezer.R
 import com.thindie.avezer.feature.home.domain.DailyForecast
+import com.thindie.avezer.feature.home.domain.TimeFormatter
 import com.thindie.avezer.uikit.AppTheme
 import com.thindie.avezer.uikit.VSpacer
 
@@ -42,7 +43,7 @@ internal fun DailyForecastCard(
         verticalAlignment = Alignment.CenterVertically,
       ) {
         Text(
-          text = dailyForecast.time,
+          text = TimeFormatter.formatDailyDate(dailyForecast.time),
           style = AppTheme.typography.headlineSmall,
           color = AppTheme.colors.contentPrimary,
         )

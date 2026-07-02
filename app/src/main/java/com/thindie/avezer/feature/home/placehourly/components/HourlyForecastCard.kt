@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.thindie.avezer.R
 import com.thindie.avezer.feature.home.domain.HourlyForecastItem
+import com.thindie.avezer.feature.home.domain.TimeFormatter
 import com.thindie.avezer.uikit.AppTheme
 import com.thindie.avezer.uikit.VSpacer
 
@@ -42,7 +43,7 @@ internal fun HourlyForecastCard(
         horizontalArrangement = Arrangement.SpaceBetween,
       ) {
         Text(
-          text = item.time,
+          text = TimeFormatter.formatHourlyTime(item.time),
           style = AppTheme.typography.titleMedium,
           color = AppTheme.colors.contentPrimary,
         )
@@ -63,29 +64,17 @@ internal fun HourlyForecastCard(
       ) {
         WeatherMetricItem(
           label = stringResource(id = R.string.weather_humidity),
-          value =
-            stringResource(
-              id = R.string.percent_sign,
-              (item.humidity ?: "-").toString(),
-            ),
+          value = stringResource(id = R.string.percent_sign),
         )
 
         WeatherMetricItem(
           label = stringResource(id = R.string.weather_wind_speed),
-          value =
-            stringResource(
-              id = R.string.kilometers_per_hour,
-              item.windSpeed.toInt().toString(),
-            ),
+          value = "${item.windSpeed.toInt()} ${stringResource(R.string.kilometers_per_hour)}",
         )
 
         WeatherMetricItem(
           label = stringResource(id = R.string.weather_precipitation),
-          value =
-            stringResource(
-              id = R.string.millimeter,
-              item.precipitation.toInt().toString(),
-            ),
+          value = "${item.precipitation.toInt()} ${stringResource(R.string.millimeter)}",
         )
       }
 

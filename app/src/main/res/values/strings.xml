@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Avezer</string>
 
@@ -113,5 +114,8 @@
     <string name="weather_min_temp">Min temp</string>
     <string name="weather_sunrise">Sunrise</string>
     <string name="weather_sunset">Sunset</string>
+
+    <!-- Placeholder for unavailable data -->
+    <string name="weather_not_available">--:--</string>
 
 </resources>

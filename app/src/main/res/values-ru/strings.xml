@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Avezer</string>
 
@@ -114,5 +113,8 @@
     <string name="weather_humidity_value">%d%%</string>
     <string name="weather_wind_speed">Скорость ветра</string>
     <string name="weather_wind_speed_value">%d км/ч</string>
+
+    <!-- Placeholder for unavailable data -->
+    <string name="weather_not_available">--:--</string>
 
 </resources>

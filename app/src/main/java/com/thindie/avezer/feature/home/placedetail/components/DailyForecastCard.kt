@@ -137,7 +137,8 @@ internal fun DailyForecastCard(
           )
 
           Text(
-            text = dailyForecast.sunrise ?: "--:--",
+            text = dailyForecast.sunrise?.let { TimeFormatter.formatTime(it) }
+              ?: stringResource(R.string.weather_not_available),
             style = AppTheme.typography.titleMedium,
             color = AppTheme.colors.contentPrimary,
           )
@@ -157,7 +158,8 @@ internal fun DailyForecastCard(
           )
 
           Text(
-            text = dailyForecast.sunset ?: "--:--",
+            text = dailyForecast.sunset?.let { TimeFormatter.formatTime(it) }
+              ?: stringResource(R.string.weather_not_available),
             style = AppTheme.typography.titleMedium,
             color = AppTheme.colors.contentPrimary,
           )

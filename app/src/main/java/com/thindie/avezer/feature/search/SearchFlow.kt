@@ -5,6 +5,7 @@ import com.thindie.avezer.engine.Router
 import com.thindie.avezer.engine.ScreenFlow
 import com.thindie.avezer.feature.home.data.di.AppFlowModule
 import com.thindie.avezer.feature.home.domain.Weather
+import com.thindie.avezer.feature.search.input.SearchRoute
 
 class SearchFlow(
   private val router: Router,

@@ -1,4 +1,4 @@
-package com.thindie.avezer.feature.home.search
+package com.thindie.avezer.feature.search.input
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
@@ -34,7 +34,6 @@ import com.thindie.avezer.R
 import com.thindie.avezer.engine.ScreenScope
 import com.thindie.avezer.feature.home.domain.FavoriteLocation
 import com.thindie.avezer.feature.home.domain.WeatherSearchResult
-import com.thindie.avezer.uikit.Action
 import com.thindie.avezer.uikit.AppScreen
 import com.thindie.avezer.uikit.AppTheme
 import com.thindie.avezer.uikit.Button
@@ -74,11 +73,6 @@ internal fun SearchScreen(scope: ScreenScope<SearchScreenState, SearchScreenComm
   val state by scope.state.collectAsState()
   AppScreen(
     screenScope = scope,
-    primary =
-      Action(
-        listener = { scope.send(SearchScreenCommand.Back) },
-        resRef = R.drawable.ic_arrow_back_24,
-      ),
   ) {
     BackHandler { scope.send(SearchScreenCommand.Back) }
 
@@ -193,7 +187,7 @@ private fun SearchScreenContent(
     ) {
       Button(
         modifier = Modifier.padding(horizontal = 16.dp),
-        text = stringResource(id = R.string.places),
+        text = stringResource(id = R.string.search_title),
         onClick = { onConfirmSearch() },
       )
     }

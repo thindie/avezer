@@ -1,4 +1,4 @@
-package com.thindie.avezer.feature.home.search
+package com.thindie.avezer.feature.search.input
 
 import com.thindie.avezer.engine.ScreenScope
 import com.thindie.avezer.engine.stateSink

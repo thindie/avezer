@@ -1,10 +1,9 @@
-package com.thindie.avezer.feature.search
+package com.thindie.avezer.feature.search.input
 
 import com.thindie.avezer.HomeSection
 import com.thindie.avezer.engine.RouteFactory
 import com.thindie.avezer.engine.ScreenScope
-import com.thindie.avezer.feature.home.search.SearchScreenCommand
-import com.thindie.avezer.feature.home.search.SearchScreenState
+import com.thindie.avezer.feature.search.SearchFlow
 
 val SearchFlow.SearchRoute get() =
   RouteFactory.create(
@@ -16,7 +15,7 @@ val SearchFlow.SearchRoute get() =
     stateSink = { scope: ScreenScope<SearchScreenState, SearchScreenCommand> ->
       scope.subscriptions(flowModule.placesRepository)
     },
-    errorMapper = com.thindie.avezer.feature.home.search.searchScreenErrorMapper(),
-    routeContent = { scope -> com.thindie.avezer.feature.home.search.SearchScreen(scope) },
+    errorMapper = searchScreenErrorMapper(),
+    routeContent = { scope -> SearchScreen(scope) },
     section = HomeSection.Search,
   )

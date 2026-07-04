@@ -32,6 +32,5 @@ internal object TimeFormatter {
     return dateTime.format(DateTimeFormatter.ofPattern("HH:mm"))
   }
 
-  fun formatTime(isoTimeString: String): String =
-    LocalDateTime.parse(isoTimeString).format(DateTimeFormatter.ofPattern("HH:mm"))
+  fun formatTime(isoTimeString: String): String = LocalDateTime.parse(isoTimeString).format(DateTimeFormatter.ofPattern("HH:mm"))
 }

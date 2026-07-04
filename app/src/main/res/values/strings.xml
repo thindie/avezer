@@ -3,8 +3,9 @@
     <string name="app_name">Avezer</string>
 
     <!-- Navigation labels -->
-    <string name="places">Places</string>
-    <string name="search_title">Search</string>
+        <string name="places">Places</string>
+        <string name="search_places">Search Place</string>
+        <string name="search_title">Search</string>
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>

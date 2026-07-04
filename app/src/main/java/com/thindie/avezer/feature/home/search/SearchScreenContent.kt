@@ -2,7 +2,6 @@ package com.thindie.avezer.feature.home.search
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -137,7 +136,7 @@ private fun SearchScreenContent(
             painter = painterResource(id = R.drawable.ic_search_24),
             contentDescription = null,
             modifier = Modifier.size(20.dp),
-            tint = AppTheme.colors.contentSecondary
+            tint = AppTheme.colors.contentSecondary,
           )
         },
         trailingContent = {
@@ -153,7 +152,7 @@ private fun SearchScreenContent(
                   .clickable(onClick = { onSearchQuery("") }),
               painter = painterResource(id = R.drawable.ic_close_16),
               contentDescription = null,
-              tint = AppTheme.colors.contentPrimary
+              tint = AppTheme.colors.contentPrimary,
             )
           }
         },

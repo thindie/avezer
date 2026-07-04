@@ -100,7 +100,7 @@ fun TextField(
             Text(
               text = placeholder,
               style = AppTheme.typography.placeholder,
-              color = AppTheme.colors.contentTertiary
+              color = AppTheme.colors.contentTertiary,
             )
           } else {
             innerText()

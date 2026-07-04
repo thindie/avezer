@@ -23,6 +23,12 @@ After completing a coding task, use `get_build_command` to run a build and verif
 
 - Do not commit or create new branches unless the user explicitly requests it
 - When committing, follow good Git style: short subject line (≤50 chars), imperative mood, blank-line separator from body
+- If user asks to commit changes, use this  simple but strict action sequence without skip
+   1) check git status
+   2) summarize the changes
+   3) atomically separate the logic bounds
+   4) check git history to resolve the style of commits at current project
+   5) atomically and sequintionally commit those changes
 
 ## Examples
 
@@ -36,7 +42,8 @@ full path: <full path>
 4. Validate via build
 
 **Bad approach:** Jumping straight into editing without a plan — this often leads to missed edge cases or broken related code.
-**rule** once plan is done, must proceed to implement without confirm. proceed with spawn_agent or directly. 
+**The rule:** once plan is done, must proceed to implement without confirm. proceed with spawn_agent or directly. 
+
 
 ## Getting Job Done
 

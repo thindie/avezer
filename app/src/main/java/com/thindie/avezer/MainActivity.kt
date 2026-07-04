@@ -54,8 +54,10 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import com.thindie.avezer.application.Application
 import com.thindie.avezer.engine.Route
+import com.thindie.avezer.engine.Router
 import com.thindie.avezer.engine.Section
 import com.thindie.avezer.feature.home.HomeFlow
+import com.thindie.avezer.feature.search.SearchFlow
 import com.thindie.avezer.feature.settings.SettingsFlow
 import com.thindie.avezer.uikit.AppTheme
 import com.thindie.avezer.uikit.LocalThemeSwitcher
@@ -64,11 +66,14 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+  private lateinit var app: Application
+  private lateinit var router: Router
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     enableEdgeToEdge()
-    val app = application as Application
-    val router = app.requireRouter()
+    app = application as Application
+    router = app.requireRouter()
     awaitFinish()
     setContent {
       SideEffect {
@@ -140,13 +145,21 @@ class MainActivity : ComponentActivity() {
                         BottomNavigationBar(
                           modifier = Modifier.align(Alignment.BottomCenter),
                           onPlacesClick = {},
-                          onSettingsClick = {
-                            SettingsFlow(
-                              router = router,
-                              repository = app.applicationScope.settingsRepository,
-                              context = app,
-                            ).switch()
-                          },
+                          onSearchClick = { switchToSearch() },
+                          onSettingsClick = { switchToSettings() },
+                          selected = route.section,
+                        )
+                      }
+                    }
+
+                    is HomeSection.Search -> {
+                      Box(modifier = Modifier.systemBarsPadding()) {
+                        route.content.invoke()
+                        BottomNavigationBar(
+                          modifier = Modifier.align(Alignment.BottomCenter),
+                          onPlacesClick = { switchToHome() },
+                          onSearchClick = {},
+                          onSettingsClick = { switchToSettings() },
                           selected = route.section,
                         )
                       }
@@ -157,12 +170,8 @@ class MainActivity : ComponentActivity() {
                         route.content.invoke()
                         BottomNavigationBar(
                           modifier = Modifier.align(Alignment.BottomCenter),
-                          onPlacesClick = {
-                            HomeFlow(
-                              router = router,
-                              flowModule = app.applicationScope.appFlowModule,
-                            ).switch()
-                          },
+                          onPlacesClick = { switchToHome() },
+                          onSearchClick = { switchToSearch() },
                           onSettingsClick = {},
                           selected = route.section,
                         )
@@ -186,12 +195,44 @@ class MainActivity : ComponentActivity() {
       finish()
     }
   }
+
+  private fun switchToHome() {
+    val flow = HomeFlow(router = router, flowModule = app.applicationScope.appFlowModule)
+    flow.onFinishBuilder { result ->
+      when (result) {
+        HomeFlow.Result.Search -> switchToSearch()
+        HomeFlow.Result.Settings -> switchToSettings()
+      }
+    }
+    flow.switch()
+  }
+
+  private fun switchToSearch() {
+    val flow = SearchFlow(router = router, flowModule = app.applicationScope.appFlowModule)
+    flow.onFinishBuilder { result ->
+      when (result) {
+        is SearchFlow.Result.PlaceRequested -> {
+          // TODO: handle selected place — e.g. navigate to Places with filter
+        }
+      }
+    }
+    flow.switch()
+  }
+
+  private fun switchToSettings() {
+    SettingsFlow(
+      router = router,
+      repository = app.applicationScope.settingsRepository,
+      context = app,
+    ).switch()
+  }
 }
 
 @Composable
 fun BottomNavigationBar(
   modifier: Modifier = Modifier,
   onPlacesClick: () -> Unit,
+  onSearchClick: () -> Unit,
   onSettingsClick: () -> Unit,
   selected: Section,
 ) {
@@ -199,6 +240,7 @@ fun BottomNavigationBar(
     remember {
       listOf(
         HomeSection.Places,
+        HomeSection.Search,
         HomeSection.Settings,
       )
     }
@@ -217,6 +259,7 @@ fun BottomNavigationBar(
       val (icon, title) =
         when (it) {
           HomeSection.Places -> R.drawable.ic_home_24 to R.string.places
+          HomeSection.Search -> R.drawable.ic_search_24 to R.string.search_title
           HomeSection.Settings -> R.drawable.ic_settings_24 to R.string.settings_title
         }
 
@@ -226,6 +269,7 @@ fun BottomNavigationBar(
         onClick = {
           when (it) {
             HomeSection.Places -> onPlacesClick.invoke()
+            HomeSection.Search -> onSearchClick.invoke()
             HomeSection.Settings -> onSettingsClick.invoke()
           }
         },
@@ -285,6 +329,9 @@ fun Section(
 
 @Immutable
 sealed interface HomeSection : Section {
+  @Immutable
+  data object Search : HomeSection
+
   @Immutable
   data object Settings : HomeSection
 

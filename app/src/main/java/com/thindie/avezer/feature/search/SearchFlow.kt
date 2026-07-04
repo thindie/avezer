@@ -1,26 +1,24 @@
-package com.thindie.avezer.feature.home
+package com.thindie.avezer.feature.search
 
 import com.thindie.avezer.engine.Route
 import com.thindie.avezer.engine.Router
 import com.thindie.avezer.engine.ScreenFlow
 import com.thindie.avezer.feature.home.data.di.AppFlowModule
-import com.thindie.avezer.feature.home.places.places
+import com.thindie.avezer.feature.home.domain.Weather
 
-class HomeFlow(
+class SearchFlow(
   private val router: Router,
   val flowModule: AppFlowModule,
-) : ScreenFlow<Route, HomeFlow.Result>(router) {
+) : ScreenFlow<Route, SearchFlow.Result>(router) {
   override fun start() {
-    router.push(places)
+    router.push(SearchRoute)
   }
 
   fun switch() {
-    router.replaceTop(places)
+    router.replaceTop(SearchRoute)
   }
 
   sealed interface Result {
-    data object Search : Result
-
-    data object Settings : Result
+    data class PlaceRequested(val result: Weather) : Result
   }
 }

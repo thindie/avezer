@@ -30,6 +30,11 @@ class AppColors(
   val onAccentPrimary: Color,
   val successPrimary: Color,
   val errorPrimary: Color,
+  val weatherSunny: Color,
+  val weatherCloudy: Color,
+  val weatherRainy: Color,
+  val weatherSnowy: Color,
+  val weatherThunderstorm: Color,
 )
 
 private val LightColorScheme =
@@ -44,6 +49,11 @@ private val LightColorScheme =
     successPrimary = Color(0xFF387A3E),
     errorPrimary = Color(0xFFB3261E),
     buttonContentPrimary = Color(0xFFFDFCFA),
+    weatherSunny = Color(0xFFFFA726),
+    weatherCloudy = Color(0xFF78909C),
+    weatherRainy = Color(0xFF42A5F5),
+    weatherSnowy = Color(0xFF4FC3F7),
+    weatherThunderstorm = Color(0xFFAB47BC),
   )
 
 private val DarkColorScheme =
@@ -58,6 +68,11 @@ private val DarkColorScheme =
     successPrimary = Color(0xFF5CB864),
     errorPrimary = Color(0xFFF05252),
     buttonContentPrimary = Color(0xFF17161A),
+    weatherSunny = Color(0xFFFFD54F),
+    weatherCloudy = Color(0xFF90A4AE),
+    weatherRainy = Color(0xFF64B5F6),
+    weatherSnowy = Color(0xFF81D4FA),
+    weatherThunderstorm = Color(0xFFCE93D8),
   )
 
 class ThemeSwitcher {
@@ -120,6 +135,11 @@ fun AppTheme(
       onAccentPrimary = animateColor(targetColors.onAccentPrimary),
       errorPrimary = animateColor(targetColors.errorPrimary),
       buttonContentPrimary = animateColor(targetColors.buttonContentPrimary),
+      weatherSunny = animateColor(targetColors.weatherSunny),
+      weatherCloudy = animateColor(targetColors.weatherCloudy),
+      weatherRainy = animateColor(targetColors.weatherRainy),
+      weatherSnowy = animateColor(targetColors.weatherSnowy),
+      weatherThunderstorm = animateColor(targetColors.weatherThunderstorm),
     )
 
   CompositionLocalProvider(

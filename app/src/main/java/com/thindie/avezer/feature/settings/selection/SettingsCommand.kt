@@ -5,11 +5,12 @@ import android.os.Build
 import android.os.LocaleList
 import com.thindie.avezer.engine.Command
 import com.thindie.avezer.feature.settings.SettingsFlow
+import com.thindie.avezer.feature.settings.domain.SettingsRepository
 
 internal sealed interface SettingsCommand : Command {
   data object Back : SettingsCommand
 
-  data class SetThemeChoice(val themeChoice: SettingsState.ThemeChoice) : SettingsCommand
+  data class SetThemeChoice(val themeChoice: SettingsRepository.ThemeChoice) : SettingsCommand
 
   data class SelectLanguage(val languageCode: String) : SettingsCommand
 
@@ -37,7 +38,10 @@ internal suspend fun SettingsFlow.exec(
       }
     }
 
-    is SettingsCommand.SetThemeChoice -> state.copy(themeChoice = command.themeChoice)
+    is SettingsCommand.SetThemeChoice -> {
+      repository.setThemeChoice(command.themeChoice)
+      state.copy(themeChoice = command.themeChoice)
+    }
 
     is SettingsCommand.StartWithFavorites -> {
       val newState = !state.startWithFavorites

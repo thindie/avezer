@@ -58,6 +58,7 @@ import com.thindie.avezer.engine.Section
 import com.thindie.avezer.feature.home.HomeFlow
 import com.thindie.avezer.feature.search.SearchFlow
 import com.thindie.avezer.feature.settings.SettingsFlow
+import com.thindie.avezer.feature.settings.domain.SettingsRepository
 import com.thindie.avezer.uikit.AppTheme
 import com.thindie.avezer.uikit.LocalThemeSwitcher
 import com.thindie.avezer.uikit.ThemeSwitcher
@@ -83,7 +84,24 @@ class MainActivity : ComponentActivity() {
         )
           .start()
       }
-      val themeSwitcher = remember { ThemeSwitcher() }
+      val settingsRepository: SettingsRepository? = remember { app.applicationScope.settingsRepository }
+      val themeSwitcher =
+        remember(settingsRepository) {
+          val switcher = ThemeSwitcher()
+          if (settingsRepository != null) {
+            val saved = settingsRepository.themeChoice()
+            if (saved != null) {
+              switcher.set(
+                when (saved) {
+                  is SettingsRepository.ThemeChoice.Auto -> ThemeSwitcher.Choice.Auto
+                  is SettingsRepository.ThemeChoice.Light -> ThemeSwitcher.Choice.Light
+                  is SettingsRepository.ThemeChoice.Dark -> ThemeSwitcher.Choice.Dark
+                },
+              )
+            }
+          }
+          switcher
+        }
       CompositionLocalProvider(
         LocalThemeSwitcher provides themeSwitcher,
       ) {

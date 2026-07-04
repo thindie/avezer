@@ -2,6 +2,7 @@ package com.thindie.avezer.feature.settings.selection
 
 import androidx.compose.runtime.Immutable
 import com.thindie.avezer.engine.ViewState
+import com.thindie.avezer.feature.settings.domain.SettingsRepository.ThemeChoice
 
 @Immutable
 data class SettingsState(
@@ -9,13 +10,4 @@ data class SettingsState(
   val language: String? = null,
   val startWithFavorites: Boolean = false,
   val legacyRestart: Boolean = false,
-) : ViewState {
-  @Immutable
-  sealed interface ThemeChoice {
-    data object Auto : ThemeChoice
-
-    data object Light : ThemeChoice
-
-    data object Dark : ThemeChoice
-  }
-}
+) : ViewState

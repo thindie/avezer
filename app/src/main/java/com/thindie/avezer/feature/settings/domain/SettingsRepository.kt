@@ -12,4 +12,16 @@ interface SettingsRepository {
   suspend fun toggleStartWithFavorite(enabled: Boolean)
 
   val startWithFavorite: Flow<Boolean>
+
+  fun themeChoice(): ThemeChoice?
+
+  suspend fun setThemeChoice(choice: ThemeChoice)
+
+  sealed interface ThemeChoice {
+    data object Auto : ThemeChoice
+
+    data object Light : ThemeChoice
+
+    data object Dark : ThemeChoice
+  }
 }

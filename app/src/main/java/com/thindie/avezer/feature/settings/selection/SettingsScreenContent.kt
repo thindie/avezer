@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.thindie.avezer.R
 import com.thindie.avezer.engine.ScreenScope
 import com.thindie.avezer.engine.ServiceCommand
+import com.thindie.avezer.feature.settings.domain.SettingsRepository
 import com.thindie.avezer.uikit.Action
 import com.thindie.avezer.uikit.AppScreen
 import com.thindie.avezer.uikit.AppTheme
@@ -41,7 +42,7 @@ import com.thindie.avezer.uikit.VSpacer
 private fun SettingsPreview() {
   val mockState =
     SettingsState(
-      themeChoice = SettingsState.ThemeChoice.Auto,
+      themeChoice = SettingsRepository.ThemeChoice.Auto,
       language = "en",
       startWithFavorites = false,
       legacyRestart = false,
@@ -70,7 +71,7 @@ internal fun SettingsScreenContent(scope: ScreenScope<SettingsState, SettingsCom
 private fun SettingsScreenBody(
   state: SettingsState,
   onBack: () -> Unit = {},
-  onSetThemeChoice: (SettingsState.ThemeChoice) -> Unit = {},
+  onSetThemeChoice: (SettingsRepository.ThemeChoice) -> Unit = {},
   onStartWithFavorites: () -> Unit = {},
   onSelectLanguage: (String) -> Unit = {},
 ) {
@@ -129,7 +130,7 @@ private fun SettingsScreenBody(
       onCheckedChange = {
         if (theme == ThemeSwitcher.Choice.Auto) return@ThemeOption
         themeSwitcher.set(ThemeSwitcher.Choice.Light)
-        onSetThemeChoice(SettingsState.ThemeChoice.Light)
+        onSetThemeChoice(SettingsRepository.ThemeChoice.Light)
       },
     )
 
@@ -140,7 +141,7 @@ private fun SettingsScreenBody(
       onCheckedChange = {
         if (theme == ThemeSwitcher.Choice.Auto) return@ThemeOption
         themeSwitcher.set(ThemeSwitcher.Choice.Dark)
-        onSetThemeChoice(SettingsState.ThemeChoice.Dark)
+        onSetThemeChoice(SettingsRepository.ThemeChoice.Dark)
       },
     )
 
@@ -358,9 +359,9 @@ private fun languageLabel(language: String?): String {
   }
 }
 
-private fun ThemeSwitcher.Choice.toSettingsThemeChoice(): SettingsState.ThemeChoice =
+private fun ThemeSwitcher.Choice.toSettingsThemeChoice(): SettingsRepository.ThemeChoice =
   when (this) {
-    ThemeSwitcher.Choice.Auto -> SettingsState.ThemeChoice.Auto
-    ThemeSwitcher.Choice.Light -> SettingsState.ThemeChoice.Light
-    ThemeSwitcher.Choice.Dark -> SettingsState.ThemeChoice.Dark
+    ThemeSwitcher.Choice.Auto -> SettingsRepository.ThemeChoice.Auto
+    ThemeSwitcher.Choice.Light -> SettingsRepository.ThemeChoice.Light
+    ThemeSwitcher.Choice.Dark -> SettingsRepository.ThemeChoice.Dark
   }

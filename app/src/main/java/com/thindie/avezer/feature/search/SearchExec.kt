@@ -4,9 +4,7 @@ import com.thindie.avezer.engine.ScreenScope
 import com.thindie.avezer.engine.stateSink
 import com.thindie.avezer.engine.sub
 import com.thindie.avezer.engine.transition
-import com.thindie.avezer.feature.home.data.di.AppFlowModule
 import com.thindie.avezer.feature.home.domain.PlacesRepository
-import com.thindie.avezer.feature.home.placehourly.PlaceHourlyRoute
 import com.thindie.avezer.feature.home.search.SearchScreenCommand
 import com.thindie.avezer.feature.home.search.SearchScreenState
 import kotlinx.coroutines.flow.first
@@ -33,7 +31,7 @@ internal suspend fun SearchFlow.exec(
           it.lon == selected.lon && it.lat == selected.lat
         }
       if (result != null) {
-        go(PlaceHourlyRoute.create(flowModule, result))
+        finish(SearchFlow.Result.PlaceRequested(result))
       }
 
       state
@@ -46,7 +44,7 @@ internal suspend fun SearchFlow.exec(
     }
 
     is SearchScreenCommand.OpenSearch -> {
-      go(SearchRoute.create(flowModule))
+      go(this@exec.SearchRoute)
       state
     }
 

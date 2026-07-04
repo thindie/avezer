@@ -6,7 +6,6 @@ import com.thindie.avezer.feature.home.domain.MainRepository
 import com.thindie.avezer.feature.home.domain.Weather
 import com.thindie.avezer.feature.home.placedetail.placeDetail
 import com.thindie.avezer.feature.home.placehourly.placeHourly
-import com.thindie.avezer.feature.home.search.searchPlaces
 
 internal sealed interface ScreenCommand : Command {
   data object Refresh : ScreenCommand
@@ -44,7 +43,7 @@ internal suspend fun HomeFlow.exec(
     }
 
     is ScreenCommand.OpenSearch -> {
-      go(searchPlaces)
+      finish(HomeFlow.Result.Search)
       null
     }
 

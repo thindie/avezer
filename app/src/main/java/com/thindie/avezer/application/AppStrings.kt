@@ -1,12 +1,12 @@
 package com.thindie.avezer.application
 
 import android.content.Context
-import androidx.annotation.StringRes
 import com.thindie.avezer.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 private var weatherMap: Map<Int, Int>? = null
+private var dayOfWeekStrings: Map<Int, String>? = null
 
 private val weatherEmojis =
   mapOf(
@@ -85,6 +85,8 @@ object AppStrings {
       80, 81, 82, 85, 86, 95, 96, 99,
     )
 
+  private val dayOfWeekIds = listOf(1, 2, 3, 4, 5, 6, 7)
+
   suspend fun init(context: Context) {
     errorUnexpected = context.getString(R.string.error_unexpected)
     withContext(Dispatchers.IO) {
@@ -98,13 +100,32 @@ object AppStrings {
             ).let { if (it != 0) it else R.string.weather_code_unknown }
           }
       }
+      if (dayOfWeekStrings == null) {
+        dayOfWeekStrings =
+          dayOfWeekIds.associateWith { id ->
+            context.resources.getIdentifier(
+              "day_of_week_$id",
+              "string",
+              context.packageName,
+            ).let { resId ->
+              if (resId != 0) {
+                context.getString(resId)
+              } else {
+                context.getString(R.string.day_of_week_unknown)
+              }
+            }
+          }
+      }
     }
   }
 }
 
-@StringRes
 fun weatherCodeRef(code: Int): Int {
   return weatherMap?.get(code) ?: R.string.weather_code_unknown
+}
+
+fun dayOfWeekString(dayValue: Int): String {
+  return dayOfWeekStrings?.get(dayValue) ?: "---"
 }
 
 fun weatherEmojiString(code: Int): String = weatherEmojis[code] ?: "❓"

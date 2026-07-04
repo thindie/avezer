@@ -85,6 +85,7 @@
     <string name="weather_code_99">Thunderstorm with heavy hail</string>
 
     <!-- Fallback -->
+    <string name="day_of_week_unknown">---</string>
     <string name="weather_code_unknown">Unknown weather</string>
 
     <!-- Units & Weather (restored) -->
@@ -115,6 +116,15 @@
     <string name="weather_min_temp">Min temp</string>
     <string name="weather_sunrise">Sunrise</string>
     <string name="weather_sunset">Sunset</string>
+
+    <!-- Day of week abbreviations (loaded dynamically via getIdentifier) -->
+    <string name="day_of_week_1">Mon</string>
+    <string name="day_of_week_2">Tue</string>
+    <string name="day_of_week_3">Wed</string>
+    <string name="day_of_week_4">Thu</string>
+    <string name="day_of_week_5">Fri</string>
+    <string name="day_of_week_6">Sat</string>
+    <string name="day_of_week_7">Sun</string>
 
     <!-- Placeholder for unavailable data -->
     <string name="weather_not_available">--:--</string>

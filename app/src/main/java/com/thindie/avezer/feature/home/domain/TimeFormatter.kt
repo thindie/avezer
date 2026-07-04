@@ -6,25 +6,33 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 internal object TimeFormatter {
-  private val dayOfWeekAbbreviations =
+  private val dayNameToValue =
     mapOf(
-      "Mon" to "Пн",
-      "Tue" to "Вт",
-      "Wed" to "Ср",
-      "Thu" to "Чт",
-      "Fri" to "Пт",
-      "Sat" to "Сб",
-      "Sun" to "Вс",
+      "monday" to 1,
+      "tuesday" to 2,
+      "wednesday" to 3,
+      "thursday" to 4,
+      "friday" to 5,
+      "saturday" to 6,
+      "sunday" to 7,
     )
 
   fun formatDailyDate(isoDateString: String): String {
     val date = LocalDate.parse(isoDateString)
-    val dayOfWeek =
-      date.dayOfWeek.toString()
-        .removePrefix("Day")
-        .let { abbr -> dayOfWeekAbbreviations[abbr] ?: abbr }
+    val dayValue = resolveDayOfWeekValue(date.dayOfWeek)
+    val dayOfWeek = com.thindie.avezer.application.dayOfWeekString(dayValue)
     val formattedDate = date.format(DateTimeFormatter.ofPattern("d MMM", Locale.getDefault()))
     return "$dayOfWeek, $formattedDate"
+  }
+
+  private fun resolveDayOfWeekValue(dayOfWeek: java.time.DayOfWeek): Int {
+    val direct = dayOfWeek.value
+    if (direct in 1..7) return direct
+
+    val name = dayOfWeek.toString().lowercase()
+    dayNameToValue[name]?.let { return it }
+
+    return 1 // default to Monday if everything fails
   }
 
   fun formatHourlyTime(isoTimeString: String): String {

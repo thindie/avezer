@@ -83,6 +83,7 @@
     <string name="weather_code_99">Гроза с сильным градом</string>
 
     <!-- Fallback -->
+    <string name="day_of_week_unknown">---</string>
     <string name="weather_code_unknown">Неизвестная погода</string>
 
     <!-- Temperature & Time -->
@@ -114,6 +115,15 @@
     <string name="weather_humidity_value">%d%%</string>
     <string name="weather_wind_speed">Скорость ветра</string>
     <string name="weather_wind_speed_value">%d км/ч</string>
+
+    <!-- Day of week abbreviations (loaded dynamically via getIdentifier) -->
+    <string name="day_of_week_1">Пн</string>
+    <string name="day_of_week_2">Вт</string>
+    <string name="day_of_week_3">Ср</string>
+    <string name="day_of_week_4">Чт</string>
+    <string name="day_of_week_5">Пт</string>
+    <string name="day_of_week_6">Сб</string>
+    <string name="day_of_week_7">Вс</string>
 
     <!-- Placeholder for unavailable data -->
     <string name="weather_not_available">--:--</string>

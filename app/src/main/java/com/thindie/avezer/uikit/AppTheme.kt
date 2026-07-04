@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 class AppColors(
   val contentPrimary: Color,
   val contentSecondary: Color,
+  val contentTertiary: Color,
   val buttonContentPrimary: Color,
   val backgroundPrimary: Color,
   val backgroundSecondary: Color,
@@ -34,7 +35,8 @@ class AppColors(
 private val LightColorScheme =
   AppColors(
     contentPrimary = Color(0xFF1C1B1F),
-    contentSecondary = Color(0xFF6E6E73),
+    contentSecondary = Color(0xFF3F3F44),
+    contentTertiary = Color(0xFF6E6E73),
     backgroundPrimary = Color(0xFFFDFCFA),
     backgroundSecondary = Color(0xFFF4F2EF),
     accentPrimary = Color(0xFF2A9D8F),
@@ -47,9 +49,10 @@ private val LightColorScheme =
 private val DarkColorScheme =
   AppColors(
     contentPrimary = Color(0xFFEDEAF5),
-    contentSecondary = Color(0xFFC4C1CC),
+    contentSecondary = Color(0xFFD8D5E0),
+    contentTertiary = Color(0xFFB8B5C0),
     backgroundPrimary = Color(0xFF17161A),
-    backgroundSecondary = Color(0xFF232129),
+    backgroundSecondary = Color(0xFF353240),
     accentPrimary = Color(0xFF2A9D8F),
     onAccentPrimary = Color(0xFFFDFCFA),
     successPrimary = Color(0xFF5CB864),
@@ -109,6 +112,7 @@ fun AppTheme(
     AppColors(
       contentPrimary = animateColor(targetColors.contentPrimary),
       contentSecondary = animateColor(targetColors.contentSecondary),
+      contentTertiary = animateColor(targetColors.contentTertiary),
       backgroundPrimary = animateColor(targetColors.backgroundPrimary),
       backgroundSecondary = animateColor(targetColors.backgroundSecondary),
       accentPrimary = animateColor(targetColors.accentPrimary),
@@ -205,6 +209,13 @@ object AppTypography {
     TextStyle(
       fontSize = 10.sp,
       lineHeight = 14.sp,
+      fontWeight = FontWeight.W400,
+    )
+
+  val placeholder =
+    TextStyle(
+      fontSize = 13.sp,
+      lineHeight = 16.sp,
       fontWeight = FontWeight.W400,
     )
 }

@@ -99,7 +99,8 @@ fun TextField(
           if (textFieldValue.text.isEmpty() && placeholder.isNotEmpty()) {
             Text(
               text = placeholder,
-              color = AppTheme.colors.contentSecondary,
+              style = AppTheme.typography.placeholder,
+              color = AppTheme.colors.contentTertiary
             )
           } else {
             innerText()

@@ -33,28 +33,28 @@ class AppColors(
 
 private val LightColorScheme =
   AppColors(
-    contentPrimary = Color(0xFF1A1A1A),
-    contentSecondary = Color(0xFF757575),
-    backgroundPrimary = Color.White,
-    backgroundSecondary = Color(0xFFF5F7FA),
-    accentPrimary = Color(0xFF4766FF),
-    onAccentPrimary = Color(0xFFF5F7FA),
-    successPrimary = Color(0xFF2E7D32),
-    errorPrimary = Color(0xFFD32F2F),
-    buttonContentPrimary = Color(0xFFF5F7FA),
+    contentPrimary = Color(0xFF1C1B1F),
+    contentSecondary = Color(0xFF6E6E73),
+    backgroundPrimary = Color(0xFFFDFCFA),
+    backgroundSecondary = Color(0xFFF4F2EF),
+    accentPrimary = Color(0xFF2A9D8F),
+    onAccentPrimary = Color(0xFF143B36),
+    successPrimary = Color(0xFF387A3E),
+    errorPrimary = Color(0xFFB3261E),
+    buttonContentPrimary = Color(0xFFFDFCFA),
   )
 
 private val DarkColorScheme =
   AppColors(
-    contentPrimary = Color(0xFFF5F5F5),
-    contentSecondary = Color(0xFF9E9E9E),
-    backgroundPrimary = Color(0xFF121212),
-    backgroundSecondary = Color(0xFF1E1E1E),
-    accentPrimary = Color(0xFF9DADFF),
-    onAccentPrimary = Color(0xFF121212),
-    successPrimary = Color(0xFF4CAF50),
-    errorPrimary = Color(0xFFF44336),
-    buttonContentPrimary = Color(0xFF121212),
+    contentPrimary = Color(0xFFEDEAF5),
+    contentSecondary = Color(0xFFC4C1CC),
+    backgroundPrimary = Color(0xFF17161A),
+    backgroundSecondary = Color(0xFF232129),
+    accentPrimary = Color(0xFF2A9D8F),
+    onAccentPrimary = Color(0xFFFDFCFA),
+    successPrimary = Color(0xFF5CB864),
+    errorPrimary = Color(0xFFF05252),
+    buttonContentPrimary = Color(0xFF17161A),
   )
 
 class ThemeSwitcher {

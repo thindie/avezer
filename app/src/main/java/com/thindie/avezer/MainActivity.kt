@@ -26,7 +26,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
@@ -62,6 +61,7 @@ import com.thindie.avezer.feature.settings.SettingsFlow
 import com.thindie.avezer.uikit.AppTheme
 import com.thindie.avezer.uikit.LocalThemeSwitcher
 import com.thindie.avezer.uikit.ThemeSwitcher
+import com.thindie.avezer.uikit.VSpacer
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -249,9 +249,7 @@ fun BottomNavigationBar(
     modifier =
       modifier
         .fillMaxWidth()
-        .height(64.dp)
-        .background(AppTheme.colors.backgroundPrimary)
-        .padding(horizontal = 8.dp),
+        .background(AppTheme.colors.backgroundPrimary),
     horizontalArrangement = Arrangement.SpaceEvenly,
     verticalAlignment = Alignment.CenterVertically,
   ) {
@@ -311,6 +309,7 @@ fun Section(
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally,
   ) {
+    VSpacer(16.dp)
     Icon(
       painter = icon,
       contentDescription = null,
@@ -319,11 +318,12 @@ fun Section(
     )
     Text(
       text = title,
-      style = AppTheme.typography.bodySmall,
+      style = AppTheme.typography.labelMedium,
       color = color,
       modifier = Modifier.padding(top = 4.dp),
       maxLines = 1,
     )
+    VSpacer(8.dp)
   }
 }
 

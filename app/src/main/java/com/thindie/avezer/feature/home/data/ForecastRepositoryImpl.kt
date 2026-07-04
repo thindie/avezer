@@ -8,12 +8,11 @@ import com.thindie.avezer.application.weatherEmojiString
 import com.thindie.avezer.engine.Log
 import com.thindie.avezer.feature.home.domain.DailyForecast
 import com.thindie.avezer.feature.home.domain.FavoriteLocation
+import com.thindie.avezer.feature.home.domain.ForecastRepository
 import com.thindie.avezer.feature.home.domain.HourlyForecast
-import com.thindie.avezer.feature.home.domain.MainRepository
 import com.thindie.avezer.feature.home.domain.Weather
 import com.thindie.avezer.network.Client
 import com.thindie.avezer.network.WeatherResponse
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.firstOrNull
@@ -23,11 +22,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import java.util.Locale
 
-class MainRepositoryImpl(
+class ForecastRepositoryImpl(
   private val storage: Storage,
   private val client: Client,
   private val locationResolver: LocationResolver,
-) : MainRepository {
+) : ForecastRepository {
   private data class CachedWeatherLocation(
     val storageId: StorageId,
     val city: String,
@@ -46,18 +45,29 @@ class MainRepositoryImpl(
     val cachedLocations = knownWeatherKeys().ifEmpty { return }
     supervisorScope {
       for (location in cachedLocations) {
-        updateCachedWeather(location)
+        launch {
+          val id = location.storageId
+          val weatherRaw = storage.read(id)
+          if (weatherRaw != null) {
+            val weather = JsonUtil.fromJson<Weather>(weatherRaw, Weather::class.java)
+            if (weather != null) {
+              weatherCache.update { it.orEmpty() + (id to weather) }
+            }
+          }
+        }
       }
     }
-  }
-
-  override suspend fun read(cityName: String) {
-    Log.d({ "Starting weather read for city: $cityName" })
-    val location =
-      locationResolver.read(cityName)
-        ?: throw IllegalStateException("Location resolver failed to find coordinates for $cityName.")
-    val (lat, lon) = location
-    readInternal(lat, lon, cityName)
+    supervisorScope {
+      for (location in cachedLocations) {
+        launch {
+          val weather =
+            client.getForecast(lat = location.lat, lon = location.lon).toDomainModel(location.city)
+          if (weather != null) {
+            storeWeather(weather)
+          }
+        }
+      }
+    }
   }
 
   override suspend fun read(
@@ -69,40 +79,6 @@ class MainRepositoryImpl(
     val weatherResponse = client.getForecast(lat = lat, lon = lon)
     val domainModel = weatherResponse.toDomainModel(cityName)
     return requireNotNull(domainModel)
-  }
-
-  private suspend fun readInternal(
-    lat: Double,
-    lon: Double,
-    cityName: String,
-  ) {
-    val weatherResponse = client.getForecast(lat = lat, lon = lon)
-    val domainModel = weatherResponse.toDomainModel(cityName)
-    if (domainModel != null) {
-      storeWeather(domainModel)
-    }
-  }
-
-  private suspend fun updateCachedWeather(location: CachedWeatherLocation) {
-    coroutineScope {
-      launch {
-        val weather =
-          client.getForecast(lat = location.lat, lon = location.lon).toDomainModel(location.city)
-        if (weather != null) {
-          storeWeather(weather)
-        }
-      }
-      if (weatherCache.value == null) {
-        val id = location.storageId
-        val weatherRaw = storage.read(id)
-        if (weatherRaw != null) {
-          val weather = JsonUtil.fromJson<Weather>(weatherRaw, Weather::class.java)
-          if (weather != null) {
-            weatherCache.update { it.orEmpty() + (id to weather) }
-          }
-        }
-      }
-    }
   }
 
   private suspend fun storeWeather(weather: Weather) {

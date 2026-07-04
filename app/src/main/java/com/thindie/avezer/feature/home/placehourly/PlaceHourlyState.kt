@@ -6,8 +6,8 @@ import com.thindie.avezer.engine.ViewState
 import com.thindie.avezer.engine.stateSink
 import com.thindie.avezer.engine.sub
 import com.thindie.avezer.engine.transition
+import com.thindie.avezer.feature.home.domain.ForecastRepository
 import com.thindie.avezer.feature.home.domain.HourlyForecastItem
-import com.thindie.avezer.feature.home.domain.MainRepository
 import com.thindie.avezer.feature.home.domain.Weather
 import kotlinx.coroutines.flow.filter
 
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.filter
 data class PlaceHourlyState(val hourlyForecast: List<HourlyForecastItem>? = null) : ViewState
 
 internal fun ScreenScope<PlaceHourlyState, PlaceHourlyCommand>.subscriptions(
-  repository: MainRepository,
+  repository: ForecastRepository,
   weather: Weather,
 ) {
   stateSink(this) { scope ->

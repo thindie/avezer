@@ -7,7 +7,7 @@ import com.thindie.avezer.engine.stateSink
 import com.thindie.avezer.engine.sub
 import com.thindie.avezer.engine.transition
 import com.thindie.avezer.feature.home.domain.DailyForecast
-import com.thindie.avezer.feature.home.domain.MainRepository
+import com.thindie.avezer.feature.home.domain.ForecastRepository
 import com.thindie.avezer.feature.home.domain.Weather
 import kotlinx.coroutines.flow.filter
 
@@ -18,7 +18,7 @@ data class PlaceDetailState(
 ) : ViewState
 
 internal fun ScreenScope<PlaceDetailState, PlaceDetailCommand>.subscriptions(
-  repository: MainRepository,
+  repository: ForecastRepository,
   weather: Weather,
 ) {
   stateSink(this) { scope ->

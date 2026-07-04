@@ -2,7 +2,7 @@ package com.thindie.avezer.feature.home.places
 
 import com.thindie.avezer.engine.Command
 import com.thindie.avezer.feature.home.HomeFlow
-import com.thindie.avezer.feature.home.domain.MainRepository
+import com.thindie.avezer.feature.home.domain.ForecastRepository
 import com.thindie.avezer.feature.home.domain.Weather
 import com.thindie.avezer.feature.home.placedetail.placeDetail
 import com.thindie.avezer.feature.home.placehourly.placeHourly
@@ -24,7 +24,7 @@ internal sealed interface ScreenCommand : Command {
 internal suspend fun HomeFlow.exec(
   command: ScreenCommand,
   state: ScreenState,
-  repository: MainRepository,
+  repository: ForecastRepository,
 ): ScreenState? =
   when (command) {
     is ScreenCommand.Refresh -> {

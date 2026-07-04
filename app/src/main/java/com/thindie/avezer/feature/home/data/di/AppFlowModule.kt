@@ -2,9 +2,9 @@ package com.thindie.avezer.feature.home.data.di
 
 import com.thindie.avezer.application.LocationResolver
 import com.thindie.avezer.application.storage.Storage
-import com.thindie.avezer.feature.home.data.MainRepositoryImpl
+import com.thindie.avezer.feature.home.data.ForecastRepositoryImpl
 import com.thindie.avezer.feature.home.data.PlacesRepositoryImpl
-import com.thindie.avezer.feature.home.domain.MainRepository
+import com.thindie.avezer.feature.home.domain.ForecastRepository
 import com.thindie.avezer.feature.home.domain.PlacesRepository
 import com.thindie.avezer.network.Client
 import kotlinx.coroutines.CoroutineScope
@@ -16,14 +16,14 @@ class AppFlowModule(
   private val appCoroutineScope: CoroutineScope,
 ) {
   private val _repository by lazy {
-    MainRepositoryImpl(
+    ForecastRepositoryImpl(
       locationResolver = resolver,
       storage = storage,
       client = client,
     )
   }
 
-  val repository: MainRepository get() = _repository
+  val repository: ForecastRepository get() = _repository
 
   private val _placesRepository by lazy {
     PlacesRepositoryImpl(storage, appCoroutineScope, resolver)

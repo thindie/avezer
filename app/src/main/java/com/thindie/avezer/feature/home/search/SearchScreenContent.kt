@@ -20,6 +20,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -132,17 +133,18 @@ private fun SearchScreenContent(
         modifier = Modifier.fillMaxWidth(),
         singleLine = true,
         leadingContent = {
-          Image(
+          Icon(
             painter = painterResource(id = R.drawable.ic_search_24),
             contentDescription = null,
             modifier = Modifier.size(20.dp),
+            tint = AppTheme.colors.contentSecondary
           )
         },
         trailingContent = {
           AnimatedVisibility(
             visible = state.query.isNotEmpty(),
           ) {
-            Image(
+            Icon(
               modifier =
                 Modifier
                   .background(AppTheme.colors.backgroundPrimary, CircleShape)
@@ -151,6 +153,7 @@ private fun SearchScreenContent(
                   .clickable(onClick = { onSearchQuery("") }),
               painter = painterResource(id = R.drawable.ic_close_16),
               contentDescription = null,
+              tint = AppTheme.colors.contentPrimary
             )
           }
         },

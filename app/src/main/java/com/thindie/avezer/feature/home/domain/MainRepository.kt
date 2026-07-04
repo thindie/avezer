@@ -13,5 +13,5 @@ interface MainRepository {
     lat: Double,
     lon: Double,
     cityName: String,
-  )
+  ): Weather
 }

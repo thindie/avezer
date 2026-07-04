@@ -42,8 +42,8 @@ class PlacesRepositoryImpl(
   }
 
   override val result: Flow<List<WeatherSearchResult>> =
-    addressesRequest.mapLatest {
-      it.mapNotNull {
+    addressesRequest.mapLatest { addresses ->
+      addresses.mapNotNull {
         val coordinates = resolver.read(it.name) ?: return@mapNotNull null
         WeatherSearchResult(
           city = it.name,

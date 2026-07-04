@@ -8,6 +8,7 @@ import com.thindie.avezer.engine.Log
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import java.util.Locale
 
 class LocationResolverImpl(
@@ -48,18 +49,24 @@ class LocationResolverImpl(
           { "Attempting to resolve address for name: ($name)" },
         )
         val addresses =
-          geocoder.getFromLocationName(
-            // locationName =
-            name,
-            // maxResults =
-            10,
-          )
+          withTimeoutOrNull(200) {
+            geocoder.getFromLocationName(
+              // locationName =
+              name,
+              // maxResults =
+              10,
+            )
+          }
 
         if (addresses.isNullOrEmpty()) {
           Log.w(
             { "No address found for name: ($name)" },
           )
           return@withContext emptyList()
+        } else {
+          Log.w(
+            { "address found for name: ($addresses)" },
+          )
         }
         return@withContext addresses.mapNotNull {
           Address(

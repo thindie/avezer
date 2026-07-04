@@ -64,9 +64,11 @@ class MainRepositoryImpl(
     lat: Double,
     lon: Double,
     cityName: String,
-  ) {
+  ): Weather {
     Log.d({ "Starting weather read for city: $cityName" })
-    readInternal(lat, lon, cityName)
+    val weatherResponse = client.getForecast(lat = lat, lon = lon)
+    val domainModel = weatherResponse.toDomainModel(cityName)
+    return requireNotNull(domainModel)
   }
 
   private suspend fun readInternal(

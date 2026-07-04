@@ -214,7 +214,7 @@ class MainActivity : ComponentActivity() {
     }
   }
 
-  private fun switchToHome() {
+  private fun switchToHome(start: HomeFlow.Start? = null) {
     val flow = HomeFlow(router = router, flowModule = app.applicationScope.appFlowModule)
     flow.onFinishBuilder { result ->
       when (result) {
@@ -222,7 +222,7 @@ class MainActivity : ComponentActivity() {
         HomeFlow.Result.Settings -> switchToSettings()
       }
     }
-    flow.switch()
+    flow.switch(start)
   }
 
   private fun switchToSearch() {
@@ -230,7 +230,7 @@ class MainActivity : ComponentActivity() {
     flow.onFinishBuilder { result ->
       when (result) {
         is SearchFlow.Result.PlaceRequested -> {
-          // TODO: handle selected place — e.g. navigate to Places with filter
+          switchToHome(HomeFlow.Start.Details(result.result))
         }
       }
     }

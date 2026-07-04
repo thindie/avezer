@@ -2,9 +2,12 @@ package com.thindie.avezer.feature.home.placedetail
 
 import com.thindie.avezer.engine.Command
 import com.thindie.avezer.feature.home.HomeFlow
+import com.thindie.avezer.feature.home.domain.Weather
 
 internal sealed interface PlaceDetailCommand : Command {
   data object Refresh : PlaceDetailCommand
+
+  data class Init(val weather: Weather) : PlaceDetailCommand
 
   data object Fetch : PlaceDetailCommand
 
@@ -14,20 +17,27 @@ internal sealed interface PlaceDetailCommand : Command {
 internal suspend fun HomeFlow.exec(
   command: PlaceDetailCommand,
   state: PlaceDetailState,
-): PlaceDetailState =
+): PlaceDetailState? =
   when (command) {
     is PlaceDetailCommand.Refresh -> {
       flowModule.repository.fetch()
-      state
+      null
     }
 
     is PlaceDetailCommand.Fetch -> {
       flowModule.repository.fetch()
-      state
+      null
     }
 
     is PlaceDetailCommand.Back -> {
       back()
-      state
+      null
+    }
+
+    is PlaceDetailCommand.Init -> {
+      state.copy(
+        title = command.weather.city,
+        dailyForecast = command.weather.forecast,
+      )
     }
   }

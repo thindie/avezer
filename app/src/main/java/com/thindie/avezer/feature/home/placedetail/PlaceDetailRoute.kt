@@ -13,6 +13,7 @@ fun HomeFlow.placeDetail(weather: Weather) =
     stateSink = { screenScope: ScreenScope<PlaceDetailState, PlaceDetailCommand> ->
       screenScope.subscriptions(flowModule.repository, weather)
     },
+    initialCommand = { PlaceDetailCommand.Init(weather) },
     errorMapper = placeDetailScreenErrorMapper(),
     routeContent = { scope -> PlaceDetailScreen(scope) },
   )

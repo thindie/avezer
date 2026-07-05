@@ -12,7 +12,10 @@ import com.thindie.avezer.feature.home.domain.Weather
 import kotlinx.coroutines.flow.filter
 
 @Immutable
-data class PlaceHourlyState(val hourlyForecast: List<HourlyForecastItem>? = null) : ViewState
+data class PlaceHourlyState(
+  val weather: Weather? = null,
+  val hourlyForecast: List<HourlyForecastItem>? = null,
+) : ViewState
 
 internal fun ScreenScope<PlaceHourlyState, PlaceHourlyCommand>.subscriptions(
   repository: ForecastRepository,
@@ -21,11 +24,9 @@ internal fun ScreenScope<PlaceHourlyState, PlaceHourlyCommand>.subscriptions(
   stateSink(this) { scope ->
     scope.sub(repository.forecast.filter { it?.any { it.city == weather.city } == true }).transition(
       block = { _, forecast ->
-        // Weather contains hourlyForecast as List<HourlyForecast>
-        // We need to map it to HourlyForecastItem which has additional fields like emoji and weatherCodeRef
         val result =
-          forecast?.flatMap { weather ->
-            weather.hourlyForecast.map { hf ->
+          forecast?.flatMap { w ->
+            w.hourlyForecast.map { hf ->
               HourlyForecastItem(
                 time = hf.time,
                 temperature = hf.temperature,
@@ -37,7 +38,7 @@ internal fun ScreenScope<PlaceHourlyState, PlaceHourlyCommand>.subscriptions(
               )
             }
           } ?: emptyList()
-        PlaceHourlyState(result)
+        PlaceHourlyState(weather = weather, hourlyForecast = result)
       },
     )
   }

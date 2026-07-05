@@ -2,30 +2,42 @@ package com.thindie.avezer.feature.home.placehourly
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.thindie.avezer.R
 import com.thindie.avezer.engine.ScreenScope
 import com.thindie.avezer.feature.home.domain.HourlyForecastItem
-import com.thindie.avezer.feature.home.placehourly.components.HourlyForecastCard
+import com.thindie.avezer.feature.home.domain.TimeFormatter
+import com.thindie.avezer.feature.home.domain.Weather
+import com.thindie.avezer.feature.home.placehourly.components.ExpandableHourlyCard
 import com.thindie.avezer.uikit.Action
 import com.thindie.avezer.uikit.AppScreen
 import com.thindie.avezer.uikit.AppTheme
+import com.thindie.avezer.uikit.HSpacer
 import com.thindie.avezer.uikit.LocalThemeSwitcher
 import com.thindie.avezer.uikit.ThemeSwitcher
+import com.thindie.avezer.uikit.VSpacer
 
 @Composable
 internal fun PlaceHourlyScreen(screenScope: ScreenScope<PlaceHourlyState, PlaceHourlyCommand>) {
@@ -59,6 +71,7 @@ internal fun PlaceHourlyScreen(screenScope: ScreenScope<PlaceHourlyState, PlaceH
       indicator = {},
     ) {
       PlaceHourlyContent(
+        weather = screenState.weather,
         hourlyForecast = screenState.hourlyForecast,
         onBack = { screenScope.send(PlaceHourlyCommand.Back) },
       )
@@ -69,6 +82,23 @@ internal fun PlaceHourlyScreen(screenScope: ScreenScope<PlaceHourlyState, PlaceH
 @Preview(name = "Place Hourly Preview")
 @Composable
 private fun PlaceHourlyPreview() {
+  val mockWeather =
+    Weather(
+      lat = 55.75,
+      lon = 37.61,
+      city = "Moscow",
+      temperature = 24.0,
+      isDay = true,
+      weatherCodeRef = R.string.weather_code_0,
+      emoji = "☀️",
+      humidity = 45,
+      windSpeed = 8.3,
+      lastUpdated = System.currentTimeMillis(),
+      timezone = "Europe/Moscow",
+      timezoneAbbreviation = "MSK",
+      utcOffsetSeconds = 10800,
+    )
+
   val mockHourlyForecast =
     listOf(
       HourlyForecastItem(
@@ -110,6 +140,7 @@ private fun PlaceHourlyPreview() {
     )
 
   PlaceHourlyContent(
+    weather = mockWeather,
     hourlyForecast = mockHourlyForecast,
     onBack = {},
   )
@@ -117,31 +148,160 @@ private fun PlaceHourlyPreview() {
 
 @Composable
 private fun PlaceHourlyContent(
+  weather: Weather?,
   hourlyForecast: List<HourlyForecastItem>?,
   onBack: () -> Unit,
 ) {
   BackHandler { onBack() }
 
-  if (hourlyForecast.isNullOrEmpty()) {
-    Box(
-      modifier =
-        Modifier
-          .fillMaxSize()
-          .padding(16.dp),
-      contentAlignment = Alignment.Center,
-    ) {
-      Text(
-        text = stringResource(R.string.places_no_forecast),
-        style = AppTheme.typography.bodyMedium,
-        color = AppTheme.colors.contentSecondary,
-      )
+  Column(
+    modifier =
+      Modifier
+        .fillMaxSize()
+        .padding(16.dp),
+  ) {
+    // Title
+    Text(
+      text = weather?.city.orEmpty(),
+      style = AppTheme.typography.headlineLarge,
+      color = AppTheme.colors.contentPrimary,
+    )
+
+    if (weather != null) {
+      VSpacer(4.dp)
+      val lastUpdatedTime = TimeFormatter.formatRelativeTime(weather.lastUpdated, LocalContext.current)
+      Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(
+          text = stringResource(R.string.place_detail_forecast_title),
+          style = AppTheme.typography.bodySmall,
+          color = AppTheme.colors.contentSecondary,
+        )
+        HSpacer(4.dp)
+        Text(
+          text = lastUpdatedTime,
+          style = AppTheme.typography.labelMedium,
+          color = AppTheme.colors.contentSecondary,
+        )
+      }
+
+      VSpacer(16.dp)
+
+      // Upper half: expanded current weather card
+      ExpandedWeatherCard(weather = weather)
+
+      VSpacer(24.dp)
+
+      if (hourlyForecast.isNullOrEmpty()) {
+        Box(modifier = Modifier.fillMaxSize()) {}
+      } else {
+        val expandedStates = remember { mutableStateOf<BooleanArray>(BooleanArray(hourlyForecast.size) { false }) }
+
+        LazyColumn(
+          modifier = Modifier.fillMaxSize(),
+          verticalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+          itemsIndexed(hourlyForecast, key = { index, _ -> index }) { index, forecast ->
+            ExpandableHourlyCard(
+              item = forecast,
+              isExpanded = expandedStates.value[index],
+              onToggle = {
+                val newState = expandedStates.value.copyOf()
+                newState[index] = !newState[index]
+                expandedStates.value = newState
+              },
+            )
+          }
+        }
+      }
+    } else if (hourlyForecast != null && hourlyForecast.isNotEmpty()) {
+      LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+      ) {
+        itemsIndexed(hourlyForecast, key = { index, _ -> index }) { _, forecast ->
+          ExpandableHourlyCard(item = forecast, isExpanded = false, onToggle = {})
+        }
+      }
+    } else {
+      Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+      ) {
+        Text(
+          text = stringResource(R.string.places_no_forecast),
+          style = AppTheme.typography.bodyMedium,
+          color = AppTheme.colors.contentSecondary,
+        )
+      }
     }
-  } else {
-    LazyColumn(
-      modifier = Modifier.fillMaxSize(),
-    ) {
-      items(hourlyForecast) { forecast ->
-        HourlyForecastCard(forecast)
+  }
+}
+
+@Composable
+private fun ExpandedWeatherCard(weather: Weather) {
+  val accentColor = com.thindie.avezer.uikit.weather.WeatherColorMapper.getAccentColor(weather.weatherCodeRef)
+
+  androidx.compose.material3.Card(
+    modifier = Modifier.fillMaxWidth(),
+    colors = androidx.compose.material3.CardDefaults.cardColors(containerColor = AppTheme.colors.cardPrimary),
+    shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+    elevation = androidx.compose.material3.CardDefaults.cardElevation(defaultElevation = 4.dp),
+  ) {
+    Column(modifier = Modifier.padding(16.dp)) {
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+      ) {
+        Text(
+          text = weather.emoji,
+          style = AppTheme.typography.headlineLarge,
+        )
+
+        Text(
+          text = "${weather.temperature.toInt()}°",
+          style = AppTheme.typography.headlineSmall,
+          color = accentColor,
+        )
+      }
+
+      VSpacer(12.dp)
+
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+      ) {
+        if (weather.humidity != null) {
+          Column(modifier = Modifier.weight(1f)) {
+            Text(
+              text = stringResource(R.string.weather_humidity),
+              style = AppTheme.typography.labelMedium,
+              color = AppTheme.colors.contentSecondary,
+            )
+            VSpacer(2.dp)
+            Text(
+              text = "${weather.humidity}%",
+              style = AppTheme.typography.titleSmall,
+              color = accentColor.copy(alpha = 0.8f),
+            )
+          }
+        }
+
+        if (weather.windSpeed != null) {
+          Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.End) {
+            Text(
+              text = stringResource(R.string.weather_wind_speed),
+              style = AppTheme.typography.labelMedium,
+              color = AppTheme.colors.contentSecondary,
+            )
+            VSpacer(2.dp)
+            Text(
+              text = "${weather.windSpeed.toInt()} ${stringResource(R.string.kilometers_per_hour)}",
+              style = AppTheme.typography.titleSmall,
+              color = accentColor.copy(alpha = 0.8f),
+            )
+          }
+        }
       }
     }
   }

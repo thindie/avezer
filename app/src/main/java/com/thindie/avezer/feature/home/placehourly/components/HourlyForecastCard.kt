@@ -189,18 +189,6 @@ internal fun HourlyForecastCard(
   }
 }
 
-@Immutable
-private data class PrecipitationStatus(
-  val emoji: String,
-  val labelResId: Int,
-)
-
 @Composable
-private fun getPrecipitationStatus(weatherCodeRef: Int): PrecipitationStatus {
-  return when (weatherCodeRef) {
-    in 51..67, in 80..82 -> PrecipitationStatus(emoji = "🌧️", labelResId = R.string.weather_condition_rain)
-    in 71..77, in 85..86 -> PrecipitationStatus(emoji = "❄️", labelResId = R.string.weather_condition_snow)
-    in 95..99 -> PrecipitationStatus(emoji = "⛈️", labelResId = R.string.weather_condition_rain)
-    else -> PrecipitationStatus(emoji = "☀️", labelResId = R.string.weather_condition_clear)
-  }
-}
+private fun getPrecipitationStatus(weatherCodeRef: Int): ExpandableHourlyCard.PrecipitationStatus =
+  ExpandableHourlyCard.getPrecipitationStatus(weatherCodeRef)

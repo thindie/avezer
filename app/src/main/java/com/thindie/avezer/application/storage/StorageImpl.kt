@@ -6,7 +6,6 @@ import com.thindie.avezer.engine.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
-import java.util.UUID
 
 internal class StorageImpl(private val persistence: SharedPreferences) : Storage {
   private val state = MutableStateFlow<List<StorageId>?>(null)
@@ -33,11 +32,6 @@ internal class StorageImpl(private val persistence: SharedPreferences) : Storage
       Log.e({ "Error reading storage for ID ${id.value}" }, throwable = e)
       null
     }
-  }
-
-  @Deprecated("Use createOrUpdate(id,value) for deterministic keys")
-  override suspend fun write(value: String) {
-    internalWrite(UUID.randomUUID().toString(), value)
   }
 
   /** Create or replace an entry with the supplied id. */

@@ -5,9 +5,6 @@ import kotlinx.coroutines.flow.Flow
 interface Storage {
   suspend fun read(id: StorageId): String?
 
-  @Deprecated("Use createOrUpdate(id,value) for deterministic keys")
-  suspend fun write(value: String)
-
   suspend fun createOrUpdate(
     id: StorageId,
     value: String,

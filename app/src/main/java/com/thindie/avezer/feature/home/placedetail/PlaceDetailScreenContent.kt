@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.thindie.avezer.R
 import com.thindie.avezer.engine.ScreenScope
 import com.thindie.avezer.feature.home.domain.TimeFormatter
+import com.thindie.avezer.feature.home.domain.Weather
 import com.thindie.avezer.feature.home.placedetail.components.DailyForecastCard
 import com.thindie.avezer.uikit.Action
 import com.thindie.avezer.uikit.AppScreen
@@ -52,6 +53,7 @@ internal fun PlaceDetailScreen(screenScope: ScreenScope<PlaceDetailState, PlaceD
         lastUpdated = screenState.lastUpdated,
         dailyForecast = screenState.dailyForecast,
         onBack = { screenScope.send(PlaceDetailCommand.Back) },
+        onClick = { screenScope.send(PlaceDetailCommand.SeeHourlyForecast(it)) },
       )
     }
   }
@@ -99,6 +101,7 @@ private fun PlaceDetailPreview() {
     lastUpdated = System.currentTimeMillis(),
     dailyForecast = mockDailyForecast,
     onBack = {},
+    onClick = {},
   )
 }
 
@@ -108,6 +111,7 @@ internal fun PlaceDetailContent(
   lastUpdated: Long?,
   dailyForecast: List<com.thindie.avezer.feature.home.domain.DailyForecast>?,
   onBack: () -> Unit,
+  onClick: (com.thindie.avezer.feature.home.domain.Weather) -> Unit = {},
 ) {
   BackHandler { onBack() }
 
@@ -157,7 +161,25 @@ internal fun PlaceDetailContent(
         modifier = Modifier.fillMaxSize(),
       ) {
         items(dailyForecast) { forecast ->
-          DailyForecastCard(dailyForecast = forecast)
+          val weather =
+            Weather(
+              lat = 0.0,
+              lon = 0.0,
+              city = title,
+              temperature = (forecast.temperatureMax + forecast.temperatureMin) / 2,
+              isDay = true,
+              weatherCodeRef = forecast.weatherCodeRef,
+              emoji = forecast.emoji,
+              humidity = null,
+              windSpeed = null,
+              timezone = "UTC",
+              timezoneAbbreviation = "UTC",
+              utcOffsetSeconds = 0,
+            )
+          DailyForecastCard(
+            dailyForecast = forecast,
+            onClick = { onClick(weather) },
+          )
         }
       }
     }

@@ -1,6 +1,7 @@
 package com.thindie.avezer.feature.home.placedetail.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,11 +30,15 @@ import com.thindie.avezer.uikit.weather.WeatherColorMapper
 internal fun DailyForecastCard(
   dailyForecast: DailyForecast,
   modifier: Modifier = Modifier,
+  onClick: () -> Unit = {},
 ) {
   val accentColor = WeatherColorMapper.getAccentColor(dailyForecast)
 
   Card(
-    modifier = modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+    modifier =
+      modifier
+        .padding(horizontal = 8.dp, vertical = 4.dp)
+        .clickable(onClick = onClick),
     colors = CardDefaults.cardColors(containerColor = AppTheme.colors.cardPrimary),
     shape = RoundedCornerShape(16.dp),
     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),

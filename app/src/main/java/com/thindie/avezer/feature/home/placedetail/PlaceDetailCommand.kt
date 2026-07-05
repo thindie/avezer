@@ -3,6 +3,7 @@ package com.thindie.avezer.feature.home.placedetail
 import com.thindie.avezer.engine.Command
 import com.thindie.avezer.feature.home.HomeFlow
 import com.thindie.avezer.feature.home.domain.Weather
+import com.thindie.avezer.feature.home.placehourly.placeHourly
 
 internal sealed interface PlaceDetailCommand : Command {
   data object Refresh : PlaceDetailCommand
@@ -12,6 +13,8 @@ internal sealed interface PlaceDetailCommand : Command {
   data object Fetch : PlaceDetailCommand
 
   data object Back : PlaceDetailCommand
+
+  data class SeeHourlyForecast(val weather: Weather) : PlaceDetailCommand
 }
 
 internal suspend fun HomeFlow.exec(
@@ -39,5 +42,10 @@ internal suspend fun HomeFlow.exec(
         title = command.weather.city,
         dailyForecast = command.weather.forecast,
       )
+    }
+
+    is PlaceDetailCommand.SeeHourlyForecast -> {
+      go(placeHourly(command.weather))
+      null
     }
   }

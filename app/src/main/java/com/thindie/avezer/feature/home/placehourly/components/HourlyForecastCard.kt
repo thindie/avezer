@@ -42,7 +42,7 @@ internal fun HourlyForecastCard(
     Column(
       modifier =
         Modifier
-          .padding(12.dp)
+          .padding(16.dp)
           .fillMaxWidth(),
     ) {
       // Header: Time and Weather Icon
@@ -53,7 +53,7 @@ internal fun HourlyForecastCard(
       ) {
         Text(
           text = TimeFormatter.formatHourlyTime(item.time),
-          style = AppTheme.typography.titleMedium,
+          style = AppTheme.typography.titleLarge,
           color = AppTheme.colors.contentPrimary,
         )
 

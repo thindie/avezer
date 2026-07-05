@@ -50,12 +50,8 @@ private fun SearchPreview() {
       query = "Moscow",
       results =
         listOf(
-          WeatherSearchResult(city = "Moscow", lat = 55.7558, lon = 37.6173),
-          WeatherSearchResult(city = "Moskva", lat = 55.7558, lon = 37.6173),
-        ),
-      favorites =
-        listOf(
-          FavoriteLocation(city = "Moscow", lat = 55.7558, lon = 37.6173),
+          WeatherSearchResult(city = "Moscow", lat = 55.7558, lon = 37.6173, isFavourite = true),
+          WeatherSearchResult(city = "Moskva", lat = 55.7558, lon = 37.6173, isFavourite = false),
         ),
     )
 
@@ -172,7 +168,7 @@ private fun SearchScreenContent(
         val favoriteLocation = FavoriteLocation(result.city, result.lat, result.lon)
         SearchResultItem(
           searchResult = result,
-          isFavorite = favoriteLocation in state.favorites,
+          isFavorite = result.isFavourite,
           onClick = { onSearchResultClick(result) },
           onToggleFavorite = { onToggleFavorite(favoriteLocation) },
         )

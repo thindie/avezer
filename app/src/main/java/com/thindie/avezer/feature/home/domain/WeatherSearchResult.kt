@@ -7,4 +7,5 @@ data class WeatherSearchResult(
   val city: String,
   val lat: Double,
   val lon: Double,
+  val isFavourite: Boolean,
 )

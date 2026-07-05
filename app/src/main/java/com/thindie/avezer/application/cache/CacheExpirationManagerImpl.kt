@@ -6,8 +6,7 @@ import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
-internal class CacheExpirationManagerImpl(
-) : CacheExpirationManager {
+internal class CacheExpirationManagerImpl() : CacheExpirationManager {
   private val timestamps = MutableStateFlow<Map<String, Instant>>(emptyMap())
 
   override suspend fun isExpired(key: String): Boolean {

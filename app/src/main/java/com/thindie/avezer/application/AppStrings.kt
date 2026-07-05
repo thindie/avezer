@@ -136,6 +136,16 @@ fun dayOfWeekString(dayValue: Int): String {
 
 fun weatherEmojiString(code: Int): String = weatherEmojis[code] ?: "❓"
 
-fun timeJustNow(): String = timeJustNow ?: "Just now"
+fun timeJustNow(
+  minutes: Int?,
+  context: Context,
+): String =
+  if (minutes == null) {
+    timeJustNow
+  } else {
+    context.getString(R.string.time_minutes_ago, minutes)
+  }.orEmpty()
+
 fun timeToday(): String = timeToday ?: "Today"
+
 fun timeYesterday(): String = timeYesterday ?: "Yesterday"

@@ -70,8 +70,10 @@ class LocationResolverImpl(
         }
         return@withContext addresses.mapNotNull {
           Address(
-            it.locality,
-            it.subAdminArea,
+            lat = it.latitude,
+            lon = it.longitude,
+            name = it.locality,
+            area = it.subAdminArea,
           )
         }
       }
@@ -103,8 +105,10 @@ class LocationResolverImpl(
           { "Found address: Locality=${address?.locality}, SubAdminArea=${address?.subAdminArea}" },
         )
         return@withContext Address(
-          requireNotNull(address?.locality),
-          address.subAdminArea,
+          lat = lat,
+          lon = lon,
+          name = requireNotNull(address?.locality),
+          area = address.subAdminArea,
         )
       }
     } catch (e: CancellationException) {

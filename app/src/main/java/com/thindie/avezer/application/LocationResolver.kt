@@ -12,6 +12,8 @@ interface LocationResolver {
 }
 
 data class Address(
+  val lat: Double,
+  val lon: Double,
   val name: String,
   val area: String?,
 )

@@ -13,7 +13,7 @@ val SearchFlow.SearchRoute get() =
       exec(cmd, state)
     },
     stateSink = { scope: ScreenScope<SearchScreenState, SearchScreenCommand> ->
-      scope.subscriptions(flowModule.placesRepository)
+      scope.subscriptions(flowModule.searchRepository)
     },
     errorMapper = searchScreenErrorMapper(),
     routeContent = { scope -> SearchScreen(scope) },

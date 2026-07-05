@@ -1,7 +1,6 @@
 package com.thindie.avezer.feature.search.input
 
 import com.thindie.avezer.feature.search.SearchFlow
-import kotlinx.coroutines.flow.firstOrNull
 
 internal suspend fun SearchFlow.exec(
   command: SearchScreenCommand,
@@ -25,9 +24,8 @@ internal suspend fun SearchFlow.exec(
     }
 
     is SearchScreenCommand.ToggleFavorite -> {
-      flowModule.placesRepository.toggleFavorite(command.favoriteLocation)
-      val favorites = flowModule.placesRepository.favoriteCities.firstOrNull().orEmpty()
-      state.copy(favorites = favorites)
+      flowModule.searchRepository.toggleFavorite(command.favoriteLocation)
+      null
     }
 
     is SearchScreenCommand.OpenSearch -> {
@@ -41,7 +39,7 @@ internal suspend fun SearchFlow.exec(
     }
 
     SearchScreenCommand.ConfirmSearch -> {
-      flowModule.placesRepository.search(state.query)
+      flowModule.searchRepository.search(state.query)
       null
     }
   }

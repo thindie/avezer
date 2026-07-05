@@ -1,6 +1,5 @@
 package com.thindie.avezer.feature.home.data
 
-import com.thindie.avezer.application.LocationResolver
 import com.thindie.avezer.application.storage.Storage
 import com.thindie.avezer.application.storage.StorageId
 import com.thindie.avezer.application.weatherCodeRef
@@ -20,12 +19,12 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
+import kotlinx.coroutines.withTimeoutOrNull
 import java.util.Locale
 
 class ForecastRepositoryImpl(
   private val storage: Storage,
   private val client: Client,
-  private val locationResolver: LocationResolver,
 ) : ForecastRepository {
   private data class CachedWeatherLocation(
     val storageId: StorageId,
@@ -46,12 +45,12 @@ class ForecastRepositoryImpl(
     supervisorScope {
       for (location in cachedLocations) {
         launch {
-          val id = location.storageId
-          val weatherRaw = storage.read(id)
-          if (weatherRaw != null) {
-            val weather = JsonUtil.fromJson<Weather>(weatherRaw, Weather::class.java)
-            if (weather != null) {
-              weatherCache.update { it.orEmpty() + (id to weather) }
+          val weather = readFromStorageInternal(location.storageId)
+          if (weather != null) {
+            weatherCache.update {
+              val map = it.orEmpty().toMutableMap()
+              map[location.storageId] = weather
+              map.toMap()
             }
           }
         }
@@ -60,8 +59,13 @@ class ForecastRepositoryImpl(
     supervisorScope {
       for (location in cachedLocations) {
         launch {
+          Log.d({ "Starting weather fetch: $location" })
           val weather =
-            client.getForecast(lat = location.lat, lon = location.lon).toDomainModel(location.city)
+            withTimeoutOrNull(1600L) {
+              client.getForecast(lat = location.lat, lon = location.lon)
+                .toDomainModel(location.city)
+            }
+          Log.d({ "Fetch for $location == $weather" })
           if (weather != null) {
             storeWeather(weather)
           }
@@ -85,10 +89,13 @@ class ForecastRepositoryImpl(
     val id = weatherKey(FavoriteLocation(weather.city, weather.lat, weather.lon))
     storage.createOrUpdate(id, JsonUtil.toJson(weather))
     Log.d({ "Write successful. Key: ${id.value}" })
-    weatherCache.update { previous ->
-      val updated = (previous ?: emptyMap()).toMutableMap()
-      updated[id] = weather
-      updated
+    val weather = readFromStorageInternal(id)
+    if (weather != null) {
+      weatherCache.update { previous ->
+        val updated = (previous ?: emptyMap()).toMutableMap()
+        updated[id] = weather
+        updated
+      }
     }
   }
 
@@ -114,7 +121,10 @@ class ForecastRepositoryImpl(
   }
 
   private suspend fun favoriteLocations(): List<FavoriteLocation> {
-    return FavoriteLocationStorage.read(storage, locationResolver)
+    return storage.read(favoriteStorageId)
+      ?.split(FAVORITE_PLACES_SEPARATOR)
+      ?.mapNotNull { JsonUtil.fromJson(it, FavoriteLocation::class.java) }
+      .orEmpty()
   }
 
   private fun parseStorageKey(id: StorageId): CachedWeatherLocation? {
@@ -138,6 +148,12 @@ class ForecastRepositoryImpl(
       lat = lat,
       lon = lon,
     )
+  }
+
+  private suspend fun readFromStorageInternal(id: StorageId): Weather? {
+    val raw = storage.read(id).orEmpty()
+    val weather = JsonUtil.fromJson(raw, Weather::class.java)
+    return weather
   }
 
   private fun weatherKey(location: FavoriteLocation): StorageId {
@@ -209,8 +225,8 @@ class ForecastRepositoryImpl(
       hourlyForecast = hourlyForecast,
     )
   }
+}
 
-  private fun formatCoordinate(value: Double): String {
-    return "%.6f".format(Locale.US, value)
-  }
+internal fun formatCoordinate(value: Double): String {
+  return "%.1f".format(Locale.US, value)
 }

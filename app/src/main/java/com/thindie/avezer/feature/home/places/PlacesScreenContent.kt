@@ -154,7 +154,7 @@ private fun PlacesContent(
     } else {
       LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
       ) {
         items(forecast) { weather ->
           WeatherCard(

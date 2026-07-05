@@ -162,6 +162,34 @@ internal fun WeatherCard(
           }
         }
       }
+
+      // Last Updated Section
+      VSpacer(12.dp)
+      HorizontalDivider(color = AppTheme.colors.backgroundPrimary, thickness = 0.5.dp)
+      VSpacer(8.dp)
+
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+      ) {
+        Text(
+          text = stringResource(R.string.last_updated_label),
+          style = AppTheme.typography.labelMedium,
+          color = AppTheme.colors.contentSecondary,
+        )
+
+        val lastUpdatedTime = java.time.LocalDateTime.ofInstant(
+          java.time.Instant.ofEpochMilli(weather.lastUpdated),
+          java.time.ZoneId.systemDefault()
+        ).format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"))
+
+        Text(
+          text = lastUpdatedTime,
+          style = AppTheme.typography.titleSmall,
+          color = accentColor.copy(alpha = 0.8f),
+        )
+      }
     }
   }
 }

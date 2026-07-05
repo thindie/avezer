@@ -134,5 +134,6 @@
     <string name="weather_condition_snow">Snow</string>
     <string name="weather_condition_clear">Clear</string>
     <string name="weather_current_temperature">Current temperature</string>
+    <string name="last_updated_label">Last updated</string>
 
 </resources>

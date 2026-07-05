@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.filter
 @Immutable
 data class PlaceDetailState(
   val title: String? = null,
+  val lastUpdated: Long? = null,
   val dailyForecast: List<DailyForecast>? = null,
 ) : ViewState
 
@@ -33,7 +34,11 @@ internal fun ScreenScope<PlaceDetailState, PlaceDetailCommand>.subscriptions(
           forecast?.flatMap { w ->
             if (w.city == cityFilter) w.forecast else emptyList()
           } ?: emptyList()
-        PlaceDetailState(title = weather.city, dailyForecast = result)
+        PlaceDetailState(
+          title = weather.city,
+          lastUpdated = weather.lastUpdated,
+          dailyForecast = result,
+        )
       },
     )
   }

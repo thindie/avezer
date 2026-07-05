@@ -34,9 +34,9 @@ internal fun DailyForecastCard(
 
   Card(
     modifier = modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-    colors = CardDefaults.cardColors(containerColor = AppTheme.colors.backgroundSecondary),
+    colors = CardDefaults.cardColors(containerColor = AppTheme.colors.cardPrimary),
     shape = RoundedCornerShape(16.dp),
-    elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
   ) {
     Column(
       modifier =
@@ -65,7 +65,7 @@ internal fun DailyForecastCard(
         ) {
           Text(
             text = dailyForecast.emoji,
-            style = AppTheme.typography.headlineSmall,
+            style = AppTheme.typography.headlineLarge,
           )
         }
       }
@@ -103,7 +103,7 @@ internal fun DailyForecastCard(
         ) {
           Text(
             text = "${dailyForecast.temperatureMax.toInt()}° / ${dailyForecast.temperatureMin.toInt()}°",
-            style = AppTheme.typography.bodyMedium,
+            style = AppTheme.typography.titleSmall,
             color = accentColor,
           )
         }
@@ -127,7 +127,7 @@ internal fun DailyForecastCard(
       if (dailyForecast.precipitationSum > 0) {
         VSpacer(12.dp)
 
-        HorizontalDivider(color = AppTheme.colors.backgroundPrimary, thickness = 0.5.dp)
+        HorizontalDivider(color = AppTheme.colors.backgroundSecondary, thickness = 0.5.dp)
         VSpacer(8.dp)
 
         Row(
@@ -162,7 +162,7 @@ internal fun DailyForecastCard(
       if (dailyForecast.sunrise != null || dailyForecast.sunset != null) {
         VSpacer(12.dp)
 
-        HorizontalDivider(color = AppTheme.colors.backgroundPrimary, thickness = 0.5.dp)
+        HorizontalDivider(color = AppTheme.colors.backgroundSecondary, thickness = 0.5.dp)
         VSpacer(8.dp)
 
         Row(

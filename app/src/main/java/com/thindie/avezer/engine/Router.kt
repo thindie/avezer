@@ -1,6 +1,5 @@
 package com.thindie.avezer.engine
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
@@ -145,7 +144,7 @@ object RouteFactory {
             CoroutineScope(
               SupervisorJob() + Dispatchers.Default +
                 CoroutineExceptionHandler { _, e ->
-                  Log.e("Avezer", "${e.cause} + ${e.message}")
+                  Log.e({ "${e.cause} + ${e.message}" })
                 },
             )
             private set
@@ -184,7 +183,7 @@ object RouteFactory {
           }
 
           override fun send(command: C) {
-            Log.d("Avezer", "Received command: $command")
+            Log.d({ "Received command: $command" })
             scope?.launch {
               when (command) {
                 ServiceCommand.Dispose -> {
@@ -224,6 +223,7 @@ object RouteFactory {
                       disposeCommand.tryEmit(command)
                       throw e
                     } catch (e: Throwable) {
+                      Log.e({ "ScreenScope error" }, throwable = e)
                       val error = errorMapper(e)
                       _error.value = error
                       _processing.value = null

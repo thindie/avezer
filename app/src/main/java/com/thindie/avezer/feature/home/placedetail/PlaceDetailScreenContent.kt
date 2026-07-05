@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
@@ -19,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.thindie.avezer.R
 import com.thindie.avezer.engine.ScreenScope
 import com.thindie.avezer.feature.home.placedetail.components.DailyForecastCard
+import com.thindie.avezer.uikit.Action
 import com.thindie.avezer.uikit.AppScreen
 import com.thindie.avezer.uikit.AppTheme
 import com.thindie.avezer.uikit.VSpacer
@@ -29,6 +29,11 @@ internal fun PlaceDetailScreen(screenScope: ScreenScope<PlaceDetailState, PlaceD
 
   AppScreen(
     screenScope = screenScope,
+    primary =
+      Action(
+        resRef = R.drawable.ic_arrow_back_24,
+        listener = { screenScope.send(PlaceDetailCommand.Back) },
+      ),
   ) {
     PullToRefreshBox(
       isRefreshing =
@@ -109,17 +114,12 @@ internal fun PlaceDetailContent(
       style = AppTheme.typography.headlineLarge,
       color = AppTheme.colors.contentPrimary,
     )
-
-    VSpacer(24.dp)
-    Divider()
-    VSpacer(16.dp)
     Text(
       text = stringResource(R.string.place_detail_forecast_title),
-      style = AppTheme.typography.titleMedium,
+      style = AppTheme.typography.bodySmall,
       color = AppTheme.colors.contentSecondary,
     )
-
-    VSpacer(16.dp)
+    VSpacer(24.dp)
 
     if (dailyForecast.isNullOrEmpty()) {
       Column(modifier = Modifier.fillMaxSize()) {}

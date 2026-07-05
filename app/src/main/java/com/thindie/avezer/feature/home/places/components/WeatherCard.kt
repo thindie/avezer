@@ -18,6 +18,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -42,9 +43,9 @@ internal fun WeatherCard(
       modifier
         .padding(horizontal = 8.dp, vertical = 4.dp)
         .clickable(onClick = onClick),
-    colors = CardDefaults.cardColors(containerColor = AppTheme.colors.backgroundSecondary),
+    colors = CardDefaults.cardColors(containerColor = AppTheme.colors.cardPrimary),
     shape = RoundedCornerShape(16.dp),
-    elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
   ) {
     Column(
       modifier =
@@ -61,7 +62,7 @@ internal fun WeatherCard(
       ) {
         Text(
           text = weather.city,
-          style = AppTheme.typography.titleLarge,
+          style = AppTheme.typography.headlineSmall,
           color = AppTheme.colors.contentPrimary,
         )
 
@@ -74,7 +75,7 @@ internal fun WeatherCard(
         ) {
           Text(
             text = weather.emoji,
-            style = AppTheme.typography.headlineSmall,
+            style = AppTheme.typography.headlineLarge,
           )
         }
       }
@@ -122,7 +123,7 @@ internal fun WeatherCard(
       // Precipitation Details (if applicable)
       if (weather.humidity != null || weather.windSpeed != null) {
         VSpacer(12.dp)
-        HorizontalDivider(color = AppTheme.colors.backgroundPrimary, thickness = 0.5.dp)
+        HorizontalDivider(color = AppTheme.colors.backgroundSecondary, thickness = 0.5.dp)
         VSpacer(8.dp)
 
         Row(
@@ -166,7 +167,7 @@ internal fun WeatherCard(
 
       // Last Updated Section
       VSpacer(12.dp)
-      HorizontalDivider(color = AppTheme.colors.backgroundPrimary, thickness = 0.5.dp)
+      HorizontalDivider(color = AppTheme.colors.backgroundSecondary, thickness = 0.5.dp)
       VSpacer(8.dp)
 
       Row(
@@ -180,7 +181,11 @@ internal fun WeatherCard(
           color = AppTheme.colors.contentSecondary,
         )
 
-        val lastUpdatedTime = TimeFormatter.formatRelativeTime(weather.lastUpdated)
+        val lastUpdatedTime =
+          TimeFormatter.formatRelativeTime(
+            weather.lastUpdated,
+            LocalContext.current,
+          )
 
         Text(
           text = lastUpdatedTime,

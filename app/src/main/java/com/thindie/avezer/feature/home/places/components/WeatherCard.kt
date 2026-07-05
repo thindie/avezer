@@ -23,6 +23,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.thindie.avezer.R
+import com.thindie.avezer.feature.home.domain.TimeFormatter
 import com.thindie.avezer.feature.home.domain.Weather
 import com.thindie.avezer.uikit.AppTheme
 import com.thindie.avezer.uikit.VSpacer
@@ -179,10 +180,7 @@ internal fun WeatherCard(
           color = AppTheme.colors.contentSecondary,
         )
 
-        val lastUpdatedTime = java.time.LocalDateTime.ofInstant(
-          java.time.Instant.ofEpochMilli(weather.lastUpdated),
-          java.time.ZoneId.systemDefault()
-        ).format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"))
+        val lastUpdatedTime = TimeFormatter.formatRelativeTime(weather.lastUpdated)
 
         Text(
           text = lastUpdatedTime,

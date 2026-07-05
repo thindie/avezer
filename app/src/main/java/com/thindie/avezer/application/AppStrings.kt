@@ -7,6 +7,9 @@ import kotlinx.coroutines.withContext
 
 private var weatherMap: Map<Int, Int>? = null
 private var dayOfWeekStrings: Map<Int, String>? = null
+private var timeJustNow: String? = null
+private var timeToday: String? = null
+private var timeYesterday: String? = null
 
 private val weatherEmojis =
   mapOf(
@@ -116,6 +119,9 @@ object AppStrings {
             }
           }
       }
+      timeJustNow = context.getString(R.string.time_just_now)
+      timeToday = context.getString(R.string.today)
+      timeYesterday = context.getString(R.string.yesterday)
     }
   }
 }
@@ -129,3 +135,7 @@ fun dayOfWeekString(dayValue: Int): String {
 }
 
 fun weatherEmojiString(code: Int): String = weatherEmojis[code] ?: "❓"
+
+fun timeJustNow(): String = timeJustNow ?: "Just now"
+fun timeToday(): String = timeToday ?: "Today"
+fun timeYesterday(): String = timeYesterday ?: "Yesterday"

@@ -3,6 +3,8 @@ package com.thindie.avezer.application
 import android.app.Application
 import com.thindie.avezer.application.di.ApplicationScope
 import com.thindie.avezer.engine.Router
+import com.thindie.avezer.widget.WidgetDataProviderImpl
+import com.thindie.avezer.widget.WidgetInit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -28,7 +30,16 @@ class Application : Application() {
     applicationScope = ApplicationScope(this)
     scope.launch {
       AppStrings.init(this@Application)
+      configureAppWidgets()
     }
+  }
+
+  fun configureAppWidgets() {
+    val dataProvider =
+      WidgetDataProviderImpl(
+        forecastRepository = applicationScope.appFlowModule.repository,
+      )
+    WidgetInit.init(this, dataProvider)
   }
 
   fun requireRouter(): Router {

@@ -3,6 +3,7 @@ package com.thindie.avezer.feature.home.data.di
 import com.thindie.avezer.application.LocationResolver
 import com.thindie.avezer.application.storage.Storage
 import com.thindie.avezer.feature.home.data.ForecastRepositoryImpl
+import com.thindie.avezer.feature.home.data.MockForecastRepository
 import com.thindie.avezer.feature.home.data.SearchRepositoryImpl
 import com.thindie.avezer.feature.home.domain.ForecastRepository
 import com.thindie.avezer.feature.home.domain.SearchRepository
@@ -18,6 +19,10 @@ class AppFlowModule(
       storage = storage,
       client = client,
     )
+  }
+
+  private val repositoryMock by lazy {
+    MockForecastRepository()
   }
 
   val repository: ForecastRepository get() = _repository

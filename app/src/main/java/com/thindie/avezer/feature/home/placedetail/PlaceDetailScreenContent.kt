@@ -20,8 +20,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.thindie.avezer.R
 import com.thindie.avezer.engine.ScreenScope
+import com.thindie.avezer.feature.home.domain.DailyForecast
 import com.thindie.avezer.feature.home.domain.TimeFormatter
-import com.thindie.avezer.feature.home.domain.Weather
 import com.thindie.avezer.feature.home.placedetail.components.DailyForecastCard
 import com.thindie.avezer.uikit.Action
 import com.thindie.avezer.uikit.AppScreen
@@ -109,9 +109,9 @@ private fun PlaceDetailPreview() {
 internal fun PlaceDetailContent(
   title: String,
   lastUpdated: Long?,
-  dailyForecast: List<com.thindie.avezer.feature.home.domain.DailyForecast>?,
+  dailyForecast: List<DailyForecast>?,
   onBack: () -> Unit,
-  onClick: (com.thindie.avezer.feature.home.domain.Weather) -> Unit = {},
+  onClick: (DailyForecast) -> Unit = {},
 ) {
   BackHandler { onBack() }
 
@@ -126,14 +126,13 @@ internal fun PlaceDetailContent(
       style = AppTheme.typography.headlineLarge,
       color = AppTheme.colors.contentPrimary,
     )
-
+    Text(
+      text = stringResource(R.string.place_detail_forecast_title),
+      style = AppTheme.typography.bodySmall,
+      color = AppTheme.colors.contentSecondary,
+    )
     if (lastUpdated != null) {
       val lastUpdatedTime = TimeFormatter.formatRelativeTime(lastUpdated, LocalContext.current)
-      Text(
-        text = stringResource(R.string.place_detail_forecast_title),
-        style = AppTheme.typography.bodySmall,
-        color = AppTheme.colors.contentSecondary,
-      )
       Row(
         modifier = Modifier.padding(top = 4.dp),
         verticalAlignment = Alignment.Bottom,
@@ -161,24 +160,9 @@ internal fun PlaceDetailContent(
         modifier = Modifier.fillMaxSize(),
       ) {
         items(dailyForecast) { forecast ->
-          val weather =
-            Weather(
-              lat = 0.0,
-              lon = 0.0,
-              city = title,
-              temperature = (forecast.temperatureMax + forecast.temperatureMin) / 2,
-              isDay = true,
-              weatherCodeRef = forecast.weatherCodeRef,
-              emoji = forecast.emoji,
-              humidity = null,
-              windSpeed = null,
-              timezone = "UTC",
-              timezoneAbbreviation = "UTC",
-              utcOffsetSeconds = 0,
-            )
           DailyForecastCard(
             dailyForecast = forecast,
-            onClick = { onClick(weather) },
+            onClick = { onClick(forecast) },
           )
         }
       }

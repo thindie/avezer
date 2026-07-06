@@ -13,7 +13,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -94,7 +93,7 @@ internal fun HourlyForecastCard(
         }
 
         // Precipitation Status
-        val precipitationStatus = getPrecipitationStatus(item.weatherCodeRef)
+        val precipitationStatus = ExpandableHourlyCard.getPrecipitationStatus(item.weatherCodeRef)
         Row(
           verticalAlignment = Alignment.CenterVertically,
           horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -188,7 +187,3 @@ internal fun HourlyForecastCard(
     }
   }
 }
-
-@Composable
-private fun getPrecipitationStatus(weatherCodeRef: Int): ExpandableHourlyCard.PrecipitationStatus =
-  ExpandableHourlyCard.getPrecipitationStatus(weatherCodeRef)

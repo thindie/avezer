@@ -1,7 +1,6 @@
 package com.thindie.avezer.feature.home.placehourly
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,33 +34,18 @@ import com.thindie.avezer.uikit.Action
 import com.thindie.avezer.uikit.AppScreen
 import com.thindie.avezer.uikit.AppTheme
 import com.thindie.avezer.uikit.HSpacer
-import com.thindie.avezer.uikit.LocalThemeSwitcher
-import com.thindie.avezer.uikit.ThemeSwitcher
 import com.thindie.avezer.uikit.VSpacer
 
 @Composable
 internal fun PlaceHourlyScreen(screenScope: ScreenScope<PlaceHourlyState, PlaceHourlyCommand>) {
-  val themeSwitcher = LocalThemeSwitcher.current
-  val themeChoice by themeSwitcher.themeFlow.collectAsState(ThemeSwitcher.Choice.Auto)
-  val isDark =
-    when (themeChoice) {
-      ThemeSwitcher.Choice.Dark -> true
-      ThemeSwitcher.Choice.Light -> false
-      else -> isSystemInDarkTheme()
-    }
-
   val screenState by screenScope.state.collectAsState()
 
   AppScreen(
     screenScope = screenScope,
     secondary =
       Action(
-        resRef = R.drawable.ic_theme_24,
-        listener = {
-          themeSwitcher.set(
-            if (isDark) ThemeSwitcher.Choice.Light else ThemeSwitcher.Choice.Dark,
-          )
-        },
+        resRef = R.drawable.ic_arrow_back_24,
+        listener = { screenScope.send(PlaceHourlyCommand.Back) },
       ),
   ) {
     PullToRefreshBox(
@@ -70,9 +54,15 @@ internal fun PlaceHourlyScreen(screenScope: ScreenScope<PlaceHourlyState, PlaceH
       onRefresh = { screenScope.send(PlaceHourlyCommand.Refresh) },
       indicator = {},
     ) {
+      val filteredForecast =
+        if (screenState.hourlyStartIndex >= 0 && screenState.hourlyEndIndex > screenState.hourlyStartIndex) {
+          screenState.hourlyForecast.subList(screenState.hourlyStartIndex, screenState.hourlyEndIndex)
+        } else {
+          screenState.hourlyForecast
+        }
       PlaceHourlyContent(
         weather = screenState.weather,
-        hourlyForecast = screenState.hourlyForecast,
+        hourlyForecast = filteredForecast,
         onBack = { screenScope.send(PlaceHourlyCommand.Back) },
       )
     }
@@ -240,67 +230,60 @@ private fun PlaceHourlyContent(
 private fun ExpandedWeatherCard(weather: Weather) {
   val accentColor = com.thindie.avezer.uikit.weather.WeatherColorMapper.getAccentColor(weather.weatherCodeRef)
 
-  androidx.compose.material3.Card(
-    modifier = Modifier.fillMaxWidth(),
-    colors = androidx.compose.material3.CardDefaults.cardColors(containerColor = AppTheme.colors.cardPrimary),
-    shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
-    elevation = androidx.compose.material3.CardDefaults.cardElevation(defaultElevation = 4.dp),
-  ) {
-    Column(modifier = Modifier.padding(16.dp)) {
-      Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-      ) {
-        Text(
-          text = weather.emoji,
-          style = AppTheme.typography.headlineLarge,
-        )
+  Column(modifier = Modifier.padding(16.dp)) {
+    Row(
+      modifier = Modifier.fillMaxWidth(),
+      horizontalArrangement = Arrangement.SpaceBetween,
+      verticalAlignment = Alignment.CenterVertically,
+    ) {
+      Text(
+        text = weather.emoji,
+        style = AppTheme.typography.headlineLarge,
+      )
 
-        Text(
-          text = "${weather.temperature.toInt()}°",
-          style = AppTheme.typography.headlineSmall,
-          color = accentColor,
-        )
+      Text(
+        text = "${weather.temperature.toInt()}°",
+        style = AppTheme.typography.headlineSmall,
+        color = accentColor,
+      )
+    }
+
+    VSpacer(12.dp)
+
+    Row(
+      modifier = Modifier.fillMaxWidth(),
+      horizontalArrangement = Arrangement.SpaceBetween,
+      verticalAlignment = Alignment.CenterVertically,
+    ) {
+      if (weather.humidity != null) {
+        Column(modifier = Modifier.weight(1f)) {
+          Text(
+            text = stringResource(R.string.weather_humidity),
+            style = AppTheme.typography.labelMedium,
+            color = AppTheme.colors.contentSecondary,
+          )
+          VSpacer(2.dp)
+          Text(
+            text = "${weather.humidity}%",
+            style = AppTheme.typography.titleSmall,
+            color = accentColor.copy(alpha = 0.8f),
+          )
+        }
       }
 
-      VSpacer(12.dp)
-
-      Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-      ) {
-        if (weather.humidity != null) {
-          Column(modifier = Modifier.weight(1f)) {
-            Text(
-              text = stringResource(R.string.weather_humidity),
-              style = AppTheme.typography.labelMedium,
-              color = AppTheme.colors.contentSecondary,
-            )
-            VSpacer(2.dp)
-            Text(
-              text = "${weather.humidity}%",
-              style = AppTheme.typography.titleSmall,
-              color = accentColor.copy(alpha = 0.8f),
-            )
-          }
-        }
-
-        if (weather.windSpeed != null) {
-          Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.End) {
-            Text(
-              text = stringResource(R.string.weather_wind_speed),
-              style = AppTheme.typography.labelMedium,
-              color = AppTheme.colors.contentSecondary,
-            )
-            VSpacer(2.dp)
-            Text(
-              text = "${weather.windSpeed.toInt()} ${stringResource(R.string.kilometers_per_hour)}",
-              style = AppTheme.typography.titleSmall,
-              color = accentColor.copy(alpha = 0.8f),
-            )
-          }
+      if (weather.windSpeed != null) {
+        Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.End) {
+          Text(
+            text = stringResource(R.string.weather_wind_speed),
+            style = AppTheme.typography.labelMedium,
+            color = AppTheme.colors.contentSecondary,
+          )
+          VSpacer(2.dp)
+          Text(
+            text = "${weather.windSpeed.toInt()} ${stringResource(R.string.kilometers_per_hour)}",
+            style = AppTheme.typography.titleSmall,
+            color = accentColor.copy(alpha = 0.8f),
+          )
         }
       }
     }

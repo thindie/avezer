@@ -27,6 +27,24 @@ import com.thindie.avezer.uikit.AppTheme
 import com.thindie.avezer.uikit.VSpacer
 import com.thindie.avezer.uikit.weather.WeatherColorMapper
 
+object ExpandableHourlyCard {
+  @Immutable
+  internal data class PrecipitationStatus(
+    val emoji: String,
+    val labelResId: Int,
+  )
+
+  @Composable
+  internal fun getPrecipitationStatus(weatherCodeRef: Int): PrecipitationStatus {
+    return when (weatherCodeRef) {
+      in 51..67, in 80..82 -> PrecipitationStatus(emoji = "🌧️", labelResId = R.string.weather_condition_rain)
+      in 71..77, in 85..86 -> PrecipitationStatus(emoji = "❄️", labelResId = R.string.weather_condition_snow)
+      in 95..99 -> PrecipitationStatus(emoji = "⛈️", labelResId = R.string.weather_condition_rain)
+      else -> PrecipitationStatus(emoji = "☀️", labelResId = R.string.weather_condition_clear)
+    }
+  }
+}
+
 @Composable
 internal fun ExpandableHourlyCard(
   item: HourlyForecastItem,

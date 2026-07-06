@@ -8,6 +8,7 @@ import com.thindie.avezer.engine.sub
 import com.thindie.avezer.engine.transition
 import com.thindie.avezer.feature.home.domain.DailyForecast
 import com.thindie.avezer.feature.home.domain.ForecastRepository
+import com.thindie.avezer.feature.home.domain.HourlyForecastItem
 import com.thindie.avezer.feature.home.domain.Weather
 import kotlinx.coroutines.flow.filter
 
@@ -16,6 +17,8 @@ data class PlaceDetailState(
   val title: String? = null,
   val lastUpdated: Long? = null,
   val dailyForecast: List<DailyForecast>? = null,
+  val hourlyForecast: List<HourlyForecastItem> = emptyList(),
+  val weather: Weather? = null,
 ) : ViewState
 
 internal fun ScreenScope<PlaceDetailState, PlaceDetailCommand>.subscriptions(
@@ -30,14 +33,34 @@ internal fun ScreenScope<PlaceDetailState, PlaceDetailCommand>.subscriptions(
       },
     ).transition(
       block = { _, forecast ->
-        val result =
+        val dailyResult =
           forecast?.flatMap { w ->
             if (w.city == cityFilter) w.forecast else emptyList()
+          } ?: emptyList()
+        val hourlyResult =
+          forecast?.flatMap { w ->
+            if (w.city == cityFilter) {
+              w.hourlyForecast.map {
+                HourlyForecastItem(
+                  time = it.time,
+                  temperature = it.temperature,
+                  humidity = it.humidity,
+                  windSpeed = it.windSpeed,
+                  precipitation = it.precipitation,
+                  weatherCodeRef = it.weatherCodeRef,
+                  emoji = it.emoji,
+                )
+              }
+            } else {
+              emptyList()
+            }
           } ?: emptyList()
         PlaceDetailState(
           title = weather.city,
           lastUpdated = weather.lastUpdated,
-          dailyForecast = result,
+          dailyForecast = dailyResult,
+          hourlyForecast = hourlyResult,
+          weather = weather,
         )
       },
     )

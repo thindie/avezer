@@ -14,7 +14,10 @@ import kotlinx.coroutines.flow.filter
 @Immutable
 data class PlaceHourlyState(
   val weather: Weather? = null,
-  val hourlyForecast: List<HourlyForecastItem>? = null,
+  val dailyWeatherIndex: Int = -1,
+  val hourlyStartIndex: Int = -1,
+  val hourlyEndIndex: Int = -1,
+  val hourlyForecast: List<HourlyForecastItem> = emptyList(),
 ) : ViewState
 
 internal fun ScreenScope<PlaceHourlyState, PlaceHourlyCommand>.subscriptions(
@@ -23,7 +26,7 @@ internal fun ScreenScope<PlaceHourlyState, PlaceHourlyCommand>.subscriptions(
 ) {
   stateSink(this) { scope ->
     scope.sub(repository.forecast.filter { it?.any { it.city == weather.city } == true }).transition(
-      block = { _, forecast ->
+      block = { prevState, forecast ->
         val result =
           forecast?.flatMap { w ->
             w.hourlyForecast.map { hf ->
@@ -38,7 +41,10 @@ internal fun ScreenScope<PlaceHourlyState, PlaceHourlyCommand>.subscriptions(
               )
             }
           } ?: emptyList()
-        PlaceHourlyState(weather = weather, hourlyForecast = result)
+        prevState.copy(
+          weather = weather,
+          hourlyForecast = result,
+        )
       },
     )
   }

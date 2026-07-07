@@ -6,6 +6,7 @@ import com.thindie.avezer.engine.ViewState
 import com.thindie.avezer.engine.stateSink
 import com.thindie.avezer.engine.sub
 import com.thindie.avezer.engine.transition
+import com.thindie.avezer.feature.home.domain.DailyForecast
 import com.thindie.avezer.feature.home.domain.ForecastRepository
 import com.thindie.avezer.feature.home.domain.HourlyForecastItem
 import com.thindie.avezer.feature.home.domain.Weather
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.filter
 @Immutable
 data class PlaceHourlyState(
   val weather: Weather? = null,
+  val dailyForecast: DailyForecast,
   val dailyWeatherIndex: Int = -1,
   val hourlyStartIndex: Int = -1,
   val hourlyEndIndex: Int = -1,

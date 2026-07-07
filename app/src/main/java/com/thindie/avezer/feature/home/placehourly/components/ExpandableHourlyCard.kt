@@ -1,10 +1,9 @@
 package com.thindie.avezer.feature.home.placehourly.components
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,10 +13,10 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.thindie.avezer.R
@@ -26,24 +25,6 @@ import com.thindie.avezer.feature.home.domain.TimeFormatter
 import com.thindie.avezer.uikit.AppTheme
 import com.thindie.avezer.uikit.VSpacer
 import com.thindie.avezer.uikit.weather.WeatherColorMapper
-
-object ExpandableHourlyCard {
-  @Immutable
-  internal data class PrecipitationStatus(
-    val emoji: String,
-    val labelResId: Int,
-  )
-
-  @Composable
-  internal fun getPrecipitationStatus(weatherCodeRef: Int): PrecipitationStatus {
-    return when (weatherCodeRef) {
-      in 51..67, in 80..82 -> PrecipitationStatus(emoji = "🌧️", labelResId = R.string.weather_condition_rain)
-      in 71..77, in 85..86 -> PrecipitationStatus(emoji = "❄️", labelResId = R.string.weather_condition_snow)
-      in 95..99 -> PrecipitationStatus(emoji = "⛈️", labelResId = R.string.weather_condition_rain)
-      else -> PrecipitationStatus(emoji = "☀️", labelResId = R.string.weather_condition_clear)
-    }
-  }
-}
 
 @Composable
 internal fun ExpandableHourlyCard(
@@ -85,20 +66,13 @@ internal fun ExpandableHourlyCard(
           verticalAlignment = Alignment.CenterVertically,
           horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-          Box(
-            modifier =
-              Modifier
-                .clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
-                .background(accentColor.copy(alpha = 0.1f))
-                .padding(8.dp),
-          ) {
-            Text(
-              text = item.emoji,
-              style = AppTheme.typography.headlineLarge,
-            )
-          }
-
           Text(
+            text = item.emoji,
+            style = AppTheme.typography.headlineSmall,
+          )
+          val degrees by animateFloatAsState(if (isExpanded) 180f else 0f)
+          Text(
+            modifier = Modifier.rotate(degrees),
             text = "▼",
             style = AppTheme.typography.bodyMedium,
             color = AppTheme.colors.contentSecondary,
@@ -124,22 +98,6 @@ internal fun ExpandableHourlyCard(
           Text(
             text = "${item.temperature.toInt()}°",
             style = AppTheme.typography.headlineSmall,
-            color = accentColor,
-          )
-        }
-
-        val precipitationStatus = getPrecipitationStatus(item.weatherCodeRef)
-        Row(
-          verticalAlignment = Alignment.CenterVertically,
-          horizontalArrangement = Arrangement.spacedBy(4.dp),
-        ) {
-          Text(
-            text = precipitationStatus.emoji,
-            style = AppTheme.typography.bodyMedium,
-          )
-          Text(
-            text = stringResource(precipitationStatus.labelResId),
-            style = AppTheme.typography.titleSmall,
             color = accentColor,
           )
         }
@@ -224,21 +182,5 @@ internal fun ExpandableHourlyCard(
         }
       }
     }
-  }
-}
-
-@Immutable
-internal data class PrecipitationStatus(
-  val emoji: String,
-  val labelResId: Int,
-)
-
-@Composable
-internal fun getPrecipitationStatus(weatherCodeRef: Int): PrecipitationStatus {
-  return when (weatherCodeRef) {
-    in 51..67, in 80..82 -> PrecipitationStatus(emoji = "🌧️", labelResId = R.string.weather_condition_rain)
-    in 71..77, in 85..86 -> PrecipitationStatus(emoji = "❄️", labelResId = R.string.weather_condition_snow)
-    in 95..99 -> PrecipitationStatus(emoji = "⛈️", labelResId = R.string.weather_condition_rain)
-    else -> PrecipitationStatus(emoji = "☀️", labelResId = R.string.weather_condition_clear)
   }
 }

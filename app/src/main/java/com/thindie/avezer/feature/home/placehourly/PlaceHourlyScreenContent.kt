@@ -17,7 +17,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -26,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.thindie.avezer.R
 import com.thindie.avezer.engine.ScreenScope
+import com.thindie.avezer.feature.home.domain.DailyForecast
 import com.thindie.avezer.feature.home.domain.HourlyForecastItem
 import com.thindie.avezer.feature.home.domain.TimeFormatter
 import com.thindie.avezer.feature.home.domain.Weather
@@ -42,7 +42,7 @@ internal fun PlaceHourlyScreen(screenScope: ScreenScope<PlaceHourlyState, PlaceH
 
   AppScreen(
     screenScope = screenScope,
-    secondary =
+    primary =
       Action(
         resRef = R.drawable.ic_arrow_back_24,
         listener = { screenScope.send(PlaceHourlyCommand.Back) },
@@ -62,6 +62,7 @@ internal fun PlaceHourlyScreen(screenScope: ScreenScope<PlaceHourlyState, PlaceH
         }
       PlaceHourlyContent(
         weather = screenState.weather,
+        daily = screenState.dailyForecast,
         hourlyForecast = filteredForecast,
         onBack = { screenScope.send(PlaceHourlyCommand.Back) },
       )
@@ -132,6 +133,7 @@ private fun PlaceHourlyPreview() {
   PlaceHourlyContent(
     weather = mockWeather,
     hourlyForecast = mockHourlyForecast,
+    daily = mockWeather.forecast[1],
     onBack = {},
   )
 }
@@ -139,6 +141,7 @@ private fun PlaceHourlyPreview() {
 @Composable
 private fun PlaceHourlyContent(
   weather: Weather?,
+  daily: DailyForecast,
   hourlyForecast: List<HourlyForecastItem>?,
   onBack: () -> Unit,
 ) {
@@ -159,11 +162,16 @@ private fun PlaceHourlyContent(
 
     if (weather != null) {
       VSpacer(4.dp)
+      Text(
+        text = stringResource(R.string.place_detail_hourly_forecast_title),
+        style = AppTheme.typography.bodySmall,
+        color = AppTheme.colors.contentSecondary,
+      )
       val lastUpdatedTime = TimeFormatter.formatRelativeTime(weather.lastUpdated, LocalContext.current)
       Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
-          text = stringResource(R.string.place_detail_forecast_title),
-          style = AppTheme.typography.bodySmall,
+          text = stringResource(R.string.last_updated_label),
+          style = AppTheme.typography.labelMedium,
           color = AppTheme.colors.contentSecondary,
         )
         HSpacer(4.dp)
@@ -175,9 +183,8 @@ private fun PlaceHourlyContent(
       }
 
       VSpacer(16.dp)
-
       // Upper half: expanded current weather card
-      ExpandedWeatherCard(weather = weather)
+      DailyWeatherForecast(weather = daily)
 
       VSpacer(24.dp)
 
@@ -227,7 +234,7 @@ private fun PlaceHourlyContent(
 }
 
 @Composable
-private fun ExpandedWeatherCard(weather: Weather) {
+private fun DailyWeatherForecast(weather: DailyForecast) {
   val accentColor = com.thindie.avezer.uikit.weather.WeatherColorMapper.getAccentColor(weather.weatherCodeRef)
 
   Column(modifier = Modifier.padding(16.dp)) {
@@ -240,10 +247,10 @@ private fun ExpandedWeatherCard(weather: Weather) {
         text = weather.emoji,
         style = AppTheme.typography.headlineLarge,
       )
-
+      val temperature = (weather.temperatureMax + weather.temperatureMin) / 2
       Text(
-        text = "${weather.temperature.toInt()}°",
-        style = AppTheme.typography.headlineSmall,
+        text = "${temperature.toInt()}°",
+        style = AppTheme.typography.headlineLarge,
         color = accentColor,
       )
     }
@@ -252,39 +259,21 @@ private fun ExpandedWeatherCard(weather: Weather) {
 
     Row(
       modifier = Modifier.fillMaxWidth(),
-      horizontalArrangement = Arrangement.SpaceBetween,
+      horizontalArrangement = Arrangement.End,
       verticalAlignment = Alignment.CenterVertically,
     ) {
-      if (weather.humidity != null) {
-        Column(modifier = Modifier.weight(1f)) {
-          Text(
-            text = stringResource(R.string.weather_humidity),
-            style = AppTheme.typography.labelMedium,
-            color = AppTheme.colors.contentSecondary,
-          )
-          VSpacer(2.dp)
-          Text(
-            text = "${weather.humidity}%",
-            style = AppTheme.typography.titleSmall,
-            color = accentColor.copy(alpha = 0.8f),
-          )
-        }
-      }
-
-      if (weather.windSpeed != null) {
-        Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.End) {
-          Text(
-            text = stringResource(R.string.weather_wind_speed),
-            style = AppTheme.typography.labelMedium,
-            color = AppTheme.colors.contentSecondary,
-          )
-          VSpacer(2.dp)
-          Text(
-            text = "${weather.windSpeed.toInt()} ${stringResource(R.string.kilometers_per_hour)}",
-            style = AppTheme.typography.titleSmall,
-            color = accentColor.copy(alpha = 0.8f),
-          )
-        }
+      Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.End) {
+        Text(
+          text = stringResource(R.string.weather_precipitation),
+          style = AppTheme.typography.labelMedium,
+          color = AppTheme.colors.contentSecondary,
+        )
+        VSpacer(2.dp)
+        Text(
+          text = "${weather.precipitationSum.toInt()} ${stringResource(R.string.millimeter)}",
+          style = AppTheme.typography.titleSmall,
+          color = accentColor.copy(alpha = 0.8f),
+        )
       }
     }
   }

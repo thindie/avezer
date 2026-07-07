@@ -17,6 +17,7 @@ fun HomeFlow.placeHourly(
       dailyWeatherIndex = dailyWeatherIndex,
       hourlyStartIndex = hourlyStartIndex,
       hourlyEndIndex = hourlyEndIndex,
+      dailyForecast = weather.forecast[dailyWeatherIndex],
     ),
   execute = { cmd, state -> exec(cmd, state) },
   stateSink = { screenScope: ScreenScope<PlaceHourlyState, PlaceHourlyCommand> ->

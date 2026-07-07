@@ -18,11 +18,16 @@ class SearchRepositoryImpl(
   private val resolver: LocationResolver,
 ) : SearchRepository {
   private val addressesRequest = MutableStateFlow(emptyList<WeatherSearchResult>())
+  private val favoritesCache = MutableStateFlow(emptyList<FavoriteLocation>())
+
+  override val favorites: Flow<List<FavoriteLocation>> = favoritesCache
 
   override suspend fun search(query: String) {
     withContext(Dispatchers.IO) {
       val addresses = resolver.readAddresses(name = query)
       val favorite = readFavoritesInternal()
+      favoritesCache.update { favorite }
+
       val addressesResult =
         addresses.map {
           WeatherSearchResult(
@@ -34,6 +39,11 @@ class SearchRepositoryImpl(
         }
       addressesRequest.update { addressesResult }
     }
+  }
+
+  override suspend fun fetchFavorites() {
+    val favorite = readFavoritesInternal()
+    favoritesCache.update { favorite }
   }
 
   private suspend fun readFavoritesInternal() =
@@ -67,6 +77,7 @@ class SearchRepositoryImpl(
         .joinToString(FAVORITE_PLACES_SEPARATOR)
 
     storage.createOrUpdate(favoriteStorageId, updatedFavorites)
+    favoritesCache.update { value }
     addressesRequest.update {
       it.map { result ->
         if (result.city == location.city) {

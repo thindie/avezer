@@ -18,6 +18,11 @@
     <string name="settings_start_with_favorites_label">Start with favorites</string>
     <string name="settings_start_with_favorites_subtitle">Open favorite places on app launch</string>
 
+    <!-- Saved Locations -->
+    <string name="settings_section_saved_locations">Saved locations</string>
+    <string name="settings_delete_location_title">Delete location?</string>
+    <string name="settings_delete_location_message">Are you sure you want to delete "%s"? This action cannot be undone.</string>
+
     <string name="language_en">English</string>
     <string name="language_ru">Russian</string>
 
@@ -30,6 +35,10 @@
 
     <string name="error_unexpected">Something went wrong. Please try again.</string>
     <string name="btn_close">Close</string>
+
+    <!-- Buttons -->
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_delete">Delete</string>
 
     <string name="error_action_ok">OK</string>
     <string name="error_action_retry">Try again</string>
@@ -94,6 +103,7 @@
     <string name="millimeter">mm</string>
 
     <string name="place_detail_forecast_title">Daily Forecast</string>
+    <string name="place_detail_hourly_forecast_title">Hourly Forecast</string>
 
     <!-- Places (restored) -->
     <string name="places_no_forecast">No forecast data available</string>

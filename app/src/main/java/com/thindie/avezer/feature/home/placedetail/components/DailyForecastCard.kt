@@ -61,18 +61,10 @@ internal fun DailyForecastCard(
           color = AppTheme.colors.contentPrimary,
         )
 
-        Box(
-          modifier =
-            Modifier
-              .clip(RoundedCornerShape(12.dp))
-              .background(accentColor.copy(alpha = 0.1f))
-              .padding(8.dp),
-        ) {
-          Text(
-            text = dailyForecast.emoji,
-            style = AppTheme.typography.headlineLarge,
-          )
-        }
+        Text(
+          text = dailyForecast.emoji,
+          style = AppTheme.typography.headlineLarge,
+        )
       }
 
       VSpacer(12.dp)

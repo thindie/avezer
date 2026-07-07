@@ -4,6 +4,7 @@ import android.app.LocaleManager
 import android.os.Build
 import android.os.LocaleList
 import com.thindie.avezer.engine.Command
+import com.thindie.avezer.feature.home.domain.FavoriteLocation
 import com.thindie.avezer.feature.settings.SettingsFlow
 import com.thindie.avezer.feature.settings.domain.SettingsRepository
 
@@ -15,16 +16,18 @@ internal sealed interface SettingsCommand : Command {
   data class SelectLanguage(val languageCode: String) : SettingsCommand
 
   data object StartWithFavorites : SettingsCommand
+
+  data class DeleteLocation(val location: FavoriteLocation) : SettingsCommand
 }
 
 internal suspend fun SettingsFlow.exec(
   command: SettingsCommand,
   state: SettingsState,
-): SettingsState =
+): SettingsState? =
   when (command) {
     is SettingsCommand.Back -> {
       back()
-      state
+      null
     }
 
     is SettingsCommand.SelectLanguage -> {
@@ -47,5 +50,10 @@ internal suspend fun SettingsFlow.exec(
       val newState = !state.startWithFavorites
       repository.toggleStartWithFavorite(newState)
       state.copy(startWithFavorites = newState)
+    }
+
+    is SettingsCommand.DeleteLocation -> {
+      searchRepository.toggleFavorite(command.location)
+      null
     }
   }

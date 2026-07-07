@@ -34,7 +34,7 @@ class Application : Application() {
     }
   }
 
-  fun configureAppWidgets() {
+  private suspend fun configureAppWidgets() {
     val dataProvider =
       WidgetDataProviderImpl(
         forecastRepository = applicationScope.appFlowModule.repository,

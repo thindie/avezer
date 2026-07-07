@@ -242,6 +242,7 @@ class MainActivity : ComponentActivity() {
       router = router,
       repository = app.applicationScope.settingsRepository,
       context = app,
+      searchRepository = app.applicationScope.appFlowModule.searchRepository,
     ).switch()
   }
 }

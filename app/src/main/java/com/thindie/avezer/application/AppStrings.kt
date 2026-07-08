@@ -149,3 +149,19 @@ fun timeJustNow(
 fun timeToday(): String = timeToday ?: "Today"
 
 fun timeYesterday(): String = timeYesterday ?: "Yesterday"
+
+/** Short relative time: "Just now" / "%d min ago" / "%dh ago". */
+fun formatRelativeTimeShort(
+  timestampMillis: Long,
+  context: Context,
+): String {
+  val minutesDiff = (System.currentTimeMillis() - timestampMillis) / 60_000
+  return when {
+    minutesDiff < 1 -> timeJustNow(null, context)
+    minutesDiff < 60 -> timeJustNow(minutesDiff.toInt(), context)
+    else -> {
+      val hours = minutesDiff / 60
+      context.getString(R.string.time_hours_ago, hours).orEmpty()
+    }
+  }
+}

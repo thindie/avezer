@@ -7,6 +7,7 @@ import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.LocalContext
+import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.provideContent
@@ -53,7 +54,7 @@ class WeatherGlanceAppWidget : GlanceAppWidget() {
       when (weatherData) {
         WeatherWidgetData.Error -> ErrorWidgetContent()
         is WeatherWidgetData.Forecast -> {
-          WeatherWidgetContent(data = weatherData)
+          WeatherWidgetContent(data = weatherData, { dataProvider.interaction.invoke() })
         }
         WeatherWidgetData.None -> EmptyWidgetContent()
         WeatherWidgetData.Outdated -> TODO()
@@ -62,19 +63,23 @@ class WeatherGlanceAppWidget : GlanceAppWidget() {
   }
 
   @Composable
-  private fun WeatherWidgetContent(data: WeatherWidgetData.Forecast) {
+  private fun WeatherWidgetContent(
+    data: WeatherWidgetData.Forecast,
+    onClick: () -> Unit,
+  ) {
     Scaffold(
+      modifier = GlanceModifier.clickable(onClick),
       titleBar = {
         Row(
           modifier =
             GlanceModifier
-              .padding(horizontal = 8.dp, vertical = 8.dp),
+              .padding(horizontal = 16.dp, vertical = 12.dp),
         ) {
           Text(
             text = data.city,
             style =
               TextStyle(
-                fontSize = 18.sp,
+                fontSize = 20.sp,
                 fontWeight = FontWeight.Medium,
               ),
           )
@@ -85,42 +90,42 @@ class WeatherGlanceAppWidget : GlanceAppWidget() {
         Row(
           modifier =
             GlanceModifier
-              .padding(horizontal = 8.dp, vertical = 8.dp),
+              .padding(horizontal = 16.dp, vertical = 12.dp),
         ) {
           Text(
             text = data.emoji,
             style =
               TextStyle(
-                fontSize = 32.sp,
+                fontSize = 36.sp,
                 fontWeight = FontWeight.Bold,
               ),
           )
-          Spacer(modifier = GlanceModifier.width(12.dp))
+          Spacer(modifier = GlanceModifier.width(16.dp))
           Text(
             text = "${data.temperature.toInt()}°",
             style =
               TextStyle(
-                fontSize = 48.sp,
+                fontSize = 52.sp,
                 fontWeight = FontWeight.Bold,
               ),
           )
         }
 
         if (data.precipitationSum != null) {
-          Spacer(modifier = GlanceModifier.height(6.dp))
+          Spacer(modifier = GlanceModifier.height(8.dp))
           Row(
             modifier =
               GlanceModifier
-                .padding(horizontal = 8.dp, vertical = 4.dp),
+                .padding(horizontal = 16.dp, vertical = 4.dp),
           ) {
             Text(
               text = "\uD83C\uDF26",
-              style = TextStyle(fontSize = 16.sp),
+              style = TextStyle(fontSize = 18.sp),
             )
             Spacer(modifier = GlanceModifier.width(4.dp))
             Text(
               text = data.precipitationSum,
-              style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Normal),
+              style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium),
             )
           }
         } else {
@@ -131,39 +136,81 @@ class WeatherGlanceAppWidget : GlanceAppWidget() {
         }
 
         if (data.windSpeed != null) {
-          Spacer(modifier = GlanceModifier.height(6.dp))
+          Spacer(modifier = GlanceModifier.height(8.dp))
           Row(
             modifier =
               GlanceModifier
-                .padding(horizontal = 8.dp, vertical = 4.dp),
+                .padding(horizontal = 16.dp, vertical = 4.dp),
           ) {
             Text(
               text = "\uD83C\uDF2C",
-              style = TextStyle(fontSize = 16.sp),
+              style = TextStyle(fontSize = 18.sp),
             )
             Spacer(modifier = GlanceModifier.width(4.dp))
             Text(
               text = data.windSpeed,
-              style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Normal),
+              style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium),
             )
           }
         }
 
         if (data.lastUpdated.isNotEmpty()) {
-          Spacer(modifier = GlanceModifier.height(6.dp))
+          Spacer(modifier = GlanceModifier.height(8.dp))
           Row(
             modifier =
               GlanceModifier
-                .padding(horizontal = 8.dp, vertical = 4.dp),
+                .padding(horizontal = 16.dp, vertical = 4.dp),
           ) {
             Text(
               text = data.lastUpdated,
-              style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Normal),
+              style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Normal),
             )
           }
         }
 
+        // Temperature bar chart for daily forecast
+        if (data.dailyTempsMax.isNotEmpty()) {
+          Spacer(modifier = GlanceModifier.height(8.dp))
+          DailyTempBarChart(
+            maxTemps = data.dailyTempsMax,
+            minTemps = data.dailyTempsMin,
+            currentDayIndex = data.currentDayIndex,
+          )
+        }
+
         Spacer(modifier = GlanceModifier.height(8.dp))
+      }
+    }
+  }
+
+  @Composable
+  private fun DailyTempBarChart(
+    maxTemps: List<Double>,
+    minTemps: List<Double>,
+    currentDayIndex: Int,
+  ) {
+    // Find global min/max for scaling bar heights
+    val allTemps = (maxTemps + minTemps).filter { it.isFinite() }
+    if (allTemps.isEmpty()) return
+    val globalMin = allTemps.min()
+    val globalMax = allTemps.max()
+    val range = if (globalMax - globalMin == 0.0) 1.0 else (globalMax - globalMin)
+
+    Row(
+      modifier =
+        GlanceModifier
+          .padding(horizontal = 8.dp, vertical = 4.dp),
+    ) {
+      maxTemps.forEachIndexed { index, temp ->
+        val heightFraction = (temp - globalMin) / range
+        val barHeightDp = (heightFraction * 48).coerceIn(4.0, 48.0)
+        Box(
+          modifier =
+            GlanceModifier
+              .width(12.dp)
+              .height(barHeightDp.dp),
+          contentAlignment = androidx.glance.layout.Alignment.Center,
+        ) {}
       }
     }
   }

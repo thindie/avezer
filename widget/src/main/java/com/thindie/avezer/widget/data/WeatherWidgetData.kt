@@ -17,6 +17,9 @@ sealed interface WeatherWidgetData {
     val precipitationSum: String? = null,
     val windSpeed: String? = null,
     val lastUpdated: String,
+    val dailyTempsMax: List<Double> = emptyList(),
+    val dailyTempsMin: List<Double> = emptyList(),
+    val currentDayIndex: Int = -1,
   ) : WeatherWidgetData
 
   data object Error : WeatherWidgetData

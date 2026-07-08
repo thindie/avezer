@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 interface ForecastRepository {
   val forecast: Flow<List<Weather>?>
 
-  suspend fun fetch()
+  suspend fun fetch(useCacheOnly: Boolean = false)
 
   suspend fun read(
     lat: Double,

@@ -2,6 +2,7 @@ package com.thindie.avezer.feature.home.placehourly.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,17 +33,29 @@ internal fun ExpandableHourlyCard(
   isExpanded: Boolean,
   onToggle: () -> Unit,
   modifier: Modifier = Modifier,
+  isCurrentHour: Boolean = false,
 ) {
   val accentColor = WeatherColorMapper.getAccentColor(item.weatherCodeRef)
 
+  val currentHourBorderModifier =
+    if (isCurrentHour) {
+      modifier.border(
+        width = 2.dp,
+        color = AppTheme.colors.accentPrimary,
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+      )
+    } else {
+      modifier
+    }
+
   Card(
     modifier =
-      modifier
+      currentHourBorderModifier
         .padding(horizontal = 8.dp, vertical = 4.dp)
         .clickable(onClick = onToggle),
     colors = CardDefaults.cardColors(containerColor = AppTheme.colors.cardPrimary),
     shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
-    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+    elevation = CardDefaults.cardElevation(defaultElevation = if (isCurrentHour) 8.dp else 4.dp),
   ) {
     Column(
       modifier =

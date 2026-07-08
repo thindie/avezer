@@ -6,12 +6,14 @@ import com.thindie.avezer.feature.home.domain.ForecastRepository
 import com.thindie.avezer.feature.home.domain.SearchRepository
 import com.thindie.avezer.widget.data.WeatherDataProvider
 import com.thindie.avezer.widget.data.WeatherWidgetData
+import com.thindie.avezer.widget.data.WidgetInteraction
 import kotlinx.coroutines.flow.firstOrNull
 
 class WidgetDataProviderImpl(
   private val context: Context,
   private val forecastRepository: ForecastRepository,
   private val searchRepository: SearchRepository,
+  override val interaction: WidgetInteraction,
 ) : WeatherDataProvider {
   override suspend fun fetch() {
     forecastRepository.fetch()
@@ -42,6 +44,15 @@ class WidgetDataProviderImpl(
     val precipitationSumStr =
       if (remainingPrecipitation > 0) "%.1f mm".format(remainingPrecipitation) else null
 
+    // Compute daily temperature range for bar chart and current day index
+    val dailyTempsMax = weather.forecast.map { it.temperatureMax }
+    val dailyTempsMin = weather.forecast.map { it.temperatureMin }
+    val nowDate = java.time.LocalDate.now()
+    val currentDayIndex =
+      weather.forecast.indexOfFirst {
+        java.time.LocalDate.parse(it.time) == nowDate
+      }
+
     return WeatherWidgetData.Forecast(
       city = weather.city,
       temperature = weather.temperature,
@@ -50,6 +61,9 @@ class WidgetDataProviderImpl(
       precipitationSum = precipitationSumStr,
       windSpeed = windSpeedStr,
       lastUpdated = lastUpdatedStr,
+      dailyTempsMax = dailyTempsMax,
+      dailyTempsMin = dailyTempsMin,
+      currentDayIndex = currentDayIndex,
     )
   }
 }

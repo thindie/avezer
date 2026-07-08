@@ -12,8 +12,18 @@ class HomeFlow(
   private val router: Router,
   val flowModule: AppFlowModule,
 ) : ScreenFlow<Route, HomeFlow.Result>(router) {
+  private var deeplink: Deeplink = Deeplink.NotSpecified
+
+  fun set(deeplink: Deeplink): HomeFlow {
+    this.deeplink = deeplink
+    return this
+  }
+
   override fun start() {
-    router.push(places)
+    when (val deeplink = consumeDeeplink()) {
+      is Deeplink.Details -> router.push(placeDetail(deeplink.weather))
+      is Deeplink.NotSpecified -> router.push(places)
+    }
   }
 
   fun switch(screen: Start? = null) {
@@ -21,6 +31,12 @@ class HomeFlow(
       is Start.Details -> router.replaceTop(placeDetail(screen.weather))
       null -> router.replaceTop(places)
     }
+  }
+
+  private fun consumeDeeplink(): Deeplink {
+    val deepl = this@HomeFlow.deeplink
+    deeplink = Deeplink.NotSpecified
+    return deepl
   }
 
   sealed interface Result {
@@ -31,5 +47,11 @@ class HomeFlow(
 
   sealed interface Start {
     data class Details(val weather: Weather) : Start
+  }
+
+  sealed interface Deeplink {
+    data class Details(val weather: Weather) : Deeplink
+
+    data object NotSpecified : Deeplink
   }
 }

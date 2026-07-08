@@ -1,6 +1,8 @@
 package com.thindie.avezer.application
 
 import android.app.Application
+import android.content.Intent
+import com.thindie.avezer.MainActivity
 import com.thindie.avezer.application.di.ApplicationScope
 import com.thindie.avezer.engine.Router
 import com.thindie.avezer.widget.WidgetDataProviderImpl
@@ -40,6 +42,15 @@ class Application : Application() {
         context = this@Application,
         forecastRepository = applicationScope.appFlowModule.repository,
         searchRepository = applicationScope.appFlowModule.searchRepository,
+        interaction = {
+          val intent =
+            Intent(this, MainActivity::class.java).apply {
+              putExtra(DEEPLINK, DAILY_FORECAST)
+              addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+
+          startActivity(intent)
+        },
       )
     WidgetInit.init(this, dataProvider)
   }
@@ -53,5 +64,10 @@ class Application : Application() {
         }
     }
     return requireNotNull(router)
+  }
+
+  companion object {
+    const val DEEPLINK = "deeplink"
+    const val DAILY_FORECAST = "daily_forecast"
   }
 }

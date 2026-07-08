@@ -17,7 +17,7 @@ class MockForecastRepository : ForecastRepository {
     _forecast.value = mockCities()
   }
 
-  override suspend fun fetch() {
+  override suspend fun fetch(useCacheOnly: Boolean) {
     // Mock data is already available, nothing to do.
   }
 

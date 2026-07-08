@@ -8,4 +8,6 @@ interface WeatherDataProvider {
   suspend fun fetch()
 
   suspend fun getWidgetData(): WeatherWidgetData
+
+  val interaction: WidgetInteraction
 }

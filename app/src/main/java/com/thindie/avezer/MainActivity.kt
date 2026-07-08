@@ -52,10 +52,13 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import com.thindie.avezer.application.Application
+import com.thindie.avezer.engine.Log
 import com.thindie.avezer.engine.Route
 import com.thindie.avezer.engine.Router
 import com.thindie.avezer.engine.Section
 import com.thindie.avezer.feature.home.HomeFlow
+import com.thindie.avezer.feature.home.domain.ForecastRepository
+import com.thindie.avezer.feature.home.domain.SearchRepository
 import com.thindie.avezer.feature.search.SearchFlow
 import com.thindie.avezer.feature.settings.SettingsFlow
 import com.thindie.avezer.feature.settings.domain.SettingsRepository
@@ -63,8 +66,10 @@ import com.thindie.avezer.uikit.AppTheme
 import com.thindie.avezer.uikit.LocalThemeSwitcher
 import com.thindie.avezer.uikit.ThemeSwitcher
 import com.thindie.avezer.uikit.VSpacer
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class MainActivity : ComponentActivity() {
   private lateinit var app: Application
@@ -74,7 +79,11 @@ class MainActivity : ComponentActivity() {
     super.onCreate(savedInstanceState)
     enableEdgeToEdge()
     app = application as Application
+    val forecastRepository = app.applicationScope.appFlowModule.repository
+    val searchRepository = app.applicationScope.appFlowModule.searchRepository
+    lifecycleScope.launch { forecastRepository.fetch(useCacheOnly = true) }
     router = app.requireRouter()
+    val deeplink = runBlocking { parseIntent(forecastRepository, searchRepository) }
     awaitFinish()
     setContent {
       SideEffect {
@@ -82,6 +91,7 @@ class MainActivity : ComponentActivity() {
           router = router,
           flowModule = app.applicationScope.appFlowModule,
         )
+          .set(deeplink)
           .start()
       }
       val settingsRepository: SettingsRepository? = remember { app.applicationScope.settingsRepository }
@@ -204,6 +214,24 @@ class MainActivity : ComponentActivity() {
           }
         }
       }
+    }
+  }
+
+  private suspend fun parseIntent(
+    forecastRepository: ForecastRepository,
+    searchRepository: SearchRepository,
+  ): HomeFlow.Deeplink {
+    val extra = intent.getStringExtra(Application.DEEPLINK)
+    Log.d({ "parsing intent extra: $extra" })
+    return when (extra) {
+      Application.DAILY_FORECAST -> {
+        val weather = forecastRepository.forecast.filterNotNull().first()
+        searchRepository.fetchFavorites()
+        val favs = searchRepository.favorites.first()
+        val widgetForecast = favs.first { it.usedForWidget }
+        HomeFlow.Deeplink.Details(weather.first { it.city == widgetForecast.city })
+      }
+      else -> HomeFlow.Deeplink.NotSpecified
     }
   }
 

@@ -38,7 +38,7 @@ class ForecastRepositoryImpl(
   override val forecast: Flow<List<Weather>?> =
     weatherCache.map { it?.values.orEmpty().toList() }
 
-  override suspend fun fetch() {
+  override suspend fun fetch(useCacheOnly: Boolean) {
     Log.d({ "Starting weather cache refresh." })
 
     val cachedLocations = knownWeatherKeys().ifEmpty { return }
@@ -56,6 +56,7 @@ class ForecastRepositoryImpl(
         }
       }
     }
+    if (useCacheOnly) return
     supervisorScope {
       for (location in cachedLocations) {
         launch {

@@ -197,7 +197,14 @@ private fun PlaceHourlyContent(
           modifier = Modifier.fillMaxSize(),
           verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
+          val nowHour = java.time.LocalTime.now()
           itemsIndexed(hourlyForecast, key = { index, _ -> index }) { index, forecast ->
+            val isCurrentHour =
+              try {
+                java.time.LocalTime.parse(forecast.time.substringAfter("T")) == nowHour
+              } catch (e: Exception) {
+                false
+              }
             ExpandableHourlyCard(
               item = forecast,
               isExpanded = expandedStates.value[index],
@@ -206,6 +213,7 @@ private fun PlaceHourlyContent(
                 newState[index] = !newState[index]
                 expandedStates.value = newState
               },
+              isCurrentHour = isCurrentHour,
             )
           }
         }

@@ -149,6 +149,11 @@
     <string name="last_updated_label">Обновлено</string>
     <string name="time_just_now">Только что</string>
     <string name="time_minutes_ago">%d мин. назад</string>
+    <string name="time_hours_ago">%dh назад</string>
+
+    <!-- Widget -->
+    <string name="widget_error_loading_data">Ошибка загрузки данных</string>
+    <string name="widget_no_data_available">Нет данных</string>
     <string name="today">Сегодня</string>
     <string name="yesterday">Вчера</string>
 

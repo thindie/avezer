@@ -14,6 +14,9 @@ sealed interface WeatherWidgetData {
     val temperature: Double,
     val emoji: String,
     val isDay: Boolean = true,
+    val precipitationSum: String? = null,
+    val windSpeed: String? = null,
+    val lastUpdated: String,
   ) : WeatherWidgetData
 
   data object Error : WeatherWidgetData

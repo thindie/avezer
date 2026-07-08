@@ -1,57 +1,44 @@
-# Project Instructions
+# Project Guidelines & Workflow
 
-## Planning before editing files
+## 1. Planning Before Editing
+- **Always invoke `feature_planner`** as the first tool call before any file modifications, regardless of task size. Do not skip this step to "move faster."
+- Analyze affected files, dependencies, and required changes before implementation.
+- Once a plan is approved, proceed immediately to implementation without additional confirmation.
 
-Before making any code changes — even simple ones — you must call `feature_planner` first to generate a plan. This is not optional: it ensures your edits are well-structured and correct the first time.
+## 2. Implementation Rules
+- **Implementation:** If it is clear, that new functionality will be added, must check mcp tool Context7. If spawn subagents - Enforce this rule when spawning subagents.
+- **Localisation:** If it is clear, that new resources/values will be added, must implement localisation changes at all resource files. If spawn subagents - Enforce this rule when spawning subagents.
+- **Indentation:** Use 2-space indentation. If spawn subagents - Enforce this rule when spawning subagents.
+- **Minimal Changes:** Keep edits focused on the task at hand. Update related tests, docs, configs, or call sites only if they are part of the change scope.
 
-**The rule:** Always invoke `feature_planner` as the very first tool call when working on anything that involves editing files, regardless of how small or straightforward the task seems. Do not skip this step to "move faster."
+## 3. Validation & Code Quality
+- **Build Verification:** After completing a task (via subagent or directly), run `get_build_command` to verify compilation before reporting success.
+  -  terminal uses bash shell, but `gradlew.bat` is a Windows batch file. Try to use `cmd /c` prefix or find another way. try using `./gradlew` (the Unix version) instead if needed.
+- **Code Review Guidelines:**
+    - Read files with `read_file` before editing — never guess contents or paths.
+    - Ensure changes pass linting and formatting checks.
+- **Formatting:** After a successful build, run `app:ktlintFormat` to enforce consistent code style.
 
-## Build validation after changes
+## 4. Git Workflow
+- **No automatic commits/branches** unless explicitly requested by the user.
+- **Commit Style (when requested):**
+    - Short subject line (≤50 chars), imperative mood, blank-line separator from body.
+    - Follow this strict sequence without skipping:
+        1. `git status`
+        2. Summarize changes
+        3. Group related logic atomically
+        4. Check git history for project commit conventions
+        5. Commit sequentially and atomically
 
-After completing a coding task, use `get_build_command` to run a build and verify your changes compile correctly before reporting success.
+## 5. Final Checklist & Iteration ("Getting Job Done")
+After all changes are implemented and validated:
+- [ ] **Core Functionality:** What does this feature do?
+- [ ] **Expected Behavior:** Does it work as intended?
+    - Can the UI render the updated functionality?
+    - Are stubs properly linked to existing codebase?
+    - Is the code functional beyond just building? (User-visible changes?)
+- [ ] **Summary & Additions:** If additional tiny/logical steps are needed, implement them and repeat this checklist.
 
-## Code review guidelines
-
-- Read files with `read_file` before editing — never guess file contents or paths
-- Update related tests, documentation, configuration, or call sites when they are part of the requested change
-- Keep changes minimal and focused on the task at hand
-
-# Code
-- Indent is 2
-
-## Git
-
-- Do not commit or create new branches unless the user explicitly requests it
-- When committing, follow good Git style: short subject line (≤50 chars), imperative mood, blank-line separator from body
-- If user asks to commit changes, use this  simple but strict action sequence without skip
-   1) check git status
-   2) summarize the changes
-   3) atomically separate the logic bounds
-   4) check git history to resolve the style of commits at current project
-   5) atomically and sequintionally commit those changes
-
-## Examples
-
-**Good plan structure:**
-1. Identify affected files and dependencies. 
-e.g. A.kt
-changes: line 2 - 20
-full path: <full path>
-2. Design the change (functions, classes, or config to modify)
-3. Implement with minimal edits
-4. Validate via build
-
-**Bad approach:** Jumping straight into editing without a plan — this often leads to missed edge cases or broken related code.
-**The rule:** once plan is done, must proceed to implement without confirm. proceed with spawn_agent or directly. 
-
-
-## Getting Job Done
-
-1. after build complete, it should be good to run app:ktLintFormat
-2. after all resolved, go checklist
- - what is the core functionality of the implemented feature
- - is it work by now as expected? 
-    a. can UI render the updated functionality?
-    b. if the stubs was added, can they be replaced and linked with existed codebase properly?
-    c. is the code is just writted and project build, but the user cant see the real changes?
-3. summarize, and additions is tiny and pretty logical - implement them. if does, repeat Getting Job Done
+---
+### ⚡ Quick Pipeline Reference
+`Plan → Implement → Build Verify → Format → Git (if requested) → Checklist → Iterate`

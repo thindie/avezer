@@ -37,6 +37,7 @@ class Application : Application() {
   private suspend fun configureAppWidgets() {
     val dataProvider =
       WidgetDataProviderImpl(
+        context = this@Application,
         forecastRepository = applicationScope.appFlowModule.repository,
         searchRepository = applicationScope.appFlowModule.searchRepository,
       )

@@ -2,4 +2,7 @@
 <resources>
   <string name="widget_description">Текущая погода — температура, город и условия</string>
   <string name="widget_preview_text">Виджет погоды Avezer</string>
+  <string name="widget_error_loading_data">Ошибка загрузки данных</string>
+  <string name="widget_no_data_available">Нет данных</string>
+    <string name="widget_precipitation_null">сегодня осадков больше не ожидается</string>
 </resources>

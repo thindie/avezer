@@ -17,6 +17,18 @@
     <string name="settings_start_with_favorites_label">Начинать с избранного</string>
     <string name="settings_start_with_favorites_subtitle">Открывать избранные места при запуске приложения</string>
 
+    <!-- Saved Locations -->
+    <string name="settings_section_saved_locations">Сохранённые локации</string>
+    <string name="saved_favorite_cities">Сохранённые города</string>
+    <string name="widget_favorite_cities">Локации виджета</string>
+    <string name="settings_manage_favorites_title">Управление избранным</string>
+    <string name="settings_delete_location_title">Удалить локацию?</string>
+    <string name="settings_delete_location_message">Вы уверены, что хотите удалить "%s"? Это действие нельзя отменить.</string>
+
+    <!-- Buttons -->
+    <string name="btn_cancel">Отмена</string>
+    <string name="btn_delete">Удалить</string>
+
     <string name="language_en">Английский</string>
     <string name="language_ru">Русский</string>
 
@@ -100,7 +112,7 @@
     <!-- Places -->
     <string name="places_no_forecast">Нет данных о прогнозе</string>
     <string name="place_detail_forecast_title">Прогноз на день</string>
-    <string name= "place_detail_hourly_forecast_title">Почасовой прогноз</string>
+    <string name="place_detail_hourly_forecast_title">Почасовой прогноз</string>
     <string name="places_search_button">Поиск мест</string>
     <string name="search_hint">напр. Москва, Калининград, Питер</string>
     <string name="places_see_hourly">Почасовой</string>

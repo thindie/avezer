@@ -20,6 +20,9 @@
 
     <!-- Saved Locations -->
     <string name="settings_section_saved_locations">Saved locations</string>
+    <string name="saved_favorite_cities">Saved cities</string>
+    <string name="widget_favorite_cities">Widget locations</string>
+    <string name="settings_manage_favorites_title">Manage favorites</string>
     <string name="settings_delete_location_title">Delete location?</string>
     <string name="settings_delete_location_message">Are you sure you want to delete "%s"? This action cannot be undone.</string>
 

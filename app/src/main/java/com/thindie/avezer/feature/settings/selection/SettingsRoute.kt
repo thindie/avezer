@@ -19,6 +19,7 @@ val SettingsFlow.selection
             .transition { state, locations -> state.copy(savedLocations = locations) }
         }
       },
+      initialCommand = { SettingsCommand.Init as SettingsCommand },
       errorMapper = { settingsScreenErrorMapper(it) },
       routeContent = { scope -> SettingsScreenContent(scope) },
       section = HomeSection.Settings,

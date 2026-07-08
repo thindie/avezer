@@ -4,12 +4,14 @@ import android.app.LocaleManager
 import android.os.Build
 import android.os.LocaleList
 import com.thindie.avezer.engine.Command
-import com.thindie.avezer.feature.home.domain.FavoriteLocation
 import com.thindie.avezer.feature.settings.SettingsFlow
 import com.thindie.avezer.feature.settings.domain.SettingsRepository
+import com.thindie.avezer.feature.settings.managefavorites.manageFavorite
 
 internal sealed interface SettingsCommand : Command {
   data object Back : SettingsCommand
+
+  data object Init : SettingsCommand
 
   data class SetThemeChoice(val themeChoice: SettingsRepository.ThemeChoice) : SettingsCommand
 
@@ -17,7 +19,7 @@ internal sealed interface SettingsCommand : Command {
 
   data object StartWithFavorites : SettingsCommand
 
-  data class DeleteLocation(val location: FavoriteLocation) : SettingsCommand
+  data object ManageLocations : SettingsCommand
 }
 
 internal suspend fun SettingsFlow.exec(
@@ -27,6 +29,11 @@ internal suspend fun SettingsFlow.exec(
   when (command) {
     is SettingsCommand.Back -> {
       back()
+      null
+    }
+
+    is SettingsCommand.Init -> {
+      searchRepository.fetchFavorites()
       null
     }
 
@@ -52,8 +59,8 @@ internal suspend fun SettingsFlow.exec(
       state.copy(startWithFavorites = newState)
     }
 
-    is SettingsCommand.DeleteLocation -> {
-      searchRepository.toggleFavorite(command.location)
+    is SettingsCommand.ManageLocations -> {
+      go(manageFavorite)
       null
     }
   }

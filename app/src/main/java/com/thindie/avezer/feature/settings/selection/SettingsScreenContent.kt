@@ -10,11 +10,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -29,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import com.thindie.avezer.R
 import com.thindie.avezer.engine.ScreenScope
 import com.thindie.avezer.engine.ServiceCommand
-import com.thindie.avezer.feature.home.domain.FavoriteLocation
 import com.thindie.avezer.feature.settings.domain.SettingsRepository
 import com.thindie.avezer.uikit.Action
 import com.thindie.avezer.uikit.AppScreen
@@ -67,23 +65,7 @@ internal fun SettingsScreenContent(scope: ScreenScope<SettingsState, SettingsCom
       onSetThemeChoice = { scope.send(SettingsCommand.SetThemeChoice(it)) },
       onStartWithFavorites = { scope.send(SettingsCommand.StartWithFavorites) },
       onSelectLanguage = { scope.send(SettingsCommand.SelectLanguage(it)) },
-      onDeleteLocationClick = { location ->
-        scope.sendEvent(
-          ServiceCommand.UiEvent.Decision(
-            content = {
-              DeleteLocationDialog(
-                cityName = location.city,
-              )
-            },
-            primaryAction = Action(listener = {}, resRef = R.string.btn_cancel),
-            secondaryAction =
-              Action(
-                listener = { scope.send(SettingsCommand.DeleteLocation(location)) },
-                resRef = R.string.btn_delete,
-              ),
-          ),
-        )
-      },
+      onManageLocations = { scope.send(SettingsCommand.ManageLocations) },
     )
   }
 }
@@ -95,7 +77,7 @@ private fun SettingsScreenBody(
   onSetThemeChoice: (SettingsRepository.ThemeChoice) -> Unit = {},
   onStartWithFavorites: () -> Unit = {},
   onSelectLanguage: (String) -> Unit = {},
-  onDeleteLocationClick: (FavoriteLocation) -> Unit = {},
+  onManageLocations: () -> Unit = {},
 ) {
   val themeSwitcher = LocalThemeSwitcher.current
   val theme by themeSwitcher.themeFlow.collectAsState(ThemeSwitcher.Choice.Auto)
@@ -202,15 +184,15 @@ private fun SettingsScreenBody(
       SectionTitle(stringResource(R.string.settings_section_saved_locations))
       VSpacer(16.dp)
 
-      LazyColumn(
+      OutlinedButton(
+        onClick = { onManageLocations() },
         modifier = Modifier.fillMaxWidth(),
       ) {
-        items(state.savedLocations) { location ->
-          SavedLocationItem(
-            cityName = location.city,
-            onClick = { onDeleteLocationClick(location) },
-          )
-        }
+        Text(
+          text = stringResource(R.string.settings_manage_favorites_title),
+          style = AppTheme.typography.bodyMedium,
+          color = AppTheme.colors.accentPrimary,
+        )
       }
     }
   }
@@ -267,7 +249,7 @@ private fun ThemeOption(
 }
 
 @Composable
-private fun ToggleRow(
+internal fun ToggleRow(
   label: String,
   subtitle: String,
   checked: Boolean,
@@ -398,55 +380,6 @@ private fun languageLabel(language: String?): String {
     "en" -> stringResource(R.string.language_en)
     "ru" -> stringResource(R.string.language_ru)
     else -> language ?: ""
-  }
-}
-
-@Composable
-private fun SavedLocationItem(
-  cityName: String,
-  onClick: (() -> Unit)? = null,
-) {
-  Row(
-    modifier =
-      Modifier
-        .fillMaxWidth()
-        .clickable(enabled = onClick != null, onClick = { onClick?.invoke() })
-        .padding(12.dp),
-    horizontalArrangement = Arrangement.SpaceBetween,
-    verticalAlignment = Alignment.CenterVertically,
-  ) {
-    Column(modifier = Modifier.weight(1f)) {
-      Text(
-        text = cityName,
-        style = AppTheme.typography.bodyMedium,
-        color = AppTheme.colors.contentPrimary,
-      )
-    }
-    if (onClick != null) {
-      HSpacer(8.dp)
-      Image(
-        painter = painterResource(R.drawable.ic_delete_24),
-        contentDescription = stringResource(R.string.btn_delete),
-        modifier = Modifier.padding(end = 4.dp),
-      )
-    }
-  }
-}
-
-@Composable
-private fun DeleteLocationDialog(cityName: String) {
-  Column {
-    Text(
-      text = stringResource(R.string.settings_delete_location_title),
-      style = AppTheme.typography.headlineMedium,
-      color = AppTheme.colors.contentPrimary,
-    )
-    VSpacer(16.dp)
-    Text(
-      text = stringResource(R.string.settings_delete_location_message, cityName),
-      style = AppTheme.typography.bodyMedium,
-      color = AppTheme.colors.contentSecondary,
-    )
   }
 }
 

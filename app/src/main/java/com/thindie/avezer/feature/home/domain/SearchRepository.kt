@@ -12,4 +12,6 @@ interface SearchRepository {
   val favorites: Flow<List<FavoriteLocation>>
 
   suspend fun fetchFavorites()
+
+  suspend fun setPrioritizedLocation(location: FavoriteLocation)
 }

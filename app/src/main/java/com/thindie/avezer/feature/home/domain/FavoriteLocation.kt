@@ -7,4 +7,5 @@ data class FavoriteLocation(
   val city: String,
   val lat: Double,
   val lon: Double,
+  val usedForWidget: Boolean = false,
 )

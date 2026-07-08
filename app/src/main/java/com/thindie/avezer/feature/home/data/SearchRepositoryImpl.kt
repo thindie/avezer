@@ -46,6 +46,29 @@ class SearchRepositoryImpl(
     favoritesCache.update { favorite }
   }
 
+  override suspend fun setPrioritizedLocation(location: FavoriteLocation) {
+    val cacheValue = readFavoritesInternal()
+    val updatedFavorites =
+      cacheValue.map {
+        val fav =
+          when {
+            it.usedForWidget -> it.copy(usedForWidget = false)
+            it.city == location.city -> it.copy(usedForWidget = true)
+            else -> it
+          }
+        return@map fav
+      }
+
+    val storedFavorites =
+      updatedFavorites
+        .map { JsonUtil.toJson(it) }
+        .onEach { Log.d({ "weather json: $it" }) }
+        .joinToString(FAVORITE_PLACES_SEPARATOR)
+
+    storage.createOrUpdate(favoriteStorageId, storedFavorites)
+    favoritesCache.update { updatedFavorites }
+  }
+
   private suspend fun readFavoritesInternal() =
     storage.read(favoriteStorageId)
       .orEmpty()

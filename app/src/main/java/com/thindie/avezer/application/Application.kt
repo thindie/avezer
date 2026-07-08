@@ -38,6 +38,7 @@ class Application : Application() {
     val dataProvider =
       WidgetDataProviderImpl(
         forecastRepository = applicationScope.appFlowModule.repository,
+        searchRepository = applicationScope.appFlowModule.searchRepository,
       )
     WidgetInit.init(this, dataProvider)
   }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="widget_description">Current weather at a glance — temperature, city and conditions</string>
-  <string name="widget_preview_text">Weather Widget</string>
+  <string name="widget_preview_text">Avezer weather widget</string>
   <color name="widget_background">#FF263238</color>
 </resources>

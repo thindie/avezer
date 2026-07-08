@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
   <application>
-    <!-- Widget Provider -->
+    <!-- Glance App Widget Receiver -->
     <receiver
       android:name=".WeatherWidgetProvider"
       android:enabled="true"
@@ -11,8 +11,8 @@
         <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
       </intent-filter>
       <meta-data
-        android:name="android.appwidget.provider"
-        android:value="@xml/weather_widget_info" />
+          android:name="android.appwidget.provider"
+          android:resource="@xml/weather_widget_info" />
     </receiver>
 
     <!-- Settings Activity for Widget -->

@@ -1,5 +1,6 @@
 package com.thindie.avezer.widget
 
+import android.annotation.SuppressLint
 import android.content.Context
 import com.thindie.avezer.application.formatRelativeTimeShort
 import com.thindie.avezer.feature.home.domain.ForecastRepository
@@ -8,6 +9,7 @@ import com.thindie.avezer.widget.data.WeatherDataProvider
 import com.thindie.avezer.widget.data.WeatherWidgetData
 import com.thindie.avezer.widget.data.WidgetInteraction
 import kotlinx.coroutines.flow.firstOrNull
+import java.lang.String.format
 
 class WidgetDataProviderImpl(
   private val context: Context,
@@ -17,8 +19,10 @@ class WidgetDataProviderImpl(
 ) : WeatherDataProvider {
   override suspend fun fetch() {
     forecastRepository.fetch()
+    searchRepository.fetchFavorites()
   }
 
+  @SuppressLint("DefaultLocale")
   override suspend fun getWidgetData(): WeatherWidgetData {
     val forecasts = forecastRepository.forecast.firstOrNull() ?: return WeatherWidgetData.None
     val favoriteLocation = searchRepository.favorites.firstOrNull()?.firstOrNull { it.usedForWidget }
@@ -32,25 +36,34 @@ class WidgetDataProviderImpl(
         weather
       } ?: return WeatherWidgetData.None
 
-    val windSpeedStr = weather.windSpeed?.let { "%.1f km/h".format(it) }
+    val windSpeedRef = com.thindie.avezer.R.string.weather_wind_speed_value
+
+    val windSpeedStr =
+      weather.windSpeed?.let {
+        context.getString(windSpeedRef, it.toString())
+      }
 
     val lastUpdatedStr = formatRelativeTimeShort(weather.lastUpdated, context)
 
-    val nowHour = java.time.LocalTime.now()
+    val nowHour = java.time.LocalTime.now().hour
+
     val remainingPrecipitation =
       weather.hourlyForecast
-        .filter { it.time.startsWith("T") && java.time.LocalTime.parse(it.time.substringAfter("T")) >= nowHour }
+        .filterIndexed { i, f -> i < nowHour }
         .sumOf { it.precipitation }
+
+    val mmRef = com.thindie.avezer.R.string.millimeter
+    val mmString = context.getString(mmRef)
     val precipitationSumStr =
-      if (remainingPrecipitation > 0) "%.1f mm".format(remainingPrecipitation) else null
+      if (remainingPrecipitation > 0) "${format("%.1f", remainingPrecipitation)} $mmString" else null
 
     // Compute daily temperature range for bar chart and current day index
     val dailyTempsMax = weather.forecast.map { it.temperatureMax }
     val dailyTempsMin = weather.forecast.map { it.temperatureMin }
-    val nowDate = java.time.LocalDate.now()
+    val nowDate = java.time.LocalDate.now().dayOfMonth
     val currentDayIndex =
       weather.forecast.indexOfFirst {
-        java.time.LocalDate.parse(it.time) == nowDate
+        java.time.LocalDate.parse(it.time).dayOfMonth == nowDate
       }
 
     return WeatherWidgetData.Forecast(

@@ -124,7 +124,7 @@
     <string name="weather_precipitation">Precipitation</string>
     <string name="weather_humidity_value">%d%%</string>
     <string name="weather_wind_speed">Wind speed</string>
-    <string name="weather_wind_speed_value">%d km/h</string>
+    <string name="weather_wind_speed_value">%s km/h</string>
     <string name="weather_max_temp">Max temp</string>
     <string name="weather_min_temp">Min temp</string>
     <string name="weather_sunrise">Sunrise</string>
@@ -157,5 +157,21 @@
     <string name="widget_no_data_available">No data available</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
+
+    <!-- Rain Notifications -->
+    <string name="rain_notification_channel_name">Rain Alerts</string>
+    <string name="rain_notification_channel_description">Notifications about expected precipitation</string>
+    <string name="rain_notification_title">Rain Expected</string>
+    <string name="rain_notification_message">Precipitation is expected in</string>
+    <string name="rain_notification_detail">Check the forecast for details.</string>
+
+    <!-- Permission Group -->
+    <string name="permission_group_notifications">Notifications</string>
+    <string name="permission_request_title">Allow Notifications</string>
+    <string name="permission_request_message">We need permission to send you rain alerts and weather updates.</string>
+    <string name="permission_rationale_title">Notification Permission Required</string>
+    <string name="permission_rationale_message">To receive rain alerts, please enable notifications in settings.</string>
+    <string name="permission_grant">Allow</string>
+    <string name="permission_deny">Deny</string>
 
 </resources>

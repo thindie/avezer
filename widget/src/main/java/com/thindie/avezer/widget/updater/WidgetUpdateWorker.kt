@@ -32,22 +32,22 @@ class WidgetUpdateWorker(
     }
   }
 
-  private suspend fun updateAllWidgets(context: Context) {
-    val manager = GlanceAppWidgetManager(context)
-    val glanceIds = manager.getGlanceIds(WeatherGlanceAppWidget::class.java)
-
-    for (glanceId in glanceIds) {
-      try {
-        WeatherGlanceAppWidget().update(context, glanceId)
-      } catch (e: Exception) {
-        // Ignore individual widget update failures
-      }
-    }
-  }
-
   companion object {
     private const val WORK_NAME = "WeatherWidgetUpdate"
     private const val UPDATE_INTERVAL_HOURS = 2L
+
+    suspend fun updateAllWidgets(context: Context) {
+      val manager = GlanceAppWidgetManager(context)
+      val glanceIds = manager.getGlanceIds(WeatherGlanceAppWidget::class.java)
+
+      for (glanceId in glanceIds) {
+        try {
+          WeatherGlanceAppWidget().update(context, glanceId)
+        } catch (e: Exception) {
+          // Ignore individual widget update failures
+        }
+      }
+    }
 
     fun startPeriodicUpdates(context: Context) {
       val constraints =
@@ -68,10 +68,6 @@ class WidgetUpdateWorker(
         ExistingPeriodicWorkPolicy.UPDATE,
         workRequest,
       )
-    }
-
-    fun stopUpdates(context: Context) {
-      WorkManager.getInstance(context).cancelUniqueWork(WORK_NAME)
     }
   }
 }

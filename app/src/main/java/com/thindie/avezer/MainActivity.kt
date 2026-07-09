@@ -69,7 +69,6 @@ import com.thindie.avezer.uikit.VSpacer
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class MainActivity : ComponentActivity() {
   private lateinit var app: Application
@@ -83,10 +82,10 @@ class MainActivity : ComponentActivity() {
     val searchRepository = app.applicationScope.appFlowModule.searchRepository
     lifecycleScope.launch { forecastRepository.fetch(useCacheOnly = true) }
     router = app.requireRouter()
-    val deeplink = runBlocking { parseIntent(forecastRepository, searchRepository) }
     awaitFinish()
     setContent {
-      SideEffect {
+      LaunchedEffect(Unit) {
+        val deeplink = parseIntent(forecastRepository, searchRepository)
         HomeFlow(
           router = router,
           flowModule = app.applicationScope.appFlowModule,

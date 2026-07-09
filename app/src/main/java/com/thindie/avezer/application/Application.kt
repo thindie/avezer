@@ -31,8 +31,10 @@ class Application : Application() {
     super.onCreate()
     applicationScope = ApplicationScope(this)
     scope.launch {
-      AppStrings.init(this@Application)
       configureAppWidgets()
+    }
+    scope.launch {
+      AppStrings.init(this@Application)
     }
   }
 

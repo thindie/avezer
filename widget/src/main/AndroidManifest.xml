@@ -14,11 +14,6 @@
           android:name="android.appwidget.provider"
           android:resource="@xml/weather_widget_info" />
     </receiver>
-
-    <!-- Settings Activity for Widget -->
-    <activity
-      android:name=".settings.WidgetSettingsActivity"
-      android:exported="false" />
   </application>
 
 </manifest>

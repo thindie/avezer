@@ -127,7 +127,7 @@
     <string name="weather_precipitation">Осадки</string>
     <string name="weather_humidity_value">%d%%</string>
     <string name="weather_wind_speed">Скорость ветра</string>
-    <string name="weather_wind_speed_value">%d км/ч</string>
+    <string name="weather_wind_speed_value">%s км/ч</string>
 
     <!-- Day of week abbreviations (loaded dynamically via getIdentifier) -->
     <string name="day_of_week_1">Пн</string>

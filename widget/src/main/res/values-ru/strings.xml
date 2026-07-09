@@ -4,5 +4,8 @@
   <string name="widget_preview_text">Виджет погоды Avezer</string>
   <string name="widget_error_loading_data">Ошибка загрузки данных</string>
   <string name="widget_no_data_available">Нет данных</string>
+    <string name="widget_precipitation_expected">Ожидаются Осадки:</string>
     <string name="widget_precipitation_null">сегодня осадков больше не ожидается</string>
+    <string name="widget_updated_label">Обновлено:</string>
+    <string name="widget_no_data_message">Не удалось загрузить данные о погоде. Попробуйте позже.</string>
 </resources>

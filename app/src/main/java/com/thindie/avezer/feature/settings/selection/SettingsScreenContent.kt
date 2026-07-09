@@ -64,7 +64,7 @@ internal fun SettingsScreenContent(scope: ScreenScope<SettingsState, SettingsCom
       onBack = { scope.send(SettingsCommand.Back) },
       onSetThemeChoice = { scope.send(SettingsCommand.SetThemeChoice(it)) },
       onStartWithFavorites = { scope.send(SettingsCommand.StartWithFavorites) },
-      onSelectLanguage = { scope.send(SettingsCommand.SelectLanguage(it)) },
+      onSelectLanguage = { selectLanguage(scope, state.language.orEmpty()) },
       onManageLocations = { scope.send(SettingsCommand.ManageLocations) },
     )
   }
@@ -76,7 +76,7 @@ private fun SettingsScreenBody(
   onBack: () -> Unit = {},
   onSetThemeChoice: (SettingsRepository.ThemeChoice) -> Unit = {},
   onStartWithFavorites: () -> Unit = {},
-  onSelectLanguage: (String) -> Unit = {},
+  onSelectLanguage: () -> Unit = {},
   onManageLocations: () -> Unit = {},
 ) {
   val themeSwitcher = LocalThemeSwitcher.current
@@ -173,7 +173,7 @@ private fun SettingsScreenBody(
     LanguageSection(
       label = stringResource(R.string.settings_language_label),
       subtitle = languageLabel(state.language),
-      onClick = { onSelectLanguage(state.language.orEmpty()) },
+      onClick = onSelectLanguage,
     )
 
     // === Saved Locations ===

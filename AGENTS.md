@@ -13,7 +13,6 @@
 
 ## 3. Validation & Code Quality
 - **Build Verification:** After completing a task (via subagent or directly), run `get_build_command` to verify compilation before reporting success.
-  -  terminal uses bash shell, but `gradlew.bat` is a Windows batch file. Try to use `cmd /c` prefix or find another way. try using `./gradlew` (the Unix version) instead if needed.
 - **Code Review Guidelines:**
     - Read files with `read_file` before editing — never guess contents or paths.
     - Ensure changes pass linting and formatting checks.

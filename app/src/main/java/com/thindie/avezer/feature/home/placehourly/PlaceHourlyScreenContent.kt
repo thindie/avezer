@@ -10,9 +10,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,6 +37,9 @@ import com.thindie.avezer.uikit.AppScreen
 import com.thindie.avezer.uikit.AppTheme
 import com.thindie.avezer.uikit.HSpacer
 import com.thindie.avezer.uikit.VSpacer
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 
 @Composable
 internal fun PlaceHourlyScreen(screenScope: ScreenScope<PlaceHourlyState, PlaceHourlyCommand>) {
@@ -192,17 +197,56 @@ private fun PlaceHourlyContent(
         Box(modifier = Modifier.fillMaxSize()) {}
       } else {
         val expandedStates = remember { mutableStateOf<BooleanArray>(BooleanArray(hourlyForecast.size) { false }) }
+        val lazyListState = rememberLazyListState()
+
+        LaunchedEffect(hourlyForecast) {
+          val nowHour = LocalTime.now()
+          var currentHourIndex = 0
+          hourlyForecast.forEachIndexed { index, forecast ->
+            try {
+              if (LocalDateTime.parse(forecast.time).toLocalDate().isEqual(LocalDate.now()) &&
+                LocalDateTime.parse(forecast.time).hour == nowHour.hour
+              ) {
+                currentHourIndex = index
+              }
+            } catch (_: Exception) {
+              // ignore
+            }
+          }
+          lazyListState.animateScrollToItem(currentHourIndex)
+        }
 
         LazyColumn(
+          state = lazyListState,
           modifier = Modifier.fillMaxSize(),
           verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
-          val nowHour = java.time.LocalTime.now()
+          val nowHour = LocalTime.now()
           itemsIndexed(hourlyForecast, key = { index, _ -> index }) { index, forecast ->
-            val isCurrentHour =
+            val isToday =
               try {
-                java.time.LocalTime.parse(forecast.time.substringAfter("T")) == nowHour
-              } catch (e: Exception) {
+                LocalDateTime.parse(forecast.time).toLocalDate().isEqual(LocalDate.now())
+              } catch (_: Exception) {
+                false
+              }
+            val isCurrentHour =
+              if (isToday) {
+                try {
+                  LocalDateTime.parse(forecast.time).hour == nowHour.hour
+                } catch (_: Exception) {
+                  false
+                }
+              } else {
+                false
+              }
+            val isPassedHour =
+              if (isToday) {
+                try {
+                  LocalDateTime.parse(forecast.time).hour < nowHour.hour
+                } catch (_: Exception) {
+                  false
+                }
+              } else {
                 false
               }
             ExpandableHourlyCard(
@@ -214,12 +258,15 @@ private fun PlaceHourlyContent(
                 expandedStates.value = newState
               },
               isCurrentHour = isCurrentHour,
+              isPassedHour = isPassedHour,
             )
           }
         }
       }
     } else if (hourlyForecast != null && hourlyForecast.isNotEmpty()) {
+      val lazyListState = rememberLazyListState()
       LazyColumn(
+        state = lazyListState,
         modifier = Modifier.fillMaxSize(),
       ) {
         itemsIndexed(hourlyForecast, key = { index, _ -> index }) { _, forecast ->

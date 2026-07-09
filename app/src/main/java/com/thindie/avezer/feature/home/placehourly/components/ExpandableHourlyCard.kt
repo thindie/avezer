@@ -2,13 +2,14 @@ package com.thindie.avezer.feature.home.placehourly.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.border
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -34,27 +35,25 @@ internal fun ExpandableHourlyCard(
   onToggle: () -> Unit,
   modifier: Modifier = Modifier,
   isCurrentHour: Boolean = false,
+  isPassedHour: Boolean = false,
 ) {
   val accentColor = WeatherColorMapper.getAccentColor(item.weatherCodeRef)
 
-  val currentHourBorderModifier =
-    if (isCurrentHour) {
-      modifier.border(
-        width = 2.dp,
-        color = AppTheme.colors.accentPrimary,
-        shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
-      )
-    } else {
-      modifier
+  val temperatureText =
+    when {
+      isCurrentHour -> stringResource(R.string.weather_temperature_now)
+      isPassedHour -> stringResource(R.string.weather_recorded_temperature)
+      else -> stringResource(R.string.weather_temperature_forecast)
     }
 
   Card(
     modifier =
-      currentHourBorderModifier
+      modifier
         .padding(horizontal = 8.dp, vertical = 4.dp)
         .clickable(onClick = onToggle),
     colors = CardDefaults.cardColors(containerColor = AppTheme.colors.cardPrimary),
-    shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+    shape = RoundedCornerShape(16.dp),
+    border = if (isCurrentHour) BorderStroke(width = 2.dp, color = AppTheme.colors.accentPrimary) else null,
     elevation = CardDefaults.cardElevation(defaultElevation = if (isCurrentHour) 8.dp else 4.dp),
   ) {
     Column(
@@ -103,7 +102,7 @@ internal fun ExpandableHourlyCard(
       ) {
         Column(modifier = Modifier.weight(1f)) {
           Text(
-            text = stringResource(R.string.weather_current_temperature),
+            text = temperatureText,
             style = AppTheme.typography.labelMedium,
             color = AppTheme.colors.contentSecondary,
           )

@@ -146,6 +146,9 @@
     <string name="weather_condition_snow">Снег</string>
     <string name="weather_condition_clear">Без осадков</string>
     <string name="weather_current_temperature">Текущая температура</string>
+    <string name="weather_recorded_temperature">Зафиксирована температура</string>
+    <string name="weather_temperature_now">Температура сейчас</string>
+    <string name="weather_temperature_forecast">Прогноз температуры</string>
     <string name="last_updated_label">Обновлено</string>
     <string name="time_just_now">Только что</string>
     <string name="time_minutes_ago">%d мин. назад</string>

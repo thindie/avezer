@@ -1,6 +1,7 @@
 package com.thindie.avezer.feature.home.placedetail.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,6 +26,12 @@ import com.thindie.avezer.feature.home.domain.TimeFormatter
 import com.thindie.avezer.uikit.AppTheme
 import com.thindie.avezer.uikit.VSpacer
 import com.thindie.avezer.uikit.weather.WeatherColorMapper
+import java.time.LocalDate
+
+private const val DATE_SEPARATOR = ", "
+private const val DEGREE_SYMBOL = "°"
+private const val TEMPERATURE_SEPARATOR = " / "
+private const val PRECIPITATION_EMOJI = "💧"
 
 @Composable
 internal fun DailyForecastCard(
@@ -33,12 +40,23 @@ internal fun DailyForecastCard(
   onClick: () -> Unit = {},
 ) {
   val accentColor = WeatherColorMapper.getAccentColor(dailyForecast)
+  val isCurrentDay = LocalDate.parse(dailyForecast.time).isEqual(LocalDate.now())
 
   Card(
     modifier =
       modifier
         .padding(horizontal = 8.dp, vertical = 4.dp)
-        .clickable(onClick = onClick),
+        .clickable(onClick = onClick)
+        .then(
+          if (isCurrentDay) {
+            Modifier.border(
+              border = androidx.compose.foundation.BorderStroke(2.dp, AppTheme.colors.accentPrimary),
+              shape = RoundedCornerShape(16.dp),
+            )
+          } else {
+            Modifier
+          },
+        ),
     colors = CardDefaults.cardColors(containerColor = AppTheme.colors.cardPrimary),
     shape = RoundedCornerShape(16.dp),
     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -56,7 +74,14 @@ internal fun DailyForecastCard(
         verticalAlignment = Alignment.CenterVertically,
       ) {
         Text(
-          text = TimeFormatter.formatDailyDate(dailyForecast.time),
+          text =
+            if (isCurrentDay) {
+              "${stringResource(R.string.today)} ${TimeFormatter.formatDailyDate(
+                dailyForecast.time,
+              ).substringAfter(DATE_SEPARATOR)}"
+            } else {
+              TimeFormatter.formatDailyDate(dailyForecast.time)
+            },
           style = AppTheme.typography.titleLarge,
           color = AppTheme.colors.contentPrimary,
         )
@@ -83,7 +108,7 @@ internal fun DailyForecastCard(
           )
           VSpacer(2.dp)
           Text(
-            text = "${dailyForecast.temperatureMax.toInt()}°",
+            text = "${dailyForecast.temperatureMax.toInt()}$DEGREE_SYMBOL",
             style = AppTheme.typography.headlineSmall,
             color = accentColor,
           )
@@ -99,7 +124,7 @@ internal fun DailyForecastCard(
               .padding(horizontal = 12.dp, vertical = 6.dp),
         ) {
           Text(
-            text = "${dailyForecast.temperatureMax.toInt()}° / ${dailyForecast.temperatureMin.toInt()}°",
+            text = "${dailyForecast.temperatureMax.toInt()}$DEGREE_SYMBOL$TEMPERATURE_SEPARATOR${dailyForecast.temperatureMin.toInt()}$DEGREE_SYMBOL",
             style = AppTheme.typography.titleSmall,
             color = accentColor,
           )
@@ -113,7 +138,7 @@ internal fun DailyForecastCard(
           )
           VSpacer(2.dp)
           Text(
-            text = "${dailyForecast.temperatureMin.toInt()}°",
+            text = "${dailyForecast.temperatureMin.toInt()}$DEGREE_SYMBOL",
             style = AppTheme.typography.headlineSmall,
             color = accentColor.copy(alpha = 0.7f),
           )
@@ -143,7 +168,7 @@ internal fun DailyForecastCard(
             horizontalArrangement = Arrangement.spacedBy(4.dp),
           ) {
             Text(
-              text = "💧",
+              text = PRECIPITATION_EMOJI,
               style = AppTheme.typography.bodyMedium,
             )
             Text(

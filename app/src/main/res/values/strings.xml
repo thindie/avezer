@@ -147,6 +147,9 @@
     <string name="weather_condition_snow">Snow</string>
     <string name="weather_condition_clear">Clear</string>
     <string name="weather_current_temperature">Current temperature</string>
+    <string name="weather_recorded_temperature">Recorded temperature</string>
+    <string name="weather_temperature_now">Temperature now</string>
+    <string name="weather_temperature_forecast">Temperature forecast</string>
     <string name="last_updated_label">Last updated</string>
     <string name="time_just_now">Just now</string>
     <string name="time_minutes_ago">%d minutes ago</string>

@@ -23,6 +23,7 @@ class HomeFlow(
     when (val deeplink = consumeDeeplink()) {
       is Deeplink.Details -> router.push(placeDetail(deeplink.weather))
       is Deeplink.NotSpecified -> router.push(places)
+      is Deeplink.Settings -> error("Not expected Deeplink")
     }
   }
 
@@ -51,6 +52,8 @@ class HomeFlow(
 
   sealed interface Deeplink {
     data class Details(val weather: Weather) : Deeplink
+
+    data object Settings : Deeplink
 
     data object NotSpecified : Deeplink
   }

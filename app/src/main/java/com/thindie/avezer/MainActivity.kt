@@ -80,34 +80,47 @@ class MainActivity : ComponentActivity() {
     app = application as Application
     val forecastRepository = app.applicationScope.appFlowModule.repository
     val searchRepository = app.applicationScope.appFlowModule.searchRepository
+    val settingsRepository = app.applicationScope.settingsRepository
     lifecycleScope.launch { forecastRepository.fetch(useCacheOnly = true) }
     router = app.requireRouter()
     awaitFinish()
     setContent {
       LaunchedEffect(Unit) {
         val deeplink = parseIntent(forecastRepository, searchRepository)
-        HomeFlow(
-          router = router,
-          flowModule = app.applicationScope.appFlowModule,
-        )
-          .set(deeplink)
-          .start()
+        when (deeplink) {
+          is HomeFlow.Deeplink.Details,
+          HomeFlow.Deeplink.NotSpecified,
+          -> {
+            HomeFlow(
+              router = router,
+              flowModule = app.applicationScope.appFlowModule,
+            )
+              .set(deeplink)
+              .start()
+          }
+          HomeFlow.Deeplink.Settings -> {
+            SettingsFlow(
+              router = router,
+              context = app,
+              repository = settingsRepository,
+              searchRepository = searchRepository,
+            )
+              .start()
+          }
+        }
       }
-      val settingsRepository: SettingsRepository? = remember { app.applicationScope.settingsRepository }
       val themeSwitcher =
         remember(settingsRepository) {
           val switcher = ThemeSwitcher()
-          if (settingsRepository != null) {
-            val saved = settingsRepository.themeChoice()
-            if (saved != null) {
-              switcher.set(
-                when (saved) {
-                  is SettingsRepository.ThemeChoice.Auto -> ThemeSwitcher.Choice.Auto
-                  is SettingsRepository.ThemeChoice.Light -> ThemeSwitcher.Choice.Light
-                  is SettingsRepository.ThemeChoice.Dark -> ThemeSwitcher.Choice.Dark
-                },
-              )
-            }
+          val saved = settingsRepository.themeChoice()
+          if (saved != null) {
+            switcher.set(
+              when (saved) {
+                is SettingsRepository.ThemeChoice.Auto -> ThemeSwitcher.Choice.Auto
+                is SettingsRepository.ThemeChoice.Light -> ThemeSwitcher.Choice.Light
+                is SettingsRepository.ThemeChoice.Dark -> ThemeSwitcher.Choice.Dark
+              },
+            )
           }
           switcher
         }
@@ -223,6 +236,9 @@ class MainActivity : ComponentActivity() {
     val extra = intent.getStringExtra(Application.DEEPLINK)
     Log.d({ "parsing intent extra: $extra" })
     return when (extra) {
+      Application.SETTINGS -> {
+        HomeFlow.Deeplink.Settings
+      }
       Application.DAILY_FORECAST -> {
         val weather = forecastRepository.forecast.filterNotNull().first()
         searchRepository.fetchFavorites()

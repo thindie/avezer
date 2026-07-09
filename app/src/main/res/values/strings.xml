@@ -107,6 +107,7 @@
 
     <string name="place_detail_forecast_title">Daily Forecast</string>
     <string name="place_detail_hourly_forecast_title">Hourly Forecast</string>
+    <string name="forecast_for_date">Forecast for %s</string>
 
     <!-- Places (restored) -->
     <string name="places_no_forecast">No forecast data available</string>

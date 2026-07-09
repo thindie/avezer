@@ -7,6 +7,7 @@ import com.thindie.avezer.application.di.ApplicationScope
 import com.thindie.avezer.engine.Router
 import com.thindie.avezer.widget.WidgetDataProviderImpl
 import com.thindie.avezer.widget.WidgetInit
+import com.thindie.avezer.widget.data.WidgetState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -44,11 +45,21 @@ class Application : Application() {
         context = this@Application,
         forecastRepository = applicationScope.appFlowModule.repository,
         searchRepository = applicationScope.appFlowModule.searchRepository,
-        interaction = {
+        interaction = { state ->
           val intent =
-            Intent(this, MainActivity::class.java).apply {
-              putExtra(DEEPLINK, DAILY_FORECAST)
-              addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            when (state) {
+              WidgetState.Error -> {
+                Intent(this, MainActivity::class.java).apply {
+                  putExtra(DEEPLINK, SETTINGS)
+                  addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+              }
+              WidgetState.Ok -> {
+                Intent(this, MainActivity::class.java).apply {
+                  putExtra(DEEPLINK, DAILY_FORECAST)
+                  addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+              }
             }
 
           startActivity(intent)
@@ -71,5 +82,6 @@ class Application : Application() {
   companion object {
     const val DEEPLINK = "deeplink"
     const val DAILY_FORECAST = "daily_forecast"
+    const val SETTINGS = "settings"
   }
 }

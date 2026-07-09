@@ -10,7 +10,6 @@ import androidx.glance.LocalContext
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.layout.Alignment
-import androidx.glance.layout.Box
 import androidx.glance.layout.Column
 import androidx.glance.layout.Row
 import androidx.glance.layout.Spacer
@@ -178,27 +177,41 @@ private fun DailyTempBarChart(
 }
 
 @Composable
-internal fun ErrorWidgetContent() {
-  Scaffold {
-    Box(
-      modifier =
-        GlanceModifier
-          .fillMaxSize(),
+internal fun ErrorWidgetContent(onUpdate: () -> Unit) {
+  Scaffold(
+    modifier = GlanceModifier.clickable { onUpdate() },
+    horizontalPadding = 16.dp,
+    backgroundColor = GlanceTheme.colors.cardPrimary,
+  ) {
+    Column(
+      modifier = GlanceModifier.fillMaxSize(),
+      horizontalAlignment = Alignment.CenterHorizontally,
+      verticalAlignment = Alignment.CenterVertically,
     ) {
-      Column(
-        modifier =
-          GlanceModifier
-            .padding(horizontal = 16.dp, vertical = 24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-      ) {
-        Text(
-          text = "⚠️",
-          style = GlanceTheme.typography.headlineLarge(GlanceTheme.colors.errorPrimary),
+      Text(
+        text = "⚠️",
+        style = GlanceTheme.typography.headlineLarge(GlanceTheme.colors.errorPrimary),
+      )
+      Spacer(modifier = GlanceModifier.height(12.dp))
+      Text(
+        text = glanceStringResource(R.string.widget_error_loading_data),
+        style = GlanceTheme.typography.bodyMedium(GlanceTheme.colors.contentPrimary),
+      )
+      Spacer(modifier = GlanceModifier.height(8.dp))
+      Row {
+        Image(
+          modifier =
+            GlanceModifier
+              .clickable { onUpdate() }
+              .size(24.dp),
+          provider = ImageProvider(R.drawable.ic_refresh_16),
+          contentDescription = null,
+          colorFilter = ColorFilter.tint(GlanceTheme.colors.accentPrimary),
         )
-        Spacer(modifier = GlanceModifier.height(12.dp))
+        Spacer(modifier = GlanceModifier.width(8.dp))
         Text(
-          text = glanceStringResource(R.string.widget_error_loading_data),
-          style = GlanceTheme.typography.bodyMedium(GlanceTheme.colors.contentPrimary),
+          text = glanceStringResource(R.string.widget_refresh_button),
+          style = GlanceTheme.typography.labelLarge(GlanceTheme.colors.accentPrimary),
         )
       }
     }
@@ -206,20 +219,16 @@ internal fun ErrorWidgetContent() {
 }
 
 @Composable
-internal fun EmptyWidgetContent() {
+internal fun EmptyWidgetContent(onUpdate: () -> Unit) {
   Scaffold(
-    titleBar = {
-      Text(
-        text = glanceStringResource(R.string.widget_no_data_available),
-        style = GlanceTheme.typography.bodyLarge(GlanceTheme.colors.contentPrimary),
-      )
-    },
+    modifier = GlanceModifier.clickable { onUpdate() },
+    horizontalPadding = 16.dp,
+    backgroundColor = GlanceTheme.colors.cardPrimary,
   ) {
     Column(
-      modifier =
-        GlanceModifier
-          .padding(horizontal = 16.dp, vertical = 24.dp),
+      modifier = GlanceModifier.fillMaxSize(),
       horizontalAlignment = Alignment.CenterHorizontally,
+      verticalAlignment = Alignment.CenterVertically,
     ) {
       Text(
         text = "📡",
@@ -230,6 +239,23 @@ internal fun EmptyWidgetContent() {
         text = glanceStringResource(R.string.widget_no_data_message),
         style = GlanceTheme.typography.bodyMedium(GlanceTheme.colors.contentTertiary),
       )
+      Spacer(modifier = GlanceModifier.height(8.dp))
+      Row {
+        Image(
+          modifier =
+            GlanceModifier
+              .clickable { onUpdate() }
+              .size(24.dp),
+          provider = ImageProvider(R.drawable.ic_refresh_16),
+          contentDescription = null,
+          colorFilter = ColorFilter.tint(GlanceTheme.colors.accentPrimary),
+        )
+        Spacer(modifier = GlanceModifier.width(8.dp))
+        Text(
+          text = glanceStringResource(R.string.widget_refresh_button),
+          style = GlanceTheme.typography.labelLarge(GlanceTheme.colors.accentPrimary),
+        )
+      }
     }
   }
 }

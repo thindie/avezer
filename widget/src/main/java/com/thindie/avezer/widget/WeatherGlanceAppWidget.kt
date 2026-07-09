@@ -11,6 +11,7 @@ import com.thindie.avezer.widget.components.GlanceTheme
 import com.thindie.avezer.widget.components.WeatherWidgetContent
 import com.thindie.avezer.widget.data.WeatherDataProviderHolder
 import com.thindie.avezer.widget.data.WeatherWidgetData
+import com.thindie.avezer.widget.data.WidgetState
 import com.thindie.avezer.widget.updater.WidgetUpdateWorker
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -42,19 +43,28 @@ class WeatherGlanceAppWidget : GlanceAppWidget() {
       val scope = rememberCoroutineScope()
       GlanceTheme {
         when (weatherData) {
-          WeatherWidgetData.Error -> ErrorWidgetContent()
+          WeatherWidgetData.Error ->
+            ErrorWidgetContent {
+              dataProvider.interaction.invoke(WidgetState.Error)
+            }
           is WeatherWidgetData.Forecast -> {
             WeatherWidgetContent(
               data = weatherData,
               onClick = {
-                dataProvider.interaction.invoke()
+                dataProvider.interaction.invoke(WidgetState.Ok)
               },
               onUpdate = { scope.launch { WidgetUpdateWorker.updateAllWidgets(context) } },
             )
           }
 
-          WeatherWidgetData.None -> EmptyWidgetContent()
-          WeatherWidgetData.Outdated -> TODO()
+          WeatherWidgetData.None ->
+            EmptyWidgetContent {
+              dataProvider.interaction.invoke(WidgetState.Error)
+            }
+          WeatherWidgetData.Outdated ->
+            ErrorWidgetContent {
+              dataProvider.interaction.invoke(WidgetState.Error)
+            }
         }
       }
     }

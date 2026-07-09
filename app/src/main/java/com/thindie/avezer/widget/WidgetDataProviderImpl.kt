@@ -10,6 +10,8 @@ import com.thindie.avezer.widget.data.WeatherWidgetData
 import com.thindie.avezer.widget.data.WidgetInteraction
 import kotlinx.coroutines.flow.firstOrNull
 import java.lang.String.format
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 class WidgetDataProviderImpl(
   private val context: Context,
@@ -45,11 +47,9 @@ class WidgetDataProviderImpl(
 
     val lastUpdatedStr = formatRelativeTimeShort(weather.lastUpdated, context)
 
-    val nowHour = java.time.LocalTime.now().hour
-
     val remainingPrecipitation =
       weather.hourlyForecast
-        .filterIndexed { i, f -> i < nowHour }
+        .filter { LocalDateTime.parse(it.time).hour >= LocalDateTime.now().hour && it.precipitation > 0 }
         .sumOf { it.precipitation }
 
     val mmRef = com.thindie.avezer.R.string.millimeter
@@ -60,10 +60,10 @@ class WidgetDataProviderImpl(
     // Compute daily temperature range for bar chart and current day index
     val dailyTempsMax = weather.forecast.map { it.temperatureMax }
     val dailyTempsMin = weather.forecast.map { it.temperatureMin }
-    val nowDate = java.time.LocalDate.now().dayOfMonth
+    val nowDate = LocalDate.now().dayOfMonth
     val currentDayIndex =
       weather.forecast.indexOfFirst {
-        java.time.LocalDate.parse(it.time).dayOfMonth == nowDate
+        LocalDate.parse(it.time).dayOfMonth == nowDate
       }
 
     return WeatherWidgetData.Forecast(

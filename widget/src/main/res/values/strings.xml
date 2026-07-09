@@ -8,5 +8,6 @@
     <string name="widget_precipitation_null">No precipitation expected today</string>
     <string name="widget_updated_label">Updated:</string>
     <string name="widget_no_data_message">Unable to load weather data. Please try again later.</string>
+    <string name="widget_refresh_button">Refresh</string>
     <color name="widget_background">#FF263238</color>
 </resources>

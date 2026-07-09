@@ -1,28 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="512"
     android:viewportHeight="512">
-  <group
-      android:scaleX="0.69"
-      android:scaleY="0.69"
-      android:translateX="79.36"
-      android:translateY="79.36">
 
-    <!-- Crescent moon (outer circle minus inner circle, opening right) -->
-    <path
-        android:pathData="M307,126 A160,160 0 1,0 307,394 A138,138 0 0,1 307,126 Z"
-        android:fillColor="#ffffff"/>
+  <!-- Single raindrop -->
+  <path
+      android:pathData="M256,120 Q340,220 340,300 A86,86 0 1,1 172,300 Q172,220 256,120 Z"
+      android:fillColor="#FFFFFF"/>
 
-    <!-- Large 4-pointed star -->
-    <path
-        android:pathData="M395,103 L407,137 L437,145 L407,153 L395,187 L383,153 L353,145 L383,137 Z"
-        android:fillColor="#ffffff"/>
-
-    <!-- Small 4-pointed star -->
-    <path
-        android:pathData="M440,228 L447,223 L466,230 L447,237 L440,256 L433,237 L414,230 L433,223 Z"
-        android:fillColor="#ffffff"/>
-
-  </group>
 </vector>

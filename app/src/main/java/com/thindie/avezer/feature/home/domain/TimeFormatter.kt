@@ -45,6 +45,11 @@ internal object TimeFormatter {
     return dateTime.format(DateTimeFormatter.ofPattern("HH:mm"))
   }
 
+  fun formatHourlyTimeFull(isoTimeString: String): String {
+    val dateTime = LocalDateTime.parse(isoTimeString)
+    return dateTime.format(DateTimeFormatter.ofPattern("d MMM", Locale.getDefault()))
+  }
+
   fun formatTime(isoTimeString: String): String =
     LocalDateTime
       .parse(isoTimeString)

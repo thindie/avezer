@@ -193,6 +193,21 @@ private fun PlaceHourlyContent(
 
       VSpacer(24.dp)
 
+      // Forecast date header
+      val time = hourlyForecast?.firstOrNull()?.time
+      if (time != null) {
+        Text(
+          text =
+            stringResource(
+              R.string.forecast_for_date,
+              TimeFormatter.formatHourlyTimeFull(time),
+            ),
+          style = AppTheme.typography.titleMedium,
+          color = AppTheme.colors.contentPrimary,
+          modifier = Modifier.padding(bottom = 8.dp),
+        )
+      }
+
       if (hourlyForecast.isNullOrEmpty()) {
         Box(modifier = Modifier.fillMaxSize()) {}
       } else {
@@ -269,7 +284,7 @@ private fun PlaceHourlyContent(
         state = lazyListState,
         modifier = Modifier.fillMaxSize(),
       ) {
-        itemsIndexed(hourlyForecast, key = { index, _ -> index }) { _, forecast ->
+        itemsIndexed(hourlyForecast, key = { index, _ -> index }) { index, forecast ->
           ExpandableHourlyCard(item = forecast, isExpanded = false, onToggle = {})
         }
       }
@@ -286,6 +301,19 @@ private fun PlaceHourlyContent(
       }
     }
   }
+}
+
+@Composable
+private fun ForecastDateHeader(
+  date: String,
+  modifier: Modifier = Modifier,
+) {
+  Text(
+    text = stringResource(R.string.forecast_for_date, TimeFormatter.formatHourlyTimeFull(date)),
+    style = AppTheme.typography.labelLarge,
+    color = AppTheme.colors.contentSecondary,
+    modifier = modifier.padding(horizontal = 4.dp),
+  )
 }
 
 @Composable

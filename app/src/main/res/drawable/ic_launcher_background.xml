@@ -5,9 +5,9 @@
     android:viewportWidth="512"
     android:viewportHeight="512">
 
-  <!-- Background gradient -->
+  <!-- Diagonal gradient for depth effect -->
   <path
       android:pathData="M0,0h512v512h-512z"
-      android:fillColor="#4A6FA5"/>
+      android:fillColor="#4ED3A4"/>
 
 </vector>

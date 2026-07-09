@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="108dp"
-    android:height="108dp"
-    android:viewportWidth="512"
-    android:viewportHeight="512">
+android:width="108dp"
+android:height="108dp"
+android:viewportWidth="512"
+android:viewportHeight="512">
 
-  <!-- Single raindrop -->
-  <path
-      android:pathData="M256,120 Q340,220 340,300 A86,86 0 1,1 172,300 Q172,220 256,120 Z"
-      android:fillColor="#FFFFFF"/>
+<!-- Левая половинка (плотная) -->
+<path
+    android:pathData="M256,120 Q172,220 172,300 A86,86 0 0,0 256,386 L256,120 Z"
+    android:fillColor="#DFEFE7"/>
 
+<!-- Правая половинка (акцентная полупрозрачная) -->
+<path
+    android:pathData="M256,120 Q340,220 340,300 A86,86 0 0,1 256,386 L256,120 Z"
+    android:fillColor="#96BDC7"/> <!-- 70% непрозрачности -->
 </vector>
+

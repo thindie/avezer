@@ -2,6 +2,7 @@ package com.thindie.avezer.feature.home.domain
 
 import android.content.Context
 import com.thindie.avezer.application.dayOfWeekString
+import com.thindie.avezer.application.timeAt
 import com.thindie.avezer.application.timeJustNow
 import com.thindie.avezer.application.timeToday
 import com.thindie.avezer.application.timeYesterday
@@ -88,7 +89,7 @@ internal object TimeFormatter {
       else -> {
         val dayValue = resolveDayOfWeekValue(then.dayOfWeek)
         val dayName = dayOfWeekString(dayValue)
-        "$dayName, ${then.format(DateTimeFormatter.ofPattern("d MMM", Locale.getDefault()))} at ${
+        "$dayName, ${then.format(DateTimeFormatter.ofPattern("d MMM", Locale.getDefault()))} ${timeAt()} ${
           then.format(
             DateTimeFormatter.ofPattern("HH:mm"),
           )

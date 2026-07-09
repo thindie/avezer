@@ -160,5 +160,6 @@
     <string name="widget_no_data_available">Нет данных</string>
     <string name="today">Сегодня</string>
     <string name="yesterday">Вчера</string>
+    <string name="time_at">в</string>
 
 </resources>

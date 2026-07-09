@@ -10,6 +10,7 @@ private var dayOfWeekStrings: Map<Int, String>? = null
 private var timeJustNow: String? = null
 private var timeToday: String? = null
 private var timeYesterday: String? = null
+private var timeAt: String? = null
 
 private val weatherEmojis =
   mapOf(
@@ -122,6 +123,7 @@ object AppStrings {
       timeJustNow = context.getString(R.string.time_just_now)
       timeToday = context.getString(R.string.today)
       timeYesterday = context.getString(R.string.yesterday)
+      timeAt = context.getString(R.string.time_at)
     }
   }
 }
@@ -149,6 +151,8 @@ fun timeJustNow(
 fun timeToday(): String = timeToday ?: "Today"
 
 fun timeYesterday(): String = timeYesterday ?: "Yesterday"
+
+fun timeAt(): String = timeAt ?: "at"
 
 /** Short relative time: "Just now" / "%d min ago" / "%dh ago". */
 fun formatRelativeTimeShort(

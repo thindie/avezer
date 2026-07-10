@@ -1,16 +1,20 @@
 package com.thindie.avezer.feature.settings.selection
 
+import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
 import androidx.compose.material3.OutlinedButton
@@ -21,6 +25,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,6 +46,7 @@ import com.thindie.avezer.uikit.LocalThemeSwitcher
 import com.thindie.avezer.uikit.ThemeSwitcher
 import com.thindie.avezer.uikit.Toggle
 import com.thindie.avezer.uikit.VSpacer
+import kotlin.math.roundToInt
 
 @Preview(name = "Settings Preview")
 @Composable
@@ -70,6 +80,7 @@ internal fun SettingsScreenContent(scope: ScreenScope<SettingsState, SettingsCom
   }
 }
 
+@SuppressLint("LocalContextGetResourceValueCall")
 @Composable
 private fun SettingsScreenBody(
   state: SettingsState,
@@ -95,11 +106,32 @@ private fun SettingsScreenBody(
         .verticalScroll(rememberScrollState())
         .padding(16.dp),
   ) {
-    Text(
-      text = stringResource(R.string.settings_title),
-      style = AppTheme.typography.headlineLarge,
-      color = AppTheme.colors.contentPrimary,
-    )
+    Row(
+      modifier = Modifier.fillMaxWidth(),
+      verticalAlignment = Alignment.CenterVertically,
+    ) {
+      val drawable = LocalContext.current.getDrawable(R.drawable.ic_launcher)
+      Box(
+        modifier =
+          Modifier
+            .requiredSize(36.dp)
+            .clip(CircleShape)
+            .drawBehind {
+              drawIntoCanvas { canvas ->
+                drawable?.let {
+                  it.setBounds(0, 0, size.width.roundToInt(), size.height.roundToInt())
+                  it.draw(canvas.nativeCanvas)
+                }
+              }
+            },
+      )
+      HSpacer(12.dp)
+      Text(
+        text = stringResource(R.string.settings_title),
+        style = AppTheme.typography.headlineLarge,
+        color = AppTheme.colors.contentPrimary,
+      )
+    }
 
     // === Appearance ===
     VSpacer(24.dp)
@@ -149,19 +181,12 @@ private fun SettingsScreenBody(
       },
     )
 
-    // === General ===
+    // === Основные ===
     VSpacer(24.dp)
     Divider()
     VSpacer(16.dp)
     SectionTitle(stringResource(R.string.settings_section_general))
     VSpacer(16.dp)
-
-    ToggleRow(
-      label = stringResource(R.string.settings_start_with_favorites_label),
-      subtitle = stringResource(R.string.settings_start_with_favorites_subtitle),
-      checked = state.startWithFavorites,
-      onCheckedChange = onStartWithFavorites,
-    )
 
     // === Language ===
     VSpacer(24.dp)

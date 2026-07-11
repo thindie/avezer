@@ -32,6 +32,7 @@ import com.thindie.avezer.feature.home.domain.HourlyForecastItem
 import com.thindie.avezer.feature.home.domain.TimeFormatter
 import com.thindie.avezer.feature.home.domain.Weather
 import com.thindie.avezer.feature.home.placehourly.components.ExpandableHourlyCard
+import com.thindie.avezer.feature.home.placehourly.components.TemperatureLineChart
 import com.thindie.avezer.uikit.Action
 import com.thindie.avezer.uikit.AppScreen
 import com.thindie.avezer.uikit.AppTheme
@@ -192,6 +193,16 @@ private fun PlaceHourlyContent(
       DailyWeatherForecast(weather = daily)
 
       VSpacer(24.dp)
+
+      // Temperature Line Chart
+      if (!hourlyForecast.isNullOrEmpty()) {
+        TemperatureLineChart(
+          hourlyForecasts = hourlyForecast,
+          modifier = Modifier.padding(horizontal = 16.dp),
+        )
+
+        VSpacer(16.dp)
+      }
 
       // Forecast date header
       val time = hourlyForecast?.firstOrNull()?.time

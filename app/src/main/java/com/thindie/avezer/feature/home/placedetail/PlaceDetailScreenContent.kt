@@ -23,6 +23,7 @@ import com.thindie.avezer.engine.ScreenScope
 import com.thindie.avezer.feature.home.domain.DailyForecast
 import com.thindie.avezer.feature.home.domain.TimeFormatter
 import com.thindie.avezer.feature.home.placedetail.components.DailyForecastCard
+import com.thindie.avezer.feature.home.placedetail.components.TemperatureBarChart
 import com.thindie.avezer.uikit.Action
 import com.thindie.avezer.uikit.AppScreen
 import com.thindie.avezer.uikit.AppTheme
@@ -156,14 +157,24 @@ internal fun PlaceDetailContent(
     if (dailyForecast.isNullOrEmpty()) {
       Column(modifier = Modifier.fillMaxSize()) {}
     } else {
-      LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-      ) {
-        items(dailyForecast) { forecast ->
-          DailyForecastCard(
-            dailyForecast = forecast,
-            onClick = { onClick(forecast) },
-          )
+      Column(modifier = Modifier.fillMaxSize()) {
+        // Temperature Bar Chart
+        TemperatureBarChart(
+          dailyForecasts = dailyForecast,
+          modifier = Modifier.padding(horizontal = 16.dp),
+        )
+
+        VSpacer(8.dp)
+
+        LazyColumn(
+          modifier = Modifier.fillMaxSize(),
+        ) {
+          items(dailyForecast) { forecast ->
+            DailyForecastCard(
+              dailyForecast = forecast,
+              onClick = { onClick(forecast) },
+            )
+          }
         }
       }
     }

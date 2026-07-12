@@ -20,6 +20,7 @@ sealed interface WeatherWidgetData {
     val dailyTempsMax: List<Double> = emptyList(),
     val dailyTempsMin: List<Double> = emptyList(),
     val currentDayIndex: Int = -1,
+    val dailyTimeLabels: List<String> = emptyList(),
   ) : WeatherWidgetData
 
   data object Error : WeatherWidgetData

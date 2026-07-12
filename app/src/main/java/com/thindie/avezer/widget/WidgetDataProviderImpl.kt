@@ -2,7 +2,7 @@ package com.thindie.avezer.widget
 
 import android.annotation.SuppressLint
 import android.content.Context
-import com.thindie.avezer.application.formatRelativeTimeShort
+import androidx.compose.ui.text.intl.Locale
 import com.thindie.avezer.feature.home.domain.ForecastRepository
 import com.thindie.avezer.feature.home.domain.SearchRepository
 import com.thindie.avezer.widget.data.WeatherDataProvider
@@ -12,6 +12,10 @@ import kotlinx.coroutines.flow.firstOrNull
 import java.lang.String.format
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import kotlin.time.Instant
+import kotlin.time.toJavaInstant
 
 class WidgetDataProviderImpl(
   private val context: Context,
@@ -45,7 +49,13 @@ class WidgetDataProviderImpl(
         context.getString(windSpeedRef, it.toString())
       }
 
-    val lastUpdatedStr = formatRelativeTimeShort(weather.lastUpdated, context)
+    val lastUpdated =
+      Instant.fromEpochMilliseconds(weather.lastUpdated)
+        .toJavaInstant()
+        .atZone(ZoneId.systemDefault())
+        .toLocalDateTime()
+
+    val lastUpdatedStr = DateTimeFormatter.ofPattern("d MMM uuuu, HH:mm").format(lastUpdated)
 
     val remainingPrecipitation =
       weather.hourlyForecast
@@ -66,6 +76,14 @@ class WidgetDataProviderImpl(
         LocalDate.parse(it.time).dayOfMonth == nowDate
       }
 
+    val dayLabels =
+      weather.forecast
+        .map {
+          LocalDate.parse(it.time)
+            .dayOfWeek
+            .getDisplayName(java.time.format.TextStyle.SHORT, java.util.Locale.getDefault())
+        }
+
     return WeatherWidgetData.Forecast(
       city = weather.city,
       temperature = weather.temperature,
@@ -77,6 +95,7 @@ class WidgetDataProviderImpl(
       dailyTempsMax = dailyTempsMax,
       dailyTempsMin = dailyTempsMin,
       currentDayIndex = currentDayIndex,
+      dailyTimeLabels = dayLabels,
     )
   }
 }

@@ -101,12 +101,22 @@ internal fun WeatherWidgetContent(
         }
       }
 
-      if (data.lastUpdated.isNotEmpty()) {
+      // Temperature bar chart for daily forecast
+      if (data.dailyTempsMax.isNotEmpty()) {
         Spacer(modifier = GlanceModifier.height(8.dp))
+        GlanceDailyChartElement(
+          data = data.dailyTempsMax,
+          labels = data.dailyTimeLabels,
+        )
+      }
+
+      if (data.lastUpdated.isNotEmpty()) {
+        Spacer(modifier = GlanceModifier.height(16.dp))
         Row(
           modifier =
             GlanceModifier
               .padding(horizontal = 16.dp, vertical = 4.dp),
+          verticalAlignment = Alignment.CenterVertically,
         ) {
           Text(
             text = glanceStringResource(R.string.widget_updated_label),
@@ -115,7 +125,7 @@ internal fun WeatherWidgetContent(
           Spacer(modifier = GlanceModifier.width(4.dp))
           Text(
             text = data.lastUpdated,
-            style = GlanceTheme.typography.bodyMedium(GlanceTheme.colors.contentSecondary),
+            style = GlanceTheme.typography.labelMedium(GlanceTheme.colors.contentSecondary),
           )
           Spacer(GlanceModifier.width(16.dp))
           Image(
@@ -129,49 +139,7 @@ internal fun WeatherWidgetContent(
           )
         }
       }
-
-      // Temperature bar chart for daily forecast
-      if (data.dailyTempsMax.isNotEmpty()) {
-        Spacer(modifier = GlanceModifier.height(8.dp))
-        DailyTempBarChart(
-          maxTemps = data.dailyTempsMax,
-          minTemps = data.dailyTempsMin,
-          currentDayIndex = data.currentDayIndex,
-        )
-      }
-
       Spacer(modifier = GlanceModifier.height(16.dp))
-    }
-  }
-}
-
-@Composable
-private fun DailyTempBarChart(
-  maxTemps: List<Double>,
-  minTemps: List<Double>,
-  currentDayIndex: Int,
-) {
-  // Find global min/max for scaling bar heights
-  val allTemps = (maxTemps + minTemps).filter { it.isFinite() }
-  if (allTemps.isEmpty()) return
-  val globalMin = allTemps.min()
-  val globalMax = allTemps.max()
-  val range = if (globalMax - globalMin == 0.0) 1.0 else (globalMax - globalMin)
-
-  Row(
-    modifier =
-      GlanceModifier
-        .padding(horizontal = 8.dp, vertical = 4.dp),
-  ) {
-    maxTemps.forEachIndexed { index, temp ->
-      val heightFraction = (temp - globalMin) / range
-      val barHeightDp = (heightFraction * 48).coerceIn(4.0, 48.0)
-      Spacer(
-        modifier =
-          GlanceModifier
-            .width(12.dp)
-            .height(barHeightDp.dp),
-      )
     }
   }
 }

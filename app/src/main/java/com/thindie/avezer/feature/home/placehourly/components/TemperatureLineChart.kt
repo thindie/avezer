@@ -39,9 +39,10 @@ internal fun TemperatureLineChart(
   val contentTertiary = AppTheme.colors.contentTertiary
 
   Canvas(
-    modifier = modifier
-      .fillMaxWidth()
-      .height(150.dp),
+    modifier =
+      modifier
+        .fillMaxWidth()
+        .height(150.dp),
   ) {
     val leftPadding = 70f
     val rightPadding = 20f
@@ -65,18 +66,19 @@ internal fun TemperatureLineChart(
       )
     }
 
-    val valuePaint = Paint().asFrameworkPaint().apply {
-      color = contentTertiary.toArgb()
-      textSize = valueTextSizePx
-      textAlign = android.graphics.Paint.Align.CENTER
-    }
+    val valuePaint =
+      Paint().asFrameworkPaint().apply {
+        color = contentTertiary.toArgb()
+        textSize = valueTextSizePx
+        textAlign = android.graphics.Paint.Align.CENTER
+      }
     val maxOf = hourlyForecasts.maxOf { it.temperature }
     val minOf = hourlyForecasts.minOf { it.temperature }
 
     var minHourDrawn = false
     var maxHourDrawn = false
 
-      // Draw points and line
+    // Draw points and line
     hourlyForecasts.forEachIndexed { index, forecast ->
       val x = leftPadding + (index * pointSpacing)
       val y = topPadding + ((maxTemp - forecast.temperature.toFloat()) / tempRange * chartHeight)
@@ -104,7 +106,7 @@ internal fun TemperatureLineChart(
           TimeFormatter.formatHourlyTime(forecast.time),
           x,
           y - 10f,
-          valuePaint
+          valuePaint,
         )
       }
       if (minOf == forecast.temperature && !minHourDrawn) {
@@ -113,17 +115,18 @@ internal fun TemperatureLineChart(
           TimeFormatter.formatHourlyTime(forecast.time),
           x,
           y + 30f,
-          valuePaint
+          valuePaint,
         )
       }
     }
 
     // Draw temperature labels on the left side
-    val labelPaint = Paint().asFrameworkPaint().apply {
-      color = contentSecondary.toArgb()
-      textSize = labelTextSizePx
-      textAlign = android.graphics.Paint.Align.LEFT
-    }
+    val labelPaint =
+      Paint().asFrameworkPaint().apply {
+        color = contentSecondary.toArgb()
+        textSize = labelTextSizePx
+        textAlign = android.graphics.Paint.Align.LEFT
+      }
 
     for (i in 0..4) {
       val temp = maxTemp - (tempRange / 4 * i)

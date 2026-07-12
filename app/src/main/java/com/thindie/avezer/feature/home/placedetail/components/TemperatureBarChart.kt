@@ -54,28 +54,30 @@ internal fun TemperatureBarChart(
     }
 
     // Создаем список анимированных стейтов (от 0f до 1f) для каждого бара
-    val animProgressList = List(dailyForecasts.size) { index ->
-      animateFloatAsState(
-        targetValue = if (animationTriggered) 1f else 0f,
-        animationSpec = tween(
-          durationMillis = 400,
-          delayMillis = 200 + (index * 100),
-          easing = LinearOutSlowInEasing
-        ),
-        label = "barAnimation_$index"
-      )
-    }
+    val animProgressList =
+      List(dailyForecasts.size) { index ->
+        animateFloatAsState(
+          targetValue = if (animationTriggered) 1f else 0f,
+          animationSpec =
+            tween(
+              durationMillis = 400,
+              delayMillis = 200 + (index * 100),
+              easing = LinearOutSlowInEasing,
+            ),
+          label = "barAnimation_$index",
+        )
+      }
 
     Canvas(
-      modifier = modifier
-        .fillMaxWidth()
-        .height(260.dp),
+      modifier =
+        modifier
+          .fillMaxWidth()
+          .height(260.dp),
     ) {
       val chartWidth = size.width - 60f
       val chartHeight = size.height - 60f
       val barWidth = (chartWidth / barCount) * 0.6f
       val barSpacing = (chartWidth / barCount) * 0.4f
-
 
       var linesHeight = 0f
       for (i in 0..4) {
@@ -89,11 +91,12 @@ internal fun TemperatureBarChart(
         linesHeight = y
       }
 
-      val dayLabelPaint = Paint().asFrameworkPaint().apply {
-        color = contentTertiary.toArgb()
-        textSize = valueTextSizePx
-        textAlign = android.graphics.Paint.Align.CENTER
-      }
+      val dayLabelPaint =
+        Paint().asFrameworkPaint().apply {
+          color = contentTertiary.toArgb()
+          textSize = valueTextSizePx
+          textAlign = android.graphics.Paint.Align.CENTER
+        }
 
       // Draw temperature bars
       dailyForecasts.forEachIndexed { index, forecast ->
@@ -106,7 +109,6 @@ internal fun TemperatureBarChart(
         val bottomY = minTempY.coerceAtLeast(maxTempY)
         val fullBarHeight = bottomY - topY
 
-
         val progress = animProgressList.getOrNull(index)?.value ?: 1f
         val animatedHeight = fullBarHeight * progress
 
@@ -118,7 +120,6 @@ internal fun TemperatureBarChart(
           topLeft = Offset(x, animatedTopY),
           size = Size(barWidth, animatedHeight),
         )
-
 
         if (progress > 0.1f) {
           // Max temp marker
@@ -138,7 +139,6 @@ internal fun TemperatureBarChart(
           )
         }
 
-
         val centerX = x + (barWidth / 2f)
         val dayLabelString = forecast.time.substring(5).replace("-", "/")
 
@@ -151,10 +151,11 @@ internal fun TemperatureBarChart(
       }
 
       // Draw temperature labels on the left
-      val labelPaint = Paint().asFrameworkPaint().apply {
-        color = contentSecondary.toArgb()
-        textSize = labelTextSizePx
-      }
+      val labelPaint =
+        Paint().asFrameworkPaint().apply {
+          color = contentSecondary.toArgb()
+          textSize = labelTextSizePx
+        }
 
       for (i in 0..4) {
         val temp = maxTemp - (tempRange / 4 * i)

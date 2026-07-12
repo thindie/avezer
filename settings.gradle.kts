@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Avezer"
 include(":app")
- 
+include(":widget")

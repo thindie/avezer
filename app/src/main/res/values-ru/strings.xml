@@ -1,0 +1,165 @@
+<resources>
+    <string name="app_name">Avezer</string>
+
+    <!-- Navigation labels -->
+        <string name="places">Места</string>
+        <string name="search_places">Поиск места</string>
+        <string name="search_title">Поиск</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Настройки</string>
+    <string name="settings_section_appearance">Внешний вид</string>
+    <string name="settings_section_general">Основные</string>
+    <string name="settings_section_language">Язык</string>
+    <string name="settings_language_label">Язык</string>
+    <string name="settings_language_title">Выберите язык</string>
+    <string name="settings_theme_auto_subtitle">Следует за системой</string>
+    <string name="settings_start_with_favorites_label">Начинать с избранного</string>
+    <string name="settings_start_with_favorites_subtitle">Открывать избранные места при запуске приложения</string>
+
+    <!-- Saved Locations -->
+    <string name="settings_section_saved_locations">Сохранённые локации</string>
+    <string name="saved_favorite_cities">Сохранённые города</string>
+    <string name="widget_favorite_cities">Локации виджета</string>
+    <string name="settings_manage_favorites_title">Управление избранным</string>
+    <string name="settings_delete_location_title">Удалить локацию?</string>
+    <string name="settings_delete_location_message">Вы уверены, что хотите удалить "%s"? Это действие нельзя отменить.</string>
+
+    <!-- Buttons -->
+    <string name="btn_cancel">Отмена</string>
+    <string name="btn_delete">Удалить</string>
+
+    <string name="language_en">Английский</string>
+    <string name="language_ru">Русский</string>
+
+    <!-- Theme -->
+    <string name="theme_auto">Авто</string>
+    <string name="theme_light">Светлая</string>
+    <string name="theme_dark">Тёмная</string>
+    <string name="theme_title">Тема</string>
+
+    <!-- Errors -->
+    <string name="error_unexpected">Что-то пошло не так. Пожалуйста, попробуйте снова.</string>
+    <string name="btn_close">Закрыть</string>
+    <string name="error_action_ok">OK</string>
+    <string name="error_action_retry">Попробовать снова</string>
+
+    <!-- Key names are designed to be easily retrieved dynamically via ID -->
+
+    <!-- Clear / Cloudy -->
+    <string name="weather_code_0">Ясно</string>
+    <string name="weather_code_1">Преимущественно ясно</string>
+    <string name="weather_code_2">Переменная облачность</string>
+    <string name="weather_code_3">Пасмурно</string>
+
+    <!-- Fog -->
+    <string name="weather_code_45">Туман</string>
+    <string name="weather_code_48">Слоистый туман</string>
+
+    <!-- Drizzle -->
+    <string name="weather_code_51">Морось: слабая интенсивность</string>
+    <string name="weather_code_53">Морось: умеренная интенсивность</string>
+    <string name="weather_code_55">Морось: высокая интенсивность</string>
+
+    <!-- Freezing Drizzle -->
+    <string name="weather_code_56">Ледяная морось: слабая интенсивность</string>
+    <string name="weather_code_57">Ледяная морось: высокая интенсивность</string>
+
+    <!-- Rain -->
+    <string name="weather_code_61">Дождь: слабая интенсивность</string>
+    <string name="weather_code_63">Дождь: умеренная интенсивность</string>
+    <string name="weather_code_65">Дождь: сильная интенсивность</string>
+
+    <!-- Freezing Rain -->
+    <string name="weather_code_66">Ледяной дождь: слабая интенсивность</string>
+    <string name="weather_code_67">Ледяной дождь: высокая интенсивность</string>
+
+    <!-- Snow -->
+    <string name="weather_code_71">Снег: слабая интенсивность</string>
+    <string name="weather_code_73">Снег: умеренная интенсивность</string>
+    <string name="weather_code_75">Снег: высокая интенсивность</string>
+    <string name="weather_code_77">Кристаллы льда (снежная крупа)</string>
+
+    <!-- Rain Showers -->
+    <string name="weather_code_80">Ливень: слабый</string>
+    <string name="weather_code_81">Ливень: умеренный</string>
+    <string name="weather_code_82">Сильный ливень (ливни)</string>
+
+    <!-- Snow Showers -->
+    <string name="weather_code_85">Снегопад: слабый</string>
+    <string name="weather_code_86">Снегопад: сильный</string>
+
+    <!-- Thunderstorm -->
+    <string name="weather_code_95">Гроза: слабая или умеренная интенсивность</string>
+    <string name="weather_code_96">Гроза со слабым градом</string>
+    <string name="weather_code_99">Гроза с сильным градом</string>
+
+    <!-- Fallback -->
+    <string name="day_of_week_unknown">---</string>
+    <string name="weather_code_unknown">Неизвестная погода</string>
+
+    <!-- Temperature & Time -->
+    <string name="weather_max_temp">Макс. температура</string>
+    <string name="weather_min_temp">Мин. температура</string>
+    <string name="weather_sunrise">Рассвет</string>
+    <string name="weather_sunset">Закат</string>
+
+    <!-- Units & Weather -->
+    <string name="percent_sign">%s%%</string>
+    <string name="kilometers_per_hour">км/ч</string>
+    <string name="millimeter">мм</string>
+
+    <!-- Places -->
+    <string name="places_no_forecast">Нет данных о прогнозе</string>
+    <string name="place_detail_forecast_title">Прогноз на день</string>
+    <string name="place_detail_hourly_forecast_title">Почасовой прогноз</string>
+    <string name="forecast_for_date">Прогноз на %s</string>
+    <string name="places_search_button">Поиск мест</string>
+    <string name="search_hint">напр. Москва, Калининград, Питер</string>
+    <string name="places_see_hourly">Почасовой</string>
+
+    <!-- Search -->
+    <string name="search_hint_multiple">Можно ввести несколько локаций</string>
+    <string name="latitude_label">широта, %s</string>
+    <string name="longitude_label">долгота, %s</string>
+    <string name="remember_button">запомнить</string>
+
+    <string name="weather_humidity">Влажность</string>
+    <string name="weather_precipitation">Осадки</string>
+    <string name="weather_humidity_value">%d%%</string>
+    <string name="weather_wind_speed">Скорость ветра</string>
+    <string name="weather_wind_speed_value">%s км/ч</string>
+
+    <!-- Day of week abbreviations (loaded dynamically via getIdentifier) -->
+    <string name="day_of_week_1">Пн</string>
+    <string name="day_of_week_2">Вт</string>
+    <string name="day_of_week_3">Ср</string>
+    <string name="day_of_week_4">Чт</string>
+    <string name="day_of_week_5">Пт</string>
+    <string name="day_of_week_6">Сб</string>
+    <string name="day_of_week_7">Вс</string>
+
+    <!-- Placeholder for unavailable data -->
+    <string name="weather_not_available">--:--</string>
+
+    <!-- Places card weather conditions -->
+    <string name="weather_condition_rain">Дождь</string>
+    <string name="weather_condition_snow">Снег</string>
+    <string name="weather_condition_clear">Без осадков</string>
+    <string name="weather_current_temperature">Текущая температура</string>
+    <string name="weather_recorded_temperature">Зафиксирована температура</string>
+    <string name="weather_temperature_now">Температура сейчас</string>
+    <string name="weather_temperature_forecast">Прогноз температуры</string>
+    <string name="last_updated_label">Обновлено</string>
+    <string name="time_just_now">Только что</string>
+    <string name="time_minutes_ago">%d мин. назад</string>
+    <string name="time_hours_ago">%dh назад</string>
+
+    <!-- Widget -->
+    <string name="widget_error_loading_data">Ошибка загрузки данных</string>
+    <string name="widget_no_data_available">Нет данных</string>
+    <string name="today">Сегодня</string>
+    <string name="yesterday">Вчера</string>
+    <string name="time_at">в</string>
+
+</resources>

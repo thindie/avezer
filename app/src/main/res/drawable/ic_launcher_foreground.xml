@@ -1,34 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="108dp"
-    android:height="108dp"
-    android:viewportWidth="512"
-    android:viewportHeight="512">
-  <group android:scaleX="0.69"
-      android:scaleY="0.69"
-      android:translateX="79.36"
-      android:translateY="79.36">
-    <path
-        android:pathData="M100,0L412,0A100,100 0,0 1,512 100L512,412A100,100 0,0 1,412 512L100,512A100,100 0,0 1,0 412L0,100A100,100 0,0 1,100 0z"
-        android:fillColor="#1A73E8"/>
-    <path
-        android:pathData="M256,80L120,140V240C120,323.8 177.8,402.2 256,432C334.2,402.2 392,323.8 392,240V140L256,80Z"
-        android:fillColor="#ffffff"
-        android:fillAlpha="0.2"/>
-    <path
-        android:pathData="M256,160L160,240V340H220V280H292V340H352V240L256,160Z"
-        android:strokeLineJoin="round"
-        android:strokeWidth="24"
-        android:fillColor="#00000000"
-        android:strokeColor="#ffffff"
-        android:strokeLineCap="round"/>
-    <path
-        android:pathData="M256,120m-15,0a15,15 0,1 1,30 0a15,15 0,1 1,-30 0"
-        android:fillColor="#8AB4F8"/>
-    <path
-        android:pathData="M160,340m-10,0a10,10 0,1 1,20 0a10,10 0,1 1,-20 0"
-        android:fillColor="#8AB4F8"/>
-    <path
-        android:pathData="M352,340m-10,0a10,10 0,1 1,20 0a10,10 0,1 1,-20 0"
-        android:fillColor="#8AB4F8"/>
-  </group>
+android:width="108dp"
+android:height="108dp"
+android:viewportWidth="512"
+android:viewportHeight="512">
+
+<!-- Левая половинка (плотная) -->
+<path
+    android:pathData="M256,120 Q172,220 172,300 A86,86 0 0,0 256,386 L256,120 Z"
+    android:fillColor="#DFEFE7"/>
+
+<!-- Правая половинка (акцентная полупрозрачная) -->
+<path
+    android:pathData="M256,120 Q340,220 340,300 A86,86 0 0,1 256,386 L256,120 Z"
+    android:fillColor="#96BDC7"/> <!-- 70% непрозрачности -->
 </vector>
+

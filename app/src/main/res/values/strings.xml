@@ -1,13 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Avezer</string>
 
-    <string name="error_unexpected">Что-то пошло не так. Попробуйте ещё раз.</string>
-    <string name="btn_close">Закрыть</string>
+    <!-- Navigation labels -->
+        <string name="places">Places</string>
+        <string name="search_places">Search Place</string>
+        <string name="search_title">Search</string>
 
-    <string name="error_action_ok">Ок</string>
-    <string name="error_action_retry">Попробовать снова</string>
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_section_appearance">Appearance</string>
+    <string name="settings_section_general">General</string>
+    <string name="settings_section_language">Language</string>
+    <string name="settings_language_label">Language</string>
+    <string name="settings_language_title">Select language</string>
+    <string name="settings_theme_auto_subtitle">Follows system settings</string>
+    <string name="settings_start_with_favorites_label">Start with favorites</string>
+    <string name="settings_start_with_favorites_subtitle">Open favorite places on app launch</string>
 
-    <!-- Имена ключей сделаны так, чтобы их было удобно доставать динамически через ID -->
+    <!-- Saved Locations -->
+    <string name="settings_section_saved_locations">Saved locations</string>
+    <string name="saved_favorite_cities">Saved cities</string>
+    <string name="widget_favorite_cities">Widget locations</string>
+    <string name="settings_manage_favorites_title">Manage favorites</string>
+    <string name="settings_delete_location_title">Delete location?</string>
+    <string name="settings_delete_location_message">Are you sure you want to delete "%s"? This action cannot be undone.</string>
+
+    <string name="language_en">English</string>
+    <string name="language_ru">Russian</string>
+
+    <string name="theme_auto">Auto</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_title">Theme</string>
+
+    <!-- Theme title (shown on the card) -->
+
+    <string name="error_unexpected">Something went wrong. Please try again.</string>
+    <string name="btn_close">Close</string>
+
+    <!-- Buttons -->
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_delete">Delete</string>
+
+    <string name="error_action_ok">OK</string>
+    <string name="error_action_retry">Try again</string>
+
+    <!-- Key names are designed to be easily retrieved dynamically via ID -->
 
     <!-- Clear / Cloudy -->
     <string name="weather_code_0">Clear sky</string>
@@ -58,5 +97,86 @@
     <string name="weather_code_99">Thunderstorm with heavy hail</string>
 
     <!-- Fallback -->
+    <string name="day_of_week_unknown">---</string>
     <string name="weather_code_unknown">Unknown weather</string>
+
+    <!-- Units & Weather (restored) -->
+    <string name="percent_sign">%s%%</string>
+    <string name="kilometers_per_hour">km/h</string>
+    <string name="millimeter">mm</string>
+
+    <string name="place_detail_forecast_title">Daily Forecast</string>
+    <string name="place_detail_hourly_forecast_title">Hourly Forecast</string>
+    <string name="forecast_for_date">Forecast for %s</string>
+
+    <!-- Places (restored) -->
+    <string name="places_no_forecast">No forecast data available</string>
+    <string name="places_search_button">Search places</string>
+    <string name="search_hint">e.g. Moscow, Kaliningrad, SPb</string>
+    <string name="places_see_hourly">See hourly</string>
+
+    <!-- Search -->
+    <string name="search_hint_multiple">Can enter multiple locations</string>
+    <string name="latitude_label">lat, %s</string>
+    <string name="longitude_label">lon, %s</string>
+    <string name="remember_button">remember</string>
+
+    <string name="weather_humidity">Humidity</string>
+    <string name="weather_precipitation">Precipitation</string>
+    <string name="weather_humidity_value">%d%%</string>
+    <string name="weather_wind_speed">Wind speed</string>
+    <string name="weather_wind_speed_value">%s km/h</string>
+    <string name="weather_max_temp">Max temp</string>
+    <string name="weather_min_temp">Min temp</string>
+    <string name="weather_sunrise">Sunrise</string>
+    <string name="weather_sunset">Sunset</string>
+
+    <!-- Day of week abbreviations (loaded dynamically via getIdentifier) -->
+    <string name="day_of_week_1">Mon</string>
+    <string name="day_of_week_2">Tue</string>
+    <string name="day_of_week_3">Wed</string>
+    <string name="day_of_week_4">Thu</string>
+    <string name="day_of_week_5">Fri</string>
+    <string name="day_of_week_6">Sat</string>
+    <string name="day_of_week_7">Sun</string>
+
+    <!-- Placeholder for unavailable data -->
+    <string name="weather_not_available">--:--</string>
+
+    <!-- Places card weather conditions -->
+    <string name="weather_condition_rain">Rain</string>
+    <string name="weather_condition_snow">Snow</string>
+    <string name="weather_condition_clear">Clear</string>
+    <string name="weather_current_temperature">Current temperature</string>
+    <string name="weather_recorded_temperature">Recorded temperature</string>
+    <string name="weather_temperature_now">Temperature now</string>
+    <string name="weather_temperature_forecast">Temperature forecast</string>
+    <string name="last_updated_label">Last updated</string>
+    <string name="time_just_now">Just now</string>
+    <string name="time_minutes_ago">%d minutes ago</string>
+    <string name="time_hours_ago">%dh ago</string>
+
+    <!-- Widget -->
+    <string name="widget_error_loading_data">Error loading data</string>
+    <string name="widget_no_data_available">No data available</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="time_at">at</string>
+
+    <!-- Rain Notifications -->
+    <string name="rain_notification_channel_name">Rain Alerts</string>
+    <string name="rain_notification_channel_description">Notifications about expected precipitation</string>
+    <string name="rain_notification_title">Rain Expected</string>
+    <string name="rain_notification_message">Precipitation is expected in</string>
+    <string name="rain_notification_detail">Check the forecast for details.</string>
+
+    <!-- Permission Group -->
+    <string name="permission_group_notifications">Notifications</string>
+    <string name="permission_request_title">Allow Notifications</string>
+    <string name="permission_request_message">We need permission to send you rain alerts and weather updates.</string>
+    <string name="permission_rationale_title">Notification Permission Required</string>
+    <string name="permission_rationale_message">To receive rain alerts, please enable notifications in settings.</string>
+    <string name="permission_grant">Allow</string>
+    <string name="permission_deny">Deny</string>
+
 </resources>

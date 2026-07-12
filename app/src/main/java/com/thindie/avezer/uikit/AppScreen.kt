@@ -25,47 +25,49 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.thindie.avezer.engine.Command
-import com.thindie.avezer.engine.ServiceCommand
 import com.thindie.avezer.engine.ScreenScope
-import com.thindie.avezer.engine.State
+import com.thindie.avezer.engine.ServiceCommand
+import com.thindie.avezer.engine.ViewState
 import kotlinx.coroutines.delay
 
 @Composable
-fun <S : State, C : Command> ScreenScope<S, C>.AppScreen(
+fun <S : ViewState, C : Command> AppScreen(
+  screenScope: ScreenScope<S, C>,
   modifier: Modifier = Modifier,
   title: String? = null,
   subtitle: String? = null,
   primary: Action? = null,
   secondary: Action? = null,
-  content: @Composable ScreenScope<S, C>.() -> Unit,
+  content: @Composable () -> Unit,
 ) {
   AnimatedContent(
-    modifier = modifier
-      .background(AppTheme.colors.backgroundPrimary)
-    , targetState = this
-  ) { screenScope ->
-    if (error.value != null) {
-      ErrorMessage()
+    modifier =
+      modifier
+        .background(AppTheme.colors.backgroundPrimary),
+    targetState = screenScope,
+  ) { _ ->
+    if (screenScope.error.value != null) {
+      screenScope.ErrorMessage()
     } else {
       Box(
         Modifier
           .fillMaxSize()
-          .background(AppTheme.colors.backgroundPrimary)
+          .background(AppTheme.colors.backgroundPrimary),
       ) {
         Column(
-          modifier = Modifier.systemBarsPadding()
+          modifier = Modifier.systemBarsPadding(),
         ) {
           TopAppBar(
             title = title,
             description = subtitle,
             primary = primary,
-            secondary = secondary
+            secondary = secondary,
           )
-          content(screenScope)
+          content()
         }
         var showEvent by remember { mutableStateOf<ServiceCommand.UiEvent?>(null) }
         LaunchedEffect(screenScope) {
-          event
+          screenScope.event
             .collect {
               showEvent = it
             }
@@ -80,22 +82,24 @@ fun <S : State, C : Command> ScreenScope<S, C>.AppScreen(
                 content = {
                   (showEvent as ServiceCommand.UiEvent.Decision).content.invoke()
                 },
-                primary = (showEvent as ServiceCommand.UiEvent.Decision).primaryAction.let {
-                  it.copy(
-                    listener = {
-                      it.listener()
-                      showEvent = null
-                    }
-                  )
-                },
-                secondary = (showEvent as ServiceCommand.UiEvent.Decision).secondaryAction?.let {
-                  it.copy(
-                    listener = {
-                      it.listener()
-                      showEvent = null
-                    }
-                  )
-                }
+                primary =
+                  (showEvent as ServiceCommand.UiEvent.Decision).primaryAction.let {
+                    it.copy(
+                      listener = {
+                        it.listener()
+                        showEvent = null
+                      },
+                    )
+                  },
+                secondary =
+                  (showEvent as ServiceCommand.UiEvent.Decision).secondaryAction?.let {
+                    it.copy(
+                      listener = {
+                        it.listener()
+                        showEvent = null
+                      },
+                    )
+                  },
               )
             }
 
@@ -105,29 +109,33 @@ fun <S : State, C : Command> ScreenScope<S, C>.AppScreen(
                 showEvent = null
               }
               AnimatedVisibility(
-                modifier = Modifier
-                  .align(Alignment.TopCenter)
-                  .clickable(
-                    onClick = {
-                      (showEvent as? ServiceCommand.UiEvent.Snack)?.action?.listener?.invoke()
-                    },
-                    indication = null,
-                    interactionSource = null
-                  )
-                  .fillMaxWidth()
-                  .padding(top = 56.dp)
-                  .padding(all = 16.dp)
-                  .background(AppTheme.colors.accentPrimary, shape = RoundedCornerShape(16.dp))
-                  .padding(all = 16.dp),
-                visible = showEvent is ServiceCommand.UiEvent.Snack || showEvent is ServiceCommand.UiEvent.SnackText
+                modifier =
+                  Modifier
+                    .align(Alignment.TopCenter)
+                    .clickable(
+                      onClick = {
+                        (showEvent as? ServiceCommand.UiEvent.Snack)?.action?.listener?.invoke()
+                      },
+                      indication = null,
+                      interactionSource = null,
+                    )
+                    .fillMaxWidth()
+                    .padding(top = 56.dp)
+                    .padding(all = 16.dp)
+                    .background(AppTheme.colors.accentPrimary, shape = RoundedCornerShape(16.dp))
+                    .padding(all = 16.dp),
+                visible = showEvent is ServiceCommand.UiEvent.Snack || showEvent is ServiceCommand.UiEvent.SnackText,
               ) {
                 Row(
-                  modifier = Modifier.fillMaxWidth()
+                  modifier = Modifier.fillMaxWidth(),
                 ) {
                   val ref = (showEvent as? ServiceCommand.UiEvent.Snack)?.action?.resRef
-                  val text = if (ref != null) stringResource(ref) else {
-                    (showEvent as ServiceCommand.UiEvent.SnackText).text
-                  }
+                  val text =
+                    if (ref != null) {
+                      stringResource(ref)
+                    } else {
+                      (showEvent as ServiceCommand.UiEvent.SnackText).text
+                    }
                   Text(
                     text = text,
                     style = AppTheme.typography.bodyMedium,
@@ -140,23 +148,24 @@ fun <S : State, C : Command> ScreenScope<S, C>.AppScreen(
             null -> error("Must not be reached")
           }
         }
-        if (this@AppScreen.processing.value != null) {
+        if (screenScope.processing.value != null) {
           Box(
             Modifier
               .fillMaxSize()
               .background(
-                Color.Transparent.copy(alpha = 0.3f)
+                Color.Transparent.copy(alpha = 0.3f),
               )
-              .clickable(onClick = {}, enabled = false)
+              .clickable(onClick = {}, enabled = false),
           ) {
             CircularProgress(
-              modifier = Modifier
-                .align(Alignment.Center)
-                .background(
-                  color = AppTheme.colors.backgroundSecondary,
-                  shape = RoundedCornerShape(20.dp)
-                )
-                .padding(16.dp)
+              modifier =
+                Modifier
+                  .align(Alignment.Center)
+                  .background(
+                    color = AppTheme.colors.backgroundSecondary,
+                    shape = RoundedCornerShape(20.dp),
+                  )
+                  .padding(16.dp),
             )
           }
         }
